@@ -15,7 +15,6 @@ public class FTBChunkDataBuffer {
         this.x = x;
         this.z = z;
         this.teamName = teamName;
-        System.out.println(this.teamName);
         this.teamColor = teamColor;
         this.isAdd = isAdd;
         this.replace = replace;

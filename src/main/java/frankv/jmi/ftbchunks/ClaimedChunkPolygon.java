@@ -34,7 +34,6 @@ public class ClaimedChunkPolygon {
 
         ChunkDimPos pos = new ChunkDimPos(mc.player.clientLevel.dimension(), mc.player.xChunk, mc.player.zChunk);
         if (chunkOverlays.containsKey(pos)) {
-            System.out.println(chunkOverlays.get(pos).getTitle());
             return chunkOverlays.get(pos).getTitle();
         }
         return "Wilderness";
