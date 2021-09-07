@@ -37,7 +37,7 @@ public class ClaimedChunkPolygon {
             System.out.println(chunkOverlays.get(pos).getTitle());
             return chunkOverlays.get(pos).getTitle();
         }
-        return "Widerness";
+        return "Wilderness";
     }
 
     @SubscribeEvent
