@@ -1,1 +1,1 @@
-# JourneyMap Intergration
+# JourneyMapIntegration
