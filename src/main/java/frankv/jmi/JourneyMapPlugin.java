@@ -1,8 +1,10 @@
 package frankv.jmi;
 
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
+import frankv.jmi.waystones.client.WaystonesWaypoint;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
+import journeymap.client.api.display.DisplayType;
 import journeymap.client.api.event.ClientEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -17,6 +19,7 @@ import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STOPPED;
 public class JourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
     private ClaimedChunkPolygon claimedChunkPolygon;
+    private WaystonesWaypoint waystoneWaypoint;
 
     @Override
     public void initialize(final IClientAPI jmAPI) {
@@ -25,6 +28,11 @@ public class JourneyMapPlugin implements IClientPlugin {
         if (JMI.ftbchunks) {
             claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
+        }
+
+        if (JMI.waystones) {
+            waystoneWaypoint = new WaystonesWaypoint(jmAPI);
+            MinecraftForge.EVENT_BUS.register(waystoneWaypoint);
         }
 
         this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED));
