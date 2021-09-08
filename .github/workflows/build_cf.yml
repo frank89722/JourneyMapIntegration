@@ -1,0 +1,71 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Build and upload to CF
+
+on:
+  push:
+    branches: [ main, test ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    if: |
+      !contains(github.event.head_commit.message, '[ciskip]')
+
+    steps:
+      - uses: actions/checkout@v2
+    
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        id: build
+        env:
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: ./gradlew build
+
+      - name: Changelog
+<<<<<<< HEAD
+        uses: Bullrich/generate-release-changelog@master
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
+=======
+          uses: scottbrenner/generate-changelog-action@master
+          id: Changelog
+>>>>>>> parent of d5403a6 (fix changelog)
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.build.outputs.modid }}-${{ steps.build.outputs.version }}
+          release_name: ${{ steps.build.outputs.modid }}-${{ steps.build.outputs.version }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      - name: "CF Release"
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
+          CHANGELOG: ${{ steps.Changelog.outputs.changelog }}
+          run: ./gradlew build curseforge
