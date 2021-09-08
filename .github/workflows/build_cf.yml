@@ -41,25 +41,24 @@ jobs:
         run: ./gradlew build
 
       - name: Changelog
-          uses: Bullrich/generate-release-changelog@master
+          uses: scottbrenner/generate-changelog-action@master
           id: Changelog
-          env:
-            REPO: ${{ github.repository }}
-            - name: Create Release
-              id: create_release
-              uses: actions/create-release@latest
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                tag_name: ${{ github.ref }}
-                release_name: ${{ steps.build.outputs.modid }}-${{ steps.build.outputs.version }}
-                body: |
-                  ${{ steps.Changelog.outputs.changelog }}
-                draft: false
-                prerelease: false
 
-            - name: "CF Release"
-              env:
-                CF_TOKEN: ${{ secrets.CF_TOKEN }}
-                CHANGELOG: ${{ steps.Changelog.outputs.changelog }}
-                run: ./gradlew build curseforge
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ steps.build.outputs.modid }}-${{ steps.build.outputs.version }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      - name: "CF Release"
+        env:
+          CF_TOKEN: ${{ secrets.CF_TOKEN }}
+          CHANGELOG: ${{ steps.Changelog.outputs.changelog }}
+          run: ./gradlew build curseforge
