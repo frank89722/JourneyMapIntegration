@@ -41,8 +41,8 @@ jobs:
         run: ./gradlew build
 
       - name: Changelog
-          uses: scottbrenner/generate-changelog-action@master
-          id: Changelog
+        uses: scottbrenner/generate-changelog-action@master
+        id: Changelog
 
       - name: Create Release
         id: create_release
