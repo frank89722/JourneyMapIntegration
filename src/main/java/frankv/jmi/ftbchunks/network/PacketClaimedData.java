@@ -1,7 +1,7 @@
 package frankv.jmi.ftbchunks.network;
 
 import dev.ftb.mods.ftbchunks.data.ClaimedChunk;
-import frankv.jmi.ftbchunks.ClaimedChunkPolygon;
+import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;

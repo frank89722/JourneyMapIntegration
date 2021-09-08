@@ -1,4 +1,4 @@
-package frankv.jmi.ftbchunks;
+package frankv.jmi.ftbchunks.client;
 
 import net.minecraft.util.ResourceLocation;
 

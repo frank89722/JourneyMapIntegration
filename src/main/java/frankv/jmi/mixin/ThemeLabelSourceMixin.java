@@ -1,6 +1,6 @@
 package frankv.jmi.mixin;
 
-import frankv.jmi.ftbchunks.ClaimedChunkPolygon;
+import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import journeymap.client.ui.theme.ThemeLabelSource;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.gen.Invoker;

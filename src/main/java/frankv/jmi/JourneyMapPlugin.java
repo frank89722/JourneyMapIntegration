@@ -1,6 +1,6 @@
 package frankv.jmi;
 
-import frankv.jmi.ftbchunks.ClaimedChunkPolygon;
+import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;

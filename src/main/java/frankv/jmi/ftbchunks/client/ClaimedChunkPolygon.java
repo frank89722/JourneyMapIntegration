@@ -1,4 +1,4 @@
-package frankv.jmi.ftbchunks;
+package frankv.jmi.ftbchunks.client;
 
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import frankv.jmi.JMI;
