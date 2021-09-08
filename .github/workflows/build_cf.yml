@@ -63,4 +63,4 @@ jobs:
         env:
           CF_TOKEN: ${{ secrets.CF_TOKEN }}
           CHANGELOG: ${{ steps.Changelog.outputs.changelog }}
-          run: ./gradlew build curseforge
+        run: ./gradlew build curseforge
