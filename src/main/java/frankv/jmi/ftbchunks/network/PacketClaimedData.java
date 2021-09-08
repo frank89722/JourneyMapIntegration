@@ -20,7 +20,6 @@ public class PacketClaimedData {
         this.x = chunk.getPos().getChunkPos().x;
         this.z = chunk.getPos().getChunkPos().z;
         this.teamName = chunk.getTeamData().getTeam().getDisplayName();
-        System.out.println(this.teamName);
         this.teamColor = chunk.getTeamData().getTeam().getColor();
         this.isAdd = isAdd;
         this.dim = chunk.getPos().dimension.location();
