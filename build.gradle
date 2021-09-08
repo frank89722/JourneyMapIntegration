@@ -170,7 +170,7 @@ if (ENV.CF_TOKEN) {
             mainArtifact(jar)
             relations {
                 requiredDependency 'journeymap'
-                optionalDependency 'ftb-chunkss-forge'
+                optionalDependency 'ftb-chunks-forge'
             }
             changelog = ENV.CHANGELOG
             changelogType = 'markdown'
