@@ -7,13 +7,17 @@ public class ClientConfig {
 
     private ForgeConfigSpec.BooleanValue ftbChunks;
     private ForgeConfigSpec.BooleanValue waystone;
+    private ForgeConfigSpec.IntValue waystoneColor;
 
     public ClientConfig() {
-        builder.comment("Toggle Client-Side integration.");
+        builder.push("Client-Side Integration");
         ftbChunks = builder.define("ftbChunks", true);
         waystone = builder.define("waystones", true);
-
-        System.out.println("Client config init");
+        builder.pop();
+        builder.push("Waystone Marker");
+        builder.comment("The color code for Waystone marker. You can generate the color code from https://www.mathsisfun.com/hexadecimal-decimal-colors.html");
+        waystoneColor = builder.defineInRange("wayStoneColor", 14738591, 0, 16777215);
+        builder.pop();
     }
 
     public ForgeConfigSpec getSpec() {
@@ -26,5 +30,9 @@ public class ClientConfig {
 
     public boolean getWayStone() {
         return waystone.get();
+    }
+
+    public int getWaystoneColor() {
+        return waystoneColor.get();
     }
 }

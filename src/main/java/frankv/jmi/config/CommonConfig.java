@@ -8,8 +8,10 @@ public class CommonConfig {
     private ForgeConfigSpec.BooleanValue ftbChunks;
 
     public CommonConfig() {
+        builder.push("Server-Side Integration");
         builder.comment("Toggle Server-side function that required for Client-Side integration to work.");
         ftbChunks = builder.define("ftbChunks", true);
+        builder.pop();
     }
 
     public ForgeConfigSpec getSpec() {

@@ -28,7 +28,7 @@ public class WaystonesWaypoint {
                 .setAnchorY(18.0d)
                 .setDisplayWidth(18.0d)
                 .setDisplayHeight(18.0d)
-                .setColor(14738591);
+                .setColor(JMI.CLIENT_CONFIG.getWaystoneColor());
 
         TextProperties textProperties = new TextProperties()
                 .setMinZoom(2)
@@ -64,7 +64,7 @@ public class WaystonesWaypoint {
             createMarker(o);
         }
 
-        for (Map.Entry<UUID, MarkerOverlay> e : new HashMap<UUID, MarkerOverlay>(markers).entrySet()) {
+        for (Map.Entry<UUID, MarkerOverlay> e : new HashMap<>(markers).entrySet()) {
             UUID uid = e.getKey();
             boolean flag = false;
             for (IWaystone o : newWaystones) {
