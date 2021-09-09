@@ -8,19 +8,17 @@ import journeymap.client.api.model.TextProperties;
 import net.blay09.mods.waystones.api.IWaystone;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 public class WaystonesWaypoint {
     private IClientAPI jmAPI;
-    private Collection<MarkerOverlay> markers;
+    private HashMap<UUID, MarkerOverlay> markers;
 
     public WaystonesWaypoint(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
-        this.markers = new ArrayList<>();
+        this.markers = new HashMap<>();
     }
 
     private void createMarker(IWaystone w) {
@@ -43,26 +41,40 @@ public class WaystonesWaypoint {
 
         try {
             jmAPI.show(markerOverlay);
-            markers.add(markerOverlay);
+            markers.put(w.getWaystoneUid(), markerOverlay);
         }
         catch (Exception e) {
             JMI.LOGGER.error(e);
         }
     }
 
-    private void removeAllMarker() {
-        for (MarkerOverlay o : markers) {
-            jmAPI.remove(o);
+    private void removeMarker(UUID uid) {
+        if (markers.containsKey(uid)) {
+            jmAPI.remove(markers.remove(uid));
         }
     }
 
     @SubscribeEvent
     public void onKnownWaystones(KnownWaystonesEvent event) {
+        if (!JMI.CLIENT_CONFIG.getWayStone()) return;
         List<IWaystone> newWaystones = new ArrayList<>(event.getWaystones());
 
         for (IWaystone o : newWaystones) {
             if (!o.hasName() || markers.containsKey(o.getWaystoneUid())) continue;
             createMarker(o);
+        }
+
+        for (Map.Entry<UUID, MarkerOverlay> e : new HashMap<UUID, MarkerOverlay>(markers).entrySet()) {
+            UUID uid = e.getKey();
+            boolean flag = false;
+            for (IWaystone o : newWaystones) {
+                if (!o.hasName()) continue;
+                if (o.getWaystoneUid().equals(uid)) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) removeMarker(uid);
         }
     }
 }

@@ -4,7 +4,6 @@ import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import frankv.jmi.waystones.client.WaystonesWaypoint;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
-import journeymap.client.api.display.DisplayType;
 import journeymap.client.api.event.ClientEvent;
 import net.minecraftforge.common.MinecraftForge;
 

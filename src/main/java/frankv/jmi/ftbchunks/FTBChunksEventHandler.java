@@ -6,6 +6,7 @@ import dev.ftb.mods.ftbchunks.data.FTBChunksAPI;
 import dev.ftb.mods.ftbchunks.event.ClaimedChunkEvent;
 import dev.ftb.mods.ftbteams.data.Team;
 import dev.ftb.mods.ftbteams.event.TeamEvent;
+import frankv.jmi.JMI;
 import frankv.jmi.NetworkHandler;
 import frankv.jmi.ftbchunks.network.PacketClaimedData;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,16 +33,19 @@ public class FTBChunksEventHandler {
 
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!JMI.COMMON_CONFIG.getFTBChunks()) return;
         if (chunkManager == null) chunkManager = FTBChunksAPI.getManager();
         sendAllData(event.getPlayer(), chunkManager.getAllClaimedChunks());
     }
 
     @SubscribeEvent
     public void onPlayerChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (!JMI.COMMON_CONFIG.getFTBChunks()) return;
         sendAllData(event.getPlayer(), chunkManager.getAllClaimedChunks());
     }
 
     private void resend(Team team) {
+        if (!JMI.COMMON_CONFIG.getFTBChunks()) return;
         Collection<ClaimedChunk> chunks = chunkManager.getData(team).getClaimedChunks();
         for (ClaimedChunk c : chunks) {
             NetworkHandler.sendFTBToClient(new PacketClaimedData(c, false, true));
@@ -49,6 +53,7 @@ public class FTBChunksEventHandler {
     }
 
     private void sendAllData(PlayerEntity player, Collection<ClaimedChunk> chunks) {
+        if (!JMI.COMMON_CONFIG.getFTBChunks()) return;
         final RegistryKey<World> dim = player.level.dimension();
 
         for (ClaimedChunk c : chunks) {

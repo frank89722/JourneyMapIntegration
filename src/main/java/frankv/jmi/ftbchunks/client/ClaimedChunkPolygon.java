@@ -4,6 +4,7 @@ import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
+import journeymap.client.api.event.DisplayUpdateEvent;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
@@ -12,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
@@ -22,7 +22,6 @@ public class ClaimedChunkPolygon {
     private static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays;
     private static List<FTBChunkDataBuffer> queue = new ArrayList<>();
     private static Minecraft mc = Minecraft.getInstance();
-
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
@@ -40,12 +39,8 @@ public class ClaimedChunkPolygon {
     }
 
     @SubscribeEvent
-    public void onPlayerChange(PlayerEvent.PlayerChangedDimensionEvent event) {
-        chunkOverlays.clear();
-    }
-
-    @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
         if (queue == null || queue.isEmpty()) return;
         if (mc.player == null) return;
         if (!mc.player.clientLevel.dimension().location().equals(queue.get(0).dim)) {
@@ -121,6 +116,7 @@ public class ClaimedChunkPolygon {
     }
 
     public static void addToQueue(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace) {
+        if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
         queue.add(new FTBChunkDataBuffer(dim, x, z, teamName, teamColor, isAdd, replace));
     }
 }
