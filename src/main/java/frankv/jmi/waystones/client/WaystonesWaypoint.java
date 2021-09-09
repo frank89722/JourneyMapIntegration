@@ -58,8 +58,10 @@ public class WaystonesWaypoint {
 
     @SubscribeEvent
     public void onKnownWaystones(KnownWaystonesEvent event) {
-        removeAllMarker();
-        for (IWaystone o : event.getWaystones()) {
+        List<IWaystone> newWaystones = new ArrayList<>(event.getWaystones());
+
+        for (IWaystone o : newWaystones) {
+            if (!o.hasName() || markers.containsKey(o.getWaystoneUid())) continue;
             createMarker(o);
         }
     }
