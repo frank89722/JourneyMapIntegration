@@ -175,6 +175,7 @@ if (ENV.CF_TOKEN) {
             relations {
                 requiredDependency 'journeymap'
                 optionalDependency 'ftb-chunks-forge'
+                optionalDependency 'waystones'
             }
             changelog = ENV.CHANGELOG
             changelogType = 'markdown'
