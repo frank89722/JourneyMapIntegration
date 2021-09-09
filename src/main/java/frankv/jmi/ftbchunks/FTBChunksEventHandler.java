@@ -30,7 +30,6 @@ public class FTBChunksEventHandler {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!JMI.COMMON_CONFIG.getFTBChunks()) return;

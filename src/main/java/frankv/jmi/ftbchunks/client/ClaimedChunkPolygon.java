@@ -4,7 +4,6 @@ import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.event.DisplayUpdateEvent;
 import journeymap.client.api.model.MapPolygon;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
