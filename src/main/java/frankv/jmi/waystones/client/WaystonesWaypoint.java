@@ -14,7 +14,7 @@ import java.util.*;
 
 public class WaystonesWaypoint {
     private IClientAPI jmAPI;
-    private HashMap<UUID, MarkerOverlay> markers;
+    public static HashMap<UUID, MarkerOverlay> markers;
 
     public WaystonesWaypoint(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
@@ -42,15 +42,19 @@ public class WaystonesWaypoint {
         try {
             jmAPI.show(markerOverlay);
             markers.put(w.getWaystoneUid(), markerOverlay);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             JMI.LOGGER.error(e);
         }
     }
 
     private void removeMarker(UUID uid) {
-        if (markers.containsKey(uid)) {
+        if (!markers.containsKey(uid)) return;
+
+        try {
             jmAPI.remove(markers.remove(uid));
+            markers.remove(uid);
+        } catch (Exception e) {
+            JMI.LOGGER.error(e);
         }
     }
 

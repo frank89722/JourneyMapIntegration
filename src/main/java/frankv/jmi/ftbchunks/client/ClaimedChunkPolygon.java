@@ -18,13 +18,12 @@ import java.util.*;
 
 public class ClaimedChunkPolygon {
     private IClientAPI jmAPI;
-    private static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays;
+    public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();;
     private static List<FTBChunkDataBuffer> queue = new ArrayList<>();
     private static Minecraft mc = Minecraft.getInstance();
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
-        this.chunkOverlays = new HashMap<>();
     }
 
     public static String getPolygonTitleByPlayerPos() {

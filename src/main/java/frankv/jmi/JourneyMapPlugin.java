@@ -1,5 +1,7 @@
 package frankv.jmi;
 
+import dev.ftb.mods.ftbchunks.FTBChunksWorldConfig;
+import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import frankv.jmi.waystones.client.WaystonesWaypoint;
 import journeymap.client.api.IClientAPI;
@@ -18,7 +20,7 @@ import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STOPPED;
 public class JourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
     private ClaimedChunkPolygon claimedChunkPolygon;
-    private WaystonesWaypoint waystoneWaypoint;
+    public WaystonesWaypoint waystoneWaypoint;
 
     @Override
     public void initialize(final IClientAPI jmAPI) {
@@ -48,15 +50,24 @@ public class JourneyMapPlugin implements IClientPlugin {
         try {
             switch (event.type) {
                 case MAPPING_STARTED:
+                    if(JMI.ftbchunks) disableFTBChunksThings();
                     break;
 
                 case MAPPING_STOPPED:
+                    claimedChunkPolygon.chunkOverlays.clear();
+                    WaystonesWaypoint.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
                     break;
             }
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             JMI.LOGGER.error(t.getMessage(), t);
         }
+    }
+
+    private void disableFTBChunksThings() {
+        if (!JMI.CLIENT_CONFIG.getDisableFTBFunction()) return;
+        FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
+        FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
+        FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);
     }
 }
