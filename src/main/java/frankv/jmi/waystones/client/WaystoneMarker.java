@@ -12,11 +12,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
 
-public class WaystonesWaypoint {
+public class WaystoneMarker {
     private IClientAPI jmAPI;
     public static HashMap<UUID, MarkerOverlay> markers = new HashMap<>();
 
-    public WaystonesWaypoint(IClientAPI jmAPI) {
+    public WaystoneMarker(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
     }
 
@@ -35,8 +35,10 @@ public class WaystonesWaypoint {
 
         MarkerOverlay markerOverlay = new MarkerOverlay(JMI.MODID, "waystone_" + w.getPos(), w.getPos(), icon);
         markerOverlay.setDimension(w.getDimension()).setTitle("Waystone")
-                .setLabel(w.getName())
+                .setTitle(w.getName())
                 .setTextProperties(textProperties);
+
+        markerOverlay.setOverlayListener(new WaystoneMarkerListener(markerOverlay, jmAPI));
 
         try {
             jmAPI.show(markerOverlay);

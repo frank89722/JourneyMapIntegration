@@ -1,9 +1,8 @@
 package frankv.jmi;
 
-import dev.ftb.mods.ftbchunks.FTBChunksWorldConfig;
 import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
-import frankv.jmi.waystones.client.WaystonesWaypoint;
+import frankv.jmi.waystones.client.WaystoneMarker;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
@@ -20,7 +19,7 @@ import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STOPPED;
 public class JourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
     private ClaimedChunkPolygon claimedChunkPolygon;
-    public WaystonesWaypoint waystoneWaypoint;
+    public WaystoneMarker waystoneWaypoint;
 
     @Override
     public void initialize(final IClientAPI jmAPI) {
@@ -32,7 +31,7 @@ public class JourneyMapPlugin implements IClientPlugin {
         }
 
         if (JMI.waystones) {
-            waystoneWaypoint = new WaystonesWaypoint(jmAPI);
+            waystoneWaypoint = new WaystoneMarker(jmAPI);
             MinecraftForge.EVENT_BUS.register(waystoneWaypoint);
         }
 
@@ -55,7 +54,7 @@ public class JourneyMapPlugin implements IClientPlugin {
 
                 case MAPPING_STOPPED:
                     claimedChunkPolygon.chunkOverlays.clear();
-                    WaystonesWaypoint.markers.clear();
+                    WaystoneMarker.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
                     break;
             }
