@@ -1,5 +1,6 @@
 package frankv.jmi.mixin;
 
+import frankv.jmi.JMI;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import journeymap.client.ui.theme.ThemeLabelSource;
 import org.spongepowered.asm.mixin.*;
@@ -34,6 +35,7 @@ public class ThemeLabelSourceMixin {
     }
 
     private static String getClaimedChunk() {
+        if (!JMI.ftbchunks) return "";
         return ClaimedChunkPolygon.getPolygonTitleByPlayerPos();
     }
 }
