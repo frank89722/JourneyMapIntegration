@@ -14,11 +14,10 @@ import java.util.*;
 
 public class WaystonesWaypoint {
     private IClientAPI jmAPI;
-    public static HashMap<UUID, MarkerOverlay> markers;
+    public static HashMap<UUID, MarkerOverlay> markers = new HashMap<>();
 
     public WaystonesWaypoint(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
-        this.markers = new HashMap<>();
     }
 
     private void createMarker(IWaystone w) {
