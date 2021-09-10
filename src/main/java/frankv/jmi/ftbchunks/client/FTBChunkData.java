@@ -2,7 +2,7 @@ package frankv.jmi.ftbchunks.client;
 
 import net.minecraft.util.ResourceLocation;
 
-public class FTBChunkDataBuffer {
+public class FTBChunkData {
     protected ResourceLocation dim;
     protected int x, z;
     protected String teamName;
@@ -10,7 +10,7 @@ public class FTBChunkDataBuffer {
     protected boolean isAdd;
     protected boolean replace;
 
-    public FTBChunkDataBuffer(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace) {
+    public FTBChunkData(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace) {
         this.dim = dim;
         this.x = x;
         this.z = z;

@@ -19,7 +19,7 @@ import java.util.*;
 public class ClaimedChunkPolygon {
     private IClientAPI jmAPI;
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();;
-    private static List<FTBChunkDataBuffer> queue = new ArrayList<>();
+    private static List<FTBChunkData> queue = new ArrayList<>();
     private static Minecraft mc = Minecraft.getInstance();
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
@@ -88,7 +88,7 @@ public class ClaimedChunkPolygon {
         addPolygon(pos);
     }
 
-    private static PolygonOverlay createOverlay(FTBChunkDataBuffer tb) {
+    private static PolygonOverlay createOverlay(FTBChunkData tb) {
         final ClientPlayerEntity player = Minecraft.getInstance().player;
 
         String displayId = "claimed_" + tb.x + ',' + tb.z;
@@ -115,6 +115,6 @@ public class ClaimedChunkPolygon {
 
     public static void addToQueue(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace) {
         if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
-        queue.add(new FTBChunkDataBuffer(dim, x, z, teamName, teamColor, isAdd, replace));
+        queue.add(new FTBChunkData(dim, x, z, teamName, teamColor, isAdd, replace));
     }
 }
