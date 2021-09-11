@@ -23,10 +23,10 @@ public class WaystoneMarker {
     private void createMarker(IWaystone w) {
         ResourceLocation marker = new ResourceLocation("jmi:images/waystone.png");
         MapImage icon = new MapImage(marker, 32, 32)
-                .setAnchorX(9.0d)
-                .setAnchorY(18.0d)
-                .setDisplayWidth(18.0d)
-                .setDisplayHeight(18.0d)
+                .setAnchorX(12.0d)
+                .setAnchorY(24.0d)
+                .setDisplayWidth(24.0d)
+                .setDisplayHeight(24.0d)
                 .setColor(JMI.CLIENT_CONFIG.getWaystoneColor());
 
         TextProperties textProperties = new TextProperties()

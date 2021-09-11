@@ -21,7 +21,7 @@ public class ClientConfig {
         builder.push("Waystones");
         waystone = builder.comment("Enable Waystones Integration").define("waystones", true);
         waystoneColor = builder.comment("The color code for Waystone marker. You can generate the color code from https://www.mathsisfun.com/hexadecimal-decimal-colors.html")
-                .defineInRange("wayStoneMarkerColor", 14738591, 0, 16777215);
+                .defineInRange("wayStoneMarkerColor", 0xffffff, 0, 16777215);
         builder.pop();
     }
 
