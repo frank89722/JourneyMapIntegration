@@ -36,7 +36,6 @@ public class NetworkHandler {
     }
 
     public static void sendFTBToClient(Object packet, RegistryKey<World> dim) {
-        System.out.println(dim.toString());
         CHANNEL_INSTANCE.send(PacketDistributor.DIMENSION.with(() -> dim), packet);
     }
 
