@@ -1,7 +1,6 @@
 package frankv.jmi.jmdefaultconfig;
 
 import frankv.jmi.JMI;
-import journeymap.common.kotlin.constants.JM;
 
 import java.io.IOException;
 
