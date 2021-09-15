@@ -9,6 +9,7 @@ public class ClientConfig {
     private ForgeConfigSpec.BooleanValue waystone;
     private ForgeConfigSpec.BooleanValue disableFTBFunction;
     private ForgeConfigSpec.IntValue waystoneColor;
+    private ForgeConfigSpec.IntValue defaultConfigVersion;
 
     public ClientConfig() {
         builder.comment("Client-Side Integration");
@@ -22,6 +23,11 @@ public class ClientConfig {
         waystone = builder.comment("Enable Waystones Integration").define("waystones", true);
         waystoneColor = builder.comment("The color code for Waystone marker. You can generate the color code from https://www.mathsisfun.com/hexadecimal-decimal-colors.html")
                 .defineInRange("wayStoneMarkerColor", 0xffffff, 0, 16777215);
+        builder.pop();
+
+        builder.push("JourneyMap Default Config");
+        defaultConfigVersion = builder.comment("When local JM default config version is older than `defaultConfigVersion`, it will copy everything under `/config/jmdefaultconfig/` to `/journeymap/` and replace the existing files. Set to -1 to disable.")
+                .defineInRange("defaultConfigVersion", -1, -1, Integer.MAX_VALUE);
         builder.pop();
     }
 
@@ -43,5 +49,9 @@ public class ClientConfig {
 
     public int getWaystoneColor() {
         return waystoneColor.get();
+    }
+
+    public int getDefaultConfigVersion() {
+        return defaultConfigVersion.get();
     }
 }

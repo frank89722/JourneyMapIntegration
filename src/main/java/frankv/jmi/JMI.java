@@ -3,10 +3,12 @@ package frankv.jmi;
 import frankv.jmi.config.ClientConfig;
 import frankv.jmi.config.CommonConfig;
 import frankv.jmi.ftbchunks.FTBChunksEventHandler;
+import frankv.jmi.jmdefaultconfig.JMDefualtConfig;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -25,6 +27,7 @@ public class JMI {
 
     public JMI() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG.getSpec());
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
 
@@ -42,6 +45,12 @@ public class JMI {
 
         if (waystones) {
             LOGGER.info("Waystones integration loaded.");
+        }
+    }
+
+    private void setupClient(final FMLClientSetupEvent event) {
+        if (CLIENT_CONFIG.getDefaultConfigVersion() != -1) {
+            JMDefualtConfig.tryWriteJMDefaultConfig();
         }
     }
 }
