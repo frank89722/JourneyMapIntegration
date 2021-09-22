@@ -26,7 +26,7 @@ public class ClientConfig {
         builder.pop();
 
         builder.push("JourneyMap Default Config");
-        defaultConfigVersion = builder.comment("When local JM default config version is older than `defaultConfigVersion`, it will copy everything under `/config/jmdefaultconfig/` to `/journeymap/` and replace the existing files. Set to -1 to disable.")
+        defaultConfigVersion = builder.comment("When local JM default config version is older than `defaultConfigVersion` it will copy everything under `/config/jmdefaultconfig/` to `/journeymap/` and replace the existing files. Set to -1 to disable.")
                 .defineInRange("defaultConfigVersion", -1, -1, Integer.MAX_VALUE);
         builder.pop();
     }

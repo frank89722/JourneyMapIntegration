@@ -15,7 +15,7 @@ public class FileManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static File versionFile = new File(System.getProperty("user.dir") + "/journeymap/defaultconfig.json");
 
-    public static Version readConfigVersion() throws IOException {
+    public static Version readConfigVersion() {
         Version version;
         try (FileReader fileReader = new FileReader(versionFile)) {
             version = GSON.fromJson(fileReader, Version.class);
@@ -26,9 +26,6 @@ public class FileManager {
         } catch (JsonParseException | NullPointerException | IOException e) {
             version = new Version(-1);
             versionFile.getParentFile().mkdirs();
-            try (FileWriter fileWriter = new FileWriter(versionFile)) {
-                GSON.toJson(version, fileWriter);
-            }
         }
         return version;
     }
@@ -38,6 +35,8 @@ public class FileManager {
         v = new Version(newVersion);
         FileWriter fileWriter = new FileWriter(versionFile);
         GSON.toJson(v, fileWriter);
+        fileWriter.flush();
+        fileWriter.close();
     }
 
     public static void writeJMDefaultConfig(int newVersion) {
