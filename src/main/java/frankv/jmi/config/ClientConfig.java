@@ -10,7 +10,7 @@ public class ClientConfig {
 
     private ForgeConfigSpec.BooleanValue ftbChunks;
     private ForgeConfigSpec.BooleanValue waystone;
-    private ForgeConfigSpec.ConfigValue<List<? extends String>> waypointMessagesBlocks;
+    private ForgeConfigSpec.ConfigValue<List<? extends String>> waypointMessageBlocks;
     private ForgeConfigSpec.BooleanValue waypointMessageEmptyHandOnly;
     private ForgeConfigSpec.DoubleValue claimedChunkOverlayOpacity;
     private ForgeConfigSpec.BooleanValue disableFTBFunction;
@@ -33,7 +33,7 @@ public class ClientConfig {
         builder.pop();
 
         builder.push("WaypointMessage");
-        waypointMessagesBlocks = builder.comment("List of block id and tags for WaypointMessage. e.g., [\"#forge:ores/diamond\", \"minecraft:diamond_block\"]").defineList("waypointMessagesBlocks", ArrayList::new, l -> l instanceof String);
+        waypointMessageBlocks = builder.comment("List of block id and tags for WaypointMessage. e.g., [\"#forge:ores/diamond\", \"minecraft:diamond_block\"]").defineList("waypointMessageBlocks", ArrayList::new, l -> l instanceof String);
         waypointMessageEmptyHandOnly = builder.define("emptyHandOnly", true);
         builder.pop();
 
@@ -56,7 +56,7 @@ public class ClientConfig {
     }
 
     public List<? extends String> getWaypointMessageBlocks() {
-        return waypointMessagesBlocks.get();
+        return waypointMessageBlocks.get();
     }
 
     public Boolean getWaypointMessageEmptyHandOnly() {
