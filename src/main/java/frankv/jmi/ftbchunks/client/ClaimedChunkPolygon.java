@@ -94,7 +94,7 @@ public class ClaimedChunkPolygon {
         String displayId = "claimed_" + tb.x + ',' + tb.z;
         ShapeProperties shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
-                .setFillColor(tb.teamColor).setFillOpacity(.3f);
+                .setFillColor(tb.teamColor).setFillOpacity((float) JMI.CLIENT_CONFIG.getClaimedChunkOverlayOpacity());
 
         TextProperties textProps = new TextProperties()
                 .setColor(tb.teamColor)
