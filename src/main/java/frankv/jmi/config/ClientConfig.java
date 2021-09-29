@@ -2,11 +2,16 @@ package frankv.jmi.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientConfig {
     private ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
     private ForgeConfigSpec.BooleanValue ftbChunks;
     private ForgeConfigSpec.BooleanValue waystone;
+    private ForgeConfigSpec.ConfigValue<List<? extends String>> waypointMessagesBlocks;
+    private ForgeConfigSpec.BooleanValue waypointMessageEmptyHandOnly;
     private ForgeConfigSpec.BooleanValue disableFTBFunction;
     private ForgeConfigSpec.IntValue waystoneColor;
     private ForgeConfigSpec.IntValue defaultConfigVersion;
@@ -25,6 +30,11 @@ public class ClientConfig {
                 .defineInRange("wayStoneMarkerColor", 0xffffff, 0, 16777215);
         builder.pop();
 
+        builder.push("WaypointMessage");
+        waypointMessagesBlocks = builder.comment("List of block id and tags for WaypointMessage. e.g., [\"#forge:ores/diamond\", \"minecraft:diamond_block\"]").defineList("waypointMessagesBlocks", ArrayList::new, l -> l instanceof String);
+        waypointMessageEmptyHandOnly = builder.define("emptyHandOnly", true);
+        builder.pop();
+
         builder.push("JourneyMap Default Config");
         defaultConfigVersion = builder.comment("When local JM default config version is older than `defaultConfigVersion` it will copy everything under `/config/jmdefaultconfig/` to `/journeymap/` and replace the existing files. Set to -1 to disable.")
                 .defineInRange("defaultConfigVersion", -1, -1, Integer.MAX_VALUE);
@@ -41,6 +51,14 @@ public class ClientConfig {
 
     public boolean getWayStone() {
         return waystone.get();
+    }
+
+    public List<? extends String> getWaypointMessageBlocks() {
+        return waypointMessagesBlocks.get();
+    }
+
+    public Boolean getWaypointMessageEmptyHandOnly() {
+        return waypointMessageEmptyHandOnly.get();
     }
 
     public boolean getDisableFTBFunction() {

@@ -2,6 +2,7 @@ package frankv.jmi;
 
 import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
+import frankv.jmi.waypointmessage.WaypointChatMessage;
 import frankv.jmi.waystones.client.WaystoneMarker;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
@@ -34,6 +35,8 @@ public class JourneyMapPlugin implements IClientPlugin {
             waystoneWaypoint = new WaystoneMarker(jmAPI);
             MinecraftForge.EVENT_BUS.register(waystoneWaypoint);
         }
+
+        MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
 
         this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED));
         JMI.LOGGER.info("Initialized " + getClass().getName());
