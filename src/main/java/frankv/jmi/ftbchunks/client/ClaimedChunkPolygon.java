@@ -39,27 +39,31 @@ public class ClaimedChunkPolygon {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
-        if (queue == null || queue.isEmpty()) return;
         if (mc.player == null) return;
-        if (!mc.player.clientLevel.dimension().location().equals(queue.get(0).dim)) {
+
+        for (int i = 0; i<60; i++) {
+            if (queue == null || queue.isEmpty()) return;
+            if (!mc.player.clientLevel.dimension().location().equals(queue.get(0).dim)) {
+                queue.remove(0);
+                continue;
+            }
+
+            final ChunkDimPos pos = new ChunkDimPos(mc.player.clientLevel.dimension(), queue.get(0).x, queue.get(0).z);
+
+            if (queue.get(0).replace) {
+                replacePolygon(pos);
+                queue.remove(0);
+                continue;
+            }
+
+            if (queue.get(0).isAdd) {
+                addPolygon(pos);
+            } else {
+                removePolygon(pos);
+            }
             queue.remove(0);
-            return;
-        }
 
-        final ChunkDimPos pos = new ChunkDimPos(mc.player.clientLevel.dimension(), queue.get(0).x, queue.get(0).z);
-
-        if (queue.get(0).replace) {
-            replacePolygon(pos);
-            queue.remove(0);
-            return;
         }
-
-        if (queue.get(0).isAdd) {
-            addPolygon(pos);
-        } else {
-            removePolygon(pos);
-        }
-        queue.remove(0);
     }
 
     private void addPolygon(ChunkDimPos pos) {
