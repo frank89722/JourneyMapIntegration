@@ -34,7 +34,7 @@ public class WaystoneMarker {
                 .setOpacity(1.0f);
 
         MarkerOverlay markerOverlay = new MarkerOverlay(JMI.MODID, "waystone_" + w.getPos(), w.getPos(), icon);
-        markerOverlay.setDimension(w.getDimension()).setTitle("Waystone")
+        markerOverlay.setDimension(w.getDimension())
                 .setTitle(w.getName())
                 .setTextProperties(textProperties);
 
@@ -71,10 +71,15 @@ public class WaystoneMarker {
 
         for (Map.Entry<UUID, MarkerOverlay> e : new HashMap<>(markers).entrySet()) {
             UUID uid = e.getKey();
+            String name = e.getValue().getTitle();
+
             boolean flag = false;
             for (IWaystone o : newWaystones) {
                 if (!o.hasName()) continue;
                 if (o.getWaystoneUid().equals(uid)) {
+                    if (o.getName() != name) {
+                        e.getValue().setTitle(o.getName());
+                    }
                     flag = true;
                     break;
                 }
