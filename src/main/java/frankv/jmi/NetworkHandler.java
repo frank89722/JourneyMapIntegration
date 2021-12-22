@@ -1,14 +1,14 @@
 package frankv.jmi;
 
-import frankv.jmi.ftbchunks.network.PacketClaimedData;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+//import frankv.jmi.ftbchunks.network.PacketClaimedData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class NetworkHandler {
     public static SimpleChannel CHANNEL_INSTANCE;
@@ -24,18 +24,20 @@ public class NetworkHandler {
                 s -> true,
                 s -> true);
 
-        CHANNEL_INSTANCE.messageBuilder(PacketClaimedData.class, nextID())
+        /*CHANNEL_INSTANCE.messageBuilder(PacketClaimedData.class, nextID())
                 .encoder(PacketClaimedData::write)
                 .decoder(PacketClaimedData::read)
                 .consumer(PacketClaimedData::handle)
                 .add();
+
+         */
     }
 
-    public static void sendFTBToClient(Object packet, ServerPlayerEntity player) {
+    public static void sendFTBToClient(Object packet, ServerPlayer player) {
         CHANNEL_INSTANCE.sendTo(packet, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static void sendFTBToClient(Object packet, RegistryKey<World> dim) {
+    public static void sendFTBToClient(Object packet, ResourceKey<Level> dim) {
         CHANNEL_INSTANCE.send(PacketDistributor.DIMENSION.with(() -> dim), packet);
     }
 

@@ -1,4 +1,4 @@
-package frankv.jmi.ftbchunks;
+/*package frankv.jmi.ftbchunks;
 
 import dev.ftb.mods.ftbchunks.data.ClaimedChunk;
 import dev.ftb.mods.ftbchunks.data.ClaimedChunkManager;
@@ -62,3 +62,5 @@ public class FTBChunksEventHandler {
         }
     }
 }
+
+ */

@@ -2,7 +2,7 @@ package frankv.jmi;
 
 import frankv.jmi.config.ClientConfig;
 import frankv.jmi.config.CommonConfig;
-import frankv.jmi.ftbchunks.FTBChunksEventHandler;
+//import frankv.jmi.ftbchunks.FTBChunksEventHandler;
 import frankv.jmi.jmdefaultconfig.JMDefualtConfig;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -40,7 +40,7 @@ public class JMI {
 
         if (ftbchunks) {
             LOGGER.info("FTBChunk integration loaded.");
-            new FTBChunksEventHandler();
+            //new FTBChunksEventHandler();
         }
 
         if (waystones) {

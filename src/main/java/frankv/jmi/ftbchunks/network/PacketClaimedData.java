@@ -1,10 +1,10 @@
-package frankv.jmi.ftbchunks.network;
+/*package frankv.jmi.ftbchunks.network;
 
 import dev.ftb.mods.ftbchunks.data.ClaimedChunk;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -36,11 +36,11 @@ public class PacketClaimedData {
         this.replace = replace;
     }
 
-    public static PacketClaimedData read(PacketBuffer buf){
+    public static PacketClaimedData read(FriendlyByteBuf buf){
         return new PacketClaimedData(buf.readResourceLocation(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(), buf.readVarInt(), buf.readBoolean(), buf.readBoolean());
     }
 
-    public static void write(PacketClaimedData msg, PacketBuffer buf) {
+    public static void write(PacketClaimedData msg, FriendlyByteBuf buf) {
         buf.writeResourceLocation(msg.dim);
         buf.writeVarInt(msg.x);
         buf.writeVarInt(msg.z);
@@ -57,3 +57,5 @@ public class PacketClaimedData {
         ctx.get().setPacketHandled(true);
     }
 }
+
+ */

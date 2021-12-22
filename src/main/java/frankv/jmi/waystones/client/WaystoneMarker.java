@@ -7,8 +7,7 @@ import journeymap.client.api.model.MapImage;
 import journeymap.client.api.model.TextProperties;
 import net.blay09.mods.waystones.api.IWaystone;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
@@ -59,7 +58,6 @@ public class WaystoneMarker {
         }
     }
 
-    @SubscribeEvent
     public void onKnownWaystones(KnownWaystonesEvent event) {
         if (!JMI.CLIENT_CONFIG.getWayStone()) return;
         List<IWaystone> newWaystones = new ArrayList<>(event.getWaystones());

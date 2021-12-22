@@ -6,7 +6,7 @@ import journeymap.client.api.display.IOverlayListener;
 import journeymap.client.api.display.MarkerOverlay;
 import journeymap.client.api.display.Waypoint;
 import journeymap.client.api.util.UIState;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 import java.awt.geom.Point2D;
 

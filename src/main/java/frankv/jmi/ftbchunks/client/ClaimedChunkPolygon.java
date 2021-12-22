@@ -1,4 +1,4 @@
-package frankv.jmi.ftbchunks.client;
+/*package frankv.jmi.ftbchunks.client;
 
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import frankv.jmi.JMI;
@@ -9,8 +9,8 @@ import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
 import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -93,7 +93,7 @@ public class ClaimedChunkPolygon {
     }
 
     private static PolygonOverlay createOverlay(FTBChunkData tb) {
-        final ClientPlayerEntity player = Minecraft.getInstance().player;
+        final LocalPlayer player = Minecraft.getInstance().player;
 
         String displayId = "claimed_" + tb.x + ',' + tb.z;
         ShapeProperties shapeProps = new ShapeProperties()
@@ -122,3 +122,5 @@ public class ClaimedChunkPolygon {
         queue.add(new FTBChunkData(dim, x, z, teamName, teamColor, isAdd, replace));
     }
 }
+
+ */
