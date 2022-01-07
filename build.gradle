@@ -96,7 +96,6 @@ repositories {
     maven {
         url "https://maven.architectury.dev"
         content {
-            includeGroup "me.shedaniel"
         }
     }
 
@@ -131,13 +130,13 @@ dependencies {
     compileOnly 'org.spongepowered:mixin:0.8.5'
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
-    //implementation fg.deobf("me.shedaniel:architectury-forge:1.20.28")
-    //implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1605.3.3-build.71") { transitive = false }
-    //implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1605.2.2-build.32") { transitive = false }
-    //implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1605.3.2-build.57") { transitive = false }
+    implementation fg.deobf("dev.architectury:architectury-forge:3.4.9")
+    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1801.3.5-build.106")
+    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1801.2.4-build.46")
+    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1801.3.3-build.107")
     implementation fg.deobf("curse.maven:balm-531761:3562184")
 	implementation fg.deobf("curse.maven:waystones-245755:3558793")
-    implementation fg.deobf("curse.maven:journeymap-32274:3573567")
+    implementation fg.deobf("curse.maven:journeymap-32274:3596395")
     //implementation fg.deobf("curse.maven:patchouli-306770:3459118")
     //implementation fg.deobf("curse.maven:geolosys-271856:3342071")
     //compileOnly fg.deobf("info.journeymap:journeymap-api:1.16.5-1.7-SNAPSHOT")

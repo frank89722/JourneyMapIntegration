@@ -1,4 +1,4 @@
-/*package frankv.jmi.mixin;
+package frankv.jmi.mixin;
 
 import frankv.jmi.JMI;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
@@ -39,5 +39,3 @@ public class ThemeLabelSourceMixin {
         return ClaimedChunkPolygon.getPolygonTitleByPlayerPos();
     }
 }
-
- */

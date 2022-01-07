@@ -1,6 +1,7 @@
 package frankv.jmi;
 
 //import frankv.jmi.ftbchunks.network.PacketClaimedData;
+import frankv.jmi.ftbchunks.network.PacketClaimedData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,13 +25,11 @@ public class NetworkHandler {
                 s -> true,
                 s -> true);
 
-        /*CHANNEL_INSTANCE.messageBuilder(PacketClaimedData.class, nextID())
+        CHANNEL_INSTANCE.messageBuilder(PacketClaimedData.class, nextID())
                 .encoder(PacketClaimedData::write)
                 .decoder(PacketClaimedData::read)
                 .consumer(PacketClaimedData::handle)
                 .add();
-
-         */
     }
 
     public static void sendFTBToClient(Object packet, ServerPlayer player) {

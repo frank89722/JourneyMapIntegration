@@ -4,6 +4,7 @@ import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.IOverlayListener;
 import journeymap.client.api.display.MarkerOverlay;
+import journeymap.client.api.display.ModPopupMenu;
 import journeymap.client.api.display.Waypoint;
 import journeymap.client.api.util.UIState;
 import net.minecraft.core.BlockPos;
@@ -50,5 +51,10 @@ public class WaystoneMarkerListener implements IOverlayListener {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void onOverlayMenuPopup(UIState uiState, Point2D.Double aDouble, BlockPos blockPos, ModPopupMenu modPopupMenu) {
+
     }
 }

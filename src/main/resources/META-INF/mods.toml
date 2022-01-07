@@ -35,12 +35,12 @@ The mod that add mod integration for JourneyMap.
     ordering="NONE"
     side="CLIENT"
 
-#[[dependencies.jmi]]
-#    modId="ftbchunks"
-#    mandatory=false
-#    versionRange="[1605.3.x,)"
-#    ordering="NONE"
-#    side="BOTH"
+[[dependencies.jmi]]
+    modId="ftbchunks"
+    mandatory=false
+    versionRange="[1801.3.3,)"
+    ordering="NONE"
+    side="BOTH"
 
 [[dependencies.jmi]]
     modId="waystones"

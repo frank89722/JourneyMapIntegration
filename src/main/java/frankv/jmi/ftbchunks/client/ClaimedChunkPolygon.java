@@ -1,4 +1,4 @@
-/*package frankv.jmi.ftbchunks.client;
+package frankv.jmi.ftbchunks.client;
 
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import frankv.jmi.JMI;
@@ -17,6 +17,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.*;
 
 public class ClaimedChunkPolygon {
+    private record FTBChunkData(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace){}
+
     private IClientAPI jmAPI;
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();;
     private static List<FTBChunkData> queue = new ArrayList<>();
@@ -29,7 +31,7 @@ public class ClaimedChunkPolygon {
     public static String getPolygonTitleByPlayerPos() {
         if (mc.player == null) return "";
 
-        ChunkDimPos pos = new ChunkDimPos(mc.player.clientLevel.dimension(), mc.player.xChunk, mc.player.zChunk);
+        ChunkDimPos pos = new ChunkDimPos(mc.player.clientLevel.dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
         if (chunkOverlays.containsKey(pos)) {
             return chunkOverlays.get(pos).getTitle();
         }
@@ -122,5 +124,3 @@ public class ClaimedChunkPolygon {
         queue.add(new FTBChunkData(dim, x, z, teamName, teamColor, isAdd, replace));
     }
 }
-
- */

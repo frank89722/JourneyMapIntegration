@@ -1,4 +1,4 @@
-/*package frankv.jmi.ftbchunks.network;
+package frankv.jmi.ftbchunks.network;
 
 import dev.ftb.mods.ftbchunks.data.ClaimedChunk;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
@@ -57,5 +57,3 @@ public class PacketClaimedData {
         ctx.get().setPacketHandled(true);
     }
 }
-
- */

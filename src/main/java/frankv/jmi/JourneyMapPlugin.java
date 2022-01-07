@@ -1,7 +1,7 @@
 package frankv.jmi;
 
-//import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
-//import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
+import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
+import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 //import frankv.jmi.ftbchunks.client.GUIHandler;
 import frankv.jmi.waypointmessage.WaypointChatMessage;
 import frankv.jmi.waystones.client.WaystoneMarker;
@@ -22,7 +22,7 @@ import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STOPPED;
 @journeymap.client.api.ClientPlugin
 public class JourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
-    //private ClaimedChunkPolygon claimedChunkPolygon;
+    private ClaimedChunkPolygon claimedChunkPolygon;
     public WaystoneMarker waystoneWaypoint;
 
     @Override
@@ -30,8 +30,8 @@ public class JourneyMapPlugin implements IClientPlugin {
         this.jmAPI = jmAPI;
 
         if (JMI.ftbchunks) {
-            //claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
-            //MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
+            claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
+            MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
             //MinecraftForge.EVENT_BUS.register(GUIHandler.class);
         }
 
@@ -56,11 +56,11 @@ public class JourneyMapPlugin implements IClientPlugin {
         try {
             switch (event.type) {
                 case MAPPING_STARTED:
-                    //if(JMI.ftbchunks) disableFTBChunksThings();
+                    if(JMI.ftbchunks) disableFTBChunksThings();
                     break;
 
                 case MAPPING_STOPPED:
-                    //claimedChunkPolygon.chunkOverlays.clear();
+                    claimedChunkPolygon.chunkOverlays.clear();
                     WaystoneMarker.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
                     JMI.LOGGER.debug("all elements removed.");
@@ -71,10 +71,10 @@ public class JourneyMapPlugin implements IClientPlugin {
         }
     }
 
-    /*private void disableFTBChunksThings() {
+    private void disableFTBChunksThings() {
         if (!JMI.CLIENT_CONFIG.getDisableFTBFunction()) return;
         FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
         FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
         FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);
-    }*/
+    }
 }
