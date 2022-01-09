@@ -12,7 +12,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileManager {
-    public record Version(int version) {}
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static File versionFile = new File(System.getProperty("user.dir") + "/journeymap/defaultconfig.json");
 
