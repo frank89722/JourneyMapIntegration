@@ -3,8 +3,6 @@ package frankv.jmi.jmdefaultconfig;
 import frankv.jmi.JMI;
 
 public class JMDefualtConfig {
-
-
     private static FileManager.Version existVersion;
 
     public static void tryWriteJMDefaultConfig() {
