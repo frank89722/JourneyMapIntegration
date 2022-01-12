@@ -3,7 +3,6 @@ package frankv.jmi.ftbchunks.client;
 import dev.ftb.mods.ftbchunks.net.RequestChunkChangePacket;
 import dev.ftb.mods.ftblibrary.math.XZ;
 import dev.ftb.mods.ftblibrary.ui.GuiHelper;
-import frankv.jmi.JMIOverlayHelper;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.event.FullscreenMapEvent;
 import journeymap.client.api.event.forge.PopupMenuEvent;

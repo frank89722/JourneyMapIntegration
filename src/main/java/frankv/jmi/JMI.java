@@ -2,7 +2,6 @@ package frankv.jmi;
 
 import frankv.jmi.config.ClientConfig;
 import frankv.jmi.config.CommonConfig;
-//import frankv.jmi.ftbchunks.FTBChunksEventHandler;
 import frankv.jmi.ftbchunks.FTBChunksEventHandler;
 import frankv.jmi.jmdefaultconfig.JMDefualtConfig;
 import net.minecraftforge.fml.ModList;

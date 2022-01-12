@@ -1,6 +1,5 @@
 package frankv.jmi;
 
-//import frankv.jmi.ftbchunks.network.PacketClaimedData;
 import frankv.jmi.ftbchunks.network.PacketClaimedData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
