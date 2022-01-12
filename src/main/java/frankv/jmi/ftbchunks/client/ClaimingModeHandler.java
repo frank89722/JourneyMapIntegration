@@ -26,8 +26,8 @@ import static frankv.jmi.JMIOverlayHelper.*;
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClaimingModeHandler {
     private static boolean doRecord = false;
-    private static Map<XZ, PolygonOverlay> dragPolygons = new HashMap<>();
-    private static HashSet<XZ> chunks = new HashSet<>();
+    public static Map<XZ, PolygonOverlay> dragPolygons = new HashMap<>();
+    public static HashSet<XZ> chunks = new HashSet<>();
 
     public static void preClick(FullscreenMapEvent.ClickEvent event) {
         if (!ClaimingMode.activated) return;

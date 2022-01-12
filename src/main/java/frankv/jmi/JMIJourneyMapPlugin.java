@@ -64,7 +64,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                     break;
 
                 case MAPPING_STOPPED:
-                    claimedChunkPolygon.chunkOverlays.clear();
+                    clearFTBChunksData();
                     WaystoneMarker.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
                     JMI.LOGGER.debug("all elements removed.");
@@ -96,5 +96,16 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
         FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
         FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);
+    }
+
+    private void clearFTBChunksData() {
+        ClaimedChunkPolygon.chunkOverlays.clear();
+        ClaimedChunkPolygon.chunkDatas.clear();
+        ClaimedChunkPolygon.forceLoadedOverlays.clear();
+        ClaimedChunkPolygon.queue.clear();
+        ClaimingMode.area.clear();
+        ClaimingMode.claimAreaPolygons.clear();
+        ClaimingModeHandler.dragPolygons.clear();
+        ClaimingModeHandler.chunks.clear();
     }
 }

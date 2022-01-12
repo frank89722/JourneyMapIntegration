@@ -26,7 +26,7 @@ public class ClaimingMode {
     private ClaimedChunkPolygon claimedChunkPolygon;
     public static boolean activated = false;
     private static Minecraft mc = Minecraft.getInstance();
-    private List<PolygonOverlay> claimAreaPolygons = new ArrayList<>();
+    public static List<PolygonOverlay> claimAreaPolygons = new ArrayList<>();
     public static Set<ChunkPos> area;
 
     public ClaimingMode(IClientAPI jmAPI, ClaimedChunkPolygon claimedChunkPolygon) {

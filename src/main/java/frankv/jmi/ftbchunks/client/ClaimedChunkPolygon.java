@@ -21,8 +21,8 @@ public class ClaimedChunkPolygon {
     private IClientAPI jmAPI;
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();;
     public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkDatas = new HashMap<>();
-    private static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
-    private static List<FTBChunkQueueData> queue = new ArrayList<>();
+    public static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
+    public static List<FTBChunkQueueData> queue = new ArrayList<>();
     private static Minecraft mc = Minecraft.getInstance();
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
