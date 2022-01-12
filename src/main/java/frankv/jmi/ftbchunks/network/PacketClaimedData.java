@@ -15,6 +15,7 @@ public class PacketClaimedData {
     private int teamColor;
     private boolean isAdd;
     private boolean replace;
+    private boolean forceLoaded;
 
     public PacketClaimedData(ClaimedChunk chunk, boolean isAdd, boolean replace) {
         this.x = chunk.getPos().getChunkPos().x;
@@ -24,9 +25,10 @@ public class PacketClaimedData {
         this.isAdd = isAdd;
         this.dim = chunk.getPos().dimension.location();
         this.replace = replace;
+        this.forceLoaded = chunk.isForceLoaded();
     }
 
-    public PacketClaimedData(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace) {
+    public PacketClaimedData(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace, boolean forceLoaded) {
         this.x = x;
         this.z = z;
         this.teamName = teamName;
@@ -34,10 +36,11 @@ public class PacketClaimedData {
         this.isAdd = isAdd;
         this.dim = dim;
         this.replace = replace;
+        this.forceLoaded = forceLoaded;
     }
 
     public static PacketClaimedData read(FriendlyByteBuf buf){
-        return new PacketClaimedData(buf.readResourceLocation(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(), buf.readVarInt(), buf.readBoolean(), buf.readBoolean());
+        return new PacketClaimedData(buf.readResourceLocation(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(), buf.readVarInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
     }
 
     public static void write(PacketClaimedData msg, FriendlyByteBuf buf) {
@@ -48,11 +51,12 @@ public class PacketClaimedData {
         buf.writeVarInt(msg.teamColor);
         buf.writeBoolean(msg.isAdd);
         buf.writeBoolean(msg.replace);
+        buf.writeBoolean(msg.forceLoaded);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ClaimedChunkPolygon.addToQueue(dim, x, z, teamName, teamColor, isAdd, replace);
+            ClaimedChunkPolygon.addToQueue(dim, x, z, teamName, teamColor, isAdd, replace, forceLoaded);
         });
         ctx.get().setPacketHandled(true);
     }

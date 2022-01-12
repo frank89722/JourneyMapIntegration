@@ -2,12 +2,14 @@ package frankv.jmi;
 
 import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
-//import frankv.jmi.ftbchunks.client.GUIHandler;
+import frankv.jmi.ftbchunks.client.ClaimingMode;
+import frankv.jmi.ftbchunks.client.ClaimingModeHandler;
 import frankv.jmi.waypointmessage.WaypointChatMessage;
 import frankv.jmi.waystones.client.WaystoneMarker;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
+import journeymap.client.api.event.FullscreenMapEvent;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,24 +17,26 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumSet;
 
-import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STARTED;
-import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STOPPED;
+import static journeymap.client.api.event.ClientEvent.Type.*;
 
 @ParametersAreNonnullByDefault
 @journeymap.client.api.ClientPlugin
-public class JourneyMapPlugin implements IClientPlugin {
+public class JMIJourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
     private ClaimedChunkPolygon claimedChunkPolygon;
+    private ClaimingMode claimMode;
     public WaystoneMarker waystoneWaypoint;
 
     @Override
     public void initialize(final IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
+        JMIOverlayHelper.jmAPI = jmAPI;
 
         if (JMI.ftbchunks) {
             claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
+            claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
-            //MinecraftForge.EVENT_BUS.register(GUIHandler.class);
+            MinecraftForge.EVENT_BUS.register(claimMode);
         }
 
         if (JMI.waystones) {
@@ -42,7 +46,7 @@ public class JourneyMapPlugin implements IClientPlugin {
 
         MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
 
-        this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED));
+        this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED));
         JMI.LOGGER.info("Initialized " + getClass().getName());
     }
 
@@ -64,6 +68,22 @@ public class JourneyMapPlugin implements IClientPlugin {
                     WaystoneMarker.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
                     JMI.LOGGER.debug("all elements removed.");
+                    break;
+
+                case MAP_CLICKED:
+                    if (event instanceof FullscreenMapEvent.ClickEvent.Pre) {
+                        ClaimingModeHandler.preClick((FullscreenMapEvent.ClickEvent) event);
+                    }
+                    break;
+
+                case MAP_DRAGGED:
+                    if (event instanceof FullscreenMapEvent.MouseDraggedEvent.Pre) {
+                        ClaimingModeHandler.preDrag((FullscreenMapEvent.MouseDraggedEvent) event);
+                    }
+                    break;
+
+                case MAP_MOUSE_MOVED:
+                    ClaimingModeHandler.mouseMove((FullscreenMapEvent.MouseMoveEvent) event);
                     break;
             }
         } catch (Throwable t) {
