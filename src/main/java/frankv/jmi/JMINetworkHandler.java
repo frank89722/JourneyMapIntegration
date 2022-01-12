@@ -11,7 +11,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public class NetworkHandler {
+public class JMINetworkHandler {
     public static SimpleChannel CHANNEL_INSTANCE;
     private static int ID = 0;
 
@@ -21,7 +21,7 @@ public class NetworkHandler {
 
     public static void register() {
         CHANNEL_INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(JMI.MODID, "jmi"),
-                () -> "1.0",
+                () -> "1.1",
                 s -> true,
                 s -> true);
 
