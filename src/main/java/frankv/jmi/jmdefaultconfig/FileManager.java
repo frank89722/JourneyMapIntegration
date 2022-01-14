@@ -17,7 +17,7 @@ public class FileManager {
 
     public static Version readConfigVersion() {
         Version version;
-        try (FileReader fileReader = new FileReader(versionFile)) {
+        try (var fileReader = new FileReader(versionFile)) {
             version = GSON.fromJson(fileReader, Version.class);
             if (version == null) {
                 throw new NullPointerException();
@@ -31,17 +31,16 @@ public class FileManager {
     }
 
     private static void updateVersionFile(int newVersion) throws IOException {
-        Version v;
-        v = new Version(newVersion);
-        FileWriter fileWriter = new FileWriter(versionFile);
+        var v = new Version(newVersion);
+        var fileWriter = new FileWriter(versionFile);
         GSON.toJson(v, fileWriter);
         fileWriter.flush();
         fileWriter.close();
     }
 
     public static void writeJMDefaultConfig(int newVersion) {
-        File source = new File(System.getProperty("user.dir") + "/config/jmdefaultconfig");
-        File dest = new File(System.getProperty("user.dir") + "/journeymap/");
+        var source = new File(System.getProperty("user.dir") + "/config/jmdefaultconfig");
+        var dest = new File(System.getProperty("user.dir") + "/journeymap/");
 
         if (!source.exists() || !source.isDirectory()) {
             JMI.LOGGER.error("No default config found.");

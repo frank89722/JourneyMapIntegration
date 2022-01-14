@@ -9,10 +9,8 @@ import dev.ftb.mods.ftbteams.event.TeamEvent;
 import frankv.jmi.JMI;
 import frankv.jmi.JMINetworkHandler;
 import frankv.jmi.ftbchunks.network.PacketClaimedData;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,17 +45,17 @@ public class FTBChunksEventHandler {
 
     private void resend(Team team) {
         if (!JMI.COMMON_CONFIG.getFTBChunks()) return;
-        Collection<ClaimedChunk> chunks = chunkManager.getData(team).getClaimedChunks();
-        for (ClaimedChunk c : chunks) {
+        var chunks = chunkManager.getData(team).getClaimedChunks();
+        for (var c : chunks) {
             JMINetworkHandler.sendFTBToClient(new PacketClaimedData(c, false, true));
         }
     }
 
     private void sendAllData(Player player, Collection<ClaimedChunk> chunks) {
         if (!JMI.COMMON_CONFIG.getFTBChunks()) return;
-        final ResourceKey<Level> dim = player.level.dimension();
+        var dim = player.level.dimension();
 
-        for (ClaimedChunk c : chunks) {
+        for (var c : chunks) {
             if (c.getPos().dimension == dim) {
                 JMINetworkHandler.sendFTBToClient(new PacketClaimedData(c, true, false), (ServerPlayer) player);
             }

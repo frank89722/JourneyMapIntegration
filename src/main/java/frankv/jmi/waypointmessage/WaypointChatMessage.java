@@ -22,13 +22,13 @@ public class WaypointChatMessage {
             if (!event.getItemStack().equals(ItemStack.EMPTY)) return;
         }
 
-        BlockPos blockPos = event.getHitVec().getBlockPos();
-        Block block = mc.level.getBlockState(blockPos).getBlock();
+        var blockPos = event.getHitVec().getBlockPos();
+        var block = mc.level.getBlockState(blockPos).getBlock();
 
         if (!checkBlockTags(block) || blockPos.equals(prevBlock) || !mc.player.isShiftKeyDown()) return;
 
-        String name = block.getName().getString();
-        String msg = String.format("[JMI] [name:\"%s\", x:%d, y:%d, z:%d]", name, event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+        var name = block.getName().getString();
+        var msg = String.format("[JMI] [name:\"%s\", x:%d, y:%d, z:%d]", name, event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
         mc.player.sendMessage(WaypointParserAccessor.addWaypointMarkup(msg, WaypointParser.getWaypointStrings(msg)), mc.player.getUUID());
 
         prevBlock = blockPos;

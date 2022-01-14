@@ -21,7 +21,7 @@ public class ClientConfig {
         builder.comment("Client-Side Integration");
         builder.push("FTBChunks");
         ftbChunks = builder.comment("Enable FTBChunks Integration").define("ftbChunks", true);
-        claimedChunkOverlayOpacity = builder.defineInRange("claimedChunkOverlayOpacity", 0.25f, 0f, 1.0f);
+        claimedChunkOverlayOpacity = builder.defineInRange("claimedChunkOverlayOpacity", 0.222223f, 0f, 1.0f);
         disableFTBFunction = builder.comment("Disable conflict functions for FTBChunks (MiniMap, Waypoint beam, Death waypoint)")
                 .define("disableFTBFunction", true);
         builder.pop();

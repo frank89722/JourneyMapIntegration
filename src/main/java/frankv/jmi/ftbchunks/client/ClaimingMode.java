@@ -64,7 +64,7 @@ public class ClaimingMode {
     }
 
     private void removeOverlays() {
-        for (PolygonOverlay o : this.claimAreaPolygons) {
+        for (var o : this.claimAreaPolygons) {
             jmAPI.remove(o);
         }
         claimedChunkPolygon.showForceLoadedByArea(false);
@@ -74,28 +74,26 @@ public class ClaimingMode {
 
     public static PolygonOverlay dragPolygon(XZ xz) {
         var player = Minecraft.getInstance().player;
+        var displayId = "drag_polygon_" + xz.x + "_" + xz.z;
 
-        String displayId = "drag_polygon_" + xz.x + "_" + xz.z;
-
-        ShapeProperties shapeProps = new ShapeProperties()
+        var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
                 .setFillColor(0xffffff).setFillOpacity(.3f);
 
-        MapPolygon polygon = PolygonHelper.createChunkPolygon(xz.x, 10, xz.z);
+        var polygon = PolygonHelper.createChunkPolygon(xz.x, 10, xz.z);
 
         return new PolygonOverlay(JMI.MODID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
     public static PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
         var player = Minecraft.getInstance().player;
+        var displayId = "ftb_force_loaded_" + pos.x + "_" + pos.z;
 
-        String displayId = "ftb_force_loaded_" + pos.x + "_" + pos.z;
-
-        ShapeProperties shapeProps = new ShapeProperties()
+        var shapeProps = new ShapeProperties()
                 .setStrokeWidth(2).setStrokeColor(0xff0000)
                 .setFillOpacity(0f);
 
-        MapPolygon polygon = PolygonHelper.createChunkPolygon(pos.x, 10, pos.z);
+        var polygon = PolygonHelper.createChunkPolygon(pos.x, 10, pos.z);
 
         return new PolygonOverlay(JMI.MODID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
     }
@@ -104,15 +102,14 @@ public class ClaimingMode {
         var player = Minecraft.getInstance().player;
         var startPoint = new ChunkPos(player.chunkPosition().x-7, player.chunkPosition().z-7);
 
-        String displayId = "claim_mode";
-
-        ShapeProperties shapeProps = new ShapeProperties()
+        var displayId = "claim_mode";
+        var shapeProps = new ShapeProperties()
                 .setStrokeWidth(3)
                 .setStrokeColor(0xffffff).setStrokeOpacity(1.0f)
                 .setFillOpacity(0f);
 
-        for (int x=0; x<15; ++x) {
-            for (int z=0; z<15; ++z){
+        for (var x=0; x<15; x++) {
+            for (var z=0; z<15; z++){
                 this.area.add(new ChunkPos(startPoint.x+x, startPoint.z+z));
             }
         }
@@ -121,7 +118,7 @@ public class ClaimingMode {
 
         var polygons = PolygonHelper.createChunksPolygon(this.area, 100);
 
-        for (final MapPolygonWithHoles polygon : polygons) {
+        for (var polygon : polygons) {
             final PolygonOverlay overlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygon);
             if (JMIOverlayHelper.createPolygon(overlay)) this.claimAreaPolygons.add(overlay);
         }
