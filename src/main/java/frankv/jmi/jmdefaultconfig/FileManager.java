@@ -31,8 +31,7 @@ public class FileManager {
     }
 
     private static void updateVersionFile(int newVersion) throws IOException {
-        Version v;
-        v = new Version(newVersion);
+        Version v = new Version(newVersion);
         FileWriter fileWriter = new FileWriter(versionFile);
         GSON.toJson(v, fileWriter);
         fileWriter.flush();

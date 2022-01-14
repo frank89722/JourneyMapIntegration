@@ -5,7 +5,6 @@ import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.MarkerOverlay;
 import journeymap.client.api.model.MapImage;
 import journeymap.client.api.model.TextProperties;
-import net.blay09.mods.waystones.api.IWaystone;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,13 +13,13 @@ import java.util.*;
 
 public class WaystoneMarker {
     private IClientAPI jmAPI;
-    public static HashMap<UUID, MarkerOverlay> markers = new HashMap<>();
+    public static HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
 
     public WaystoneMarker(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
     }
 
-    private void createMarker(IWaystone w) {
+    private void createMarker(ComparableWaystone waystone) {
         ResourceLocation marker = new ResourceLocation("jmi:images/waystone.png");
         MapImage icon = new MapImage(marker, 32, 32)
                 .setAnchorX(12.0d)
@@ -30,30 +29,29 @@ public class WaystoneMarker {
                 .setColor(JMI.CLIENT_CONFIG.getWaystoneColor());
 
         TextProperties textProperties = new TextProperties()
-                .setMinZoom(2)
                 .setOpacity(1.0f);
 
-        MarkerOverlay markerOverlay = new MarkerOverlay(JMI.MODID, "waystone_" + w.getPos(), w.getPos(), icon);
-        markerOverlay.setDimension(w.getDimension())
-                .setTitle(w.getName())
+        MarkerOverlay markerOverlay = new MarkerOverlay(JMI.MODID, "waystone_" + waystone.pos, waystone.pos, icon);
+        markerOverlay.setDimension(waystone.dim)
+                .setTitle(waystone.name)
                 .setTextProperties(textProperties);
 
         markerOverlay.setOverlayListener(new WaystoneMarkerListener(markerOverlay, jmAPI));
 
         try {
             jmAPI.show(markerOverlay);
-            markers.put(w.getWaystoneUid(), markerOverlay);
+            markers.put(waystone, markerOverlay);
         } catch (Exception e) {
             JMI.LOGGER.error(e);
         }
     }
 
-    private void removeMarker(UUID uid) {
-        if (!markers.containsKey(uid)) return;
+    private void removeMarker(ComparableWaystone waystone) {
+        if (!markers.containsKey(waystone)) return;
 
         try {
-            jmAPI.remove(markers.remove(uid));
-            markers.remove(uid);
+            jmAPI.remove(markers.remove(waystone));
+            markers.remove(waystone);
         } catch (Exception e) {
             JMI.LOGGER.error(e);
         }
@@ -62,29 +60,20 @@ public class WaystoneMarker {
     @SubscribeEvent
     public void onKnownWaystones(KnownWaystonesEvent event) {
         if (!JMI.CLIENT_CONFIG.getWayStone()) return;
-        List<IWaystone> newWaystones = new ArrayList<>(event.getWaystones());
+        Set<ComparableWaystone> newWaystones = new HashSet<>(ComparableWaystone.fromEvent(event));
+        Set<ComparableWaystone> oldWaystones = new HashSet<>(markers.keySet());
 
-        for (IWaystone o : newWaystones) {
-            if (!o.hasName() || markers.containsKey(o.getWaystoneUid())) continue;
-            createMarker(o);
-        }
+        //---------
+        // KnownWaystonesEvent give a list with only a waystone in when there is a new waystone got placed. That why this exist
+        if (newWaystones.size() == 1 && oldWaystones.size() > 2) return;
+        //---------
 
-        for (Map.Entry<UUID, MarkerOverlay> e : new HashMap<>(markers).entrySet()) {
-            UUID uid = e.getKey();
-            String name = e.getValue().getTitle();
+        Set<ComparableWaystone> addWaystones = new HashSet<>(newWaystones);
+        Set<ComparableWaystone> rmvWaystones = new HashSet<>(oldWaystones);
 
-            boolean flag = false;
-            for (IWaystone o : newWaystones) {
-                if (!o.hasName()) continue;
-                if (o.getWaystoneUid().equals(uid)) {
-                    if (o.getName() != name) {
-                        e.getValue().setTitle(o.getName());
-                    }
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag) removeMarker(uid);
-        }
+        rmvWaystones.removeAll(newWaystones);
+        addWaystones.removeAll(oldWaystones);
+        rmvWaystones.forEach(w -> removeMarker(w));
+        addWaystones.forEach(w -> createMarker(w));
     }
 }

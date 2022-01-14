@@ -36,7 +36,7 @@ public class JMI {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        NetworkHandler.register();
+        JMINetworkHandler.register();
 
         if (ftbchunks) {
             LOGGER.info("FTBChunk integration loaded.");

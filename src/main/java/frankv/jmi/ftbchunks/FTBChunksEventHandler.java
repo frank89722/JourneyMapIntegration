@@ -7,7 +7,7 @@ import dev.ftb.mods.ftbchunks.event.ClaimedChunkEvent;
 import dev.ftb.mods.ftbteams.data.Team;
 import dev.ftb.mods.ftbteams.event.TeamEvent;
 import frankv.jmi.JMI;
-import frankv.jmi.NetworkHandler;
+import frankv.jmi.JMINetworkHandler;
 import frankv.jmi.ftbchunks.network.PacketClaimedData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -23,8 +23,10 @@ public class FTBChunksEventHandler {
     private static ClaimedChunkManager chunkManager = null;
 
     public FTBChunksEventHandler() {
-        ClaimedChunkEvent.AFTER_CLAIM.register((source, chunk) -> NetworkHandler.sendFTBToClient(new PacketClaimedData(chunk, true, false), chunk.getPos().dimension));
-        ClaimedChunkEvent.AFTER_UNCLAIM.register((source, chunk) -> NetworkHandler.sendFTBToClient(new PacketClaimedData(chunk, false, false), chunk.getPos().dimension));
+        ClaimedChunkEvent.AFTER_CLAIM.register((source, chunk) -> JMINetworkHandler.sendFTBToClient(new PacketClaimedData(chunk, true, false), chunk.getPos().dimension));
+        ClaimedChunkEvent.AFTER_UNCLAIM.register((source, chunk) -> JMINetworkHandler.sendFTBToClient(new PacketClaimedData(chunk, false, false), chunk.getPos().dimension));
+        ClaimedChunkEvent.AFTER_LOAD.register((source, chunk) -> JMINetworkHandler.sendFTBToClient(new PacketClaimedData(chunk, true, true), chunk.getPos().dimension));
+        ClaimedChunkEvent.AFTER_UNLOAD.register((source, chunk) -> JMINetworkHandler.sendFTBToClient(new PacketClaimedData(chunk, true, true), chunk.getPos().dimension));
         TeamEvent.PROPERTIES_CHANGED.register((team) -> resend(team.getTeam()));
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -47,7 +49,7 @@ public class FTBChunksEventHandler {
         if (!JMI.COMMON_CONFIG.getFTBChunks()) return;
         Collection<ClaimedChunk> chunks = chunkManager.getData(team).getClaimedChunks();
         for (ClaimedChunk c : chunks) {
-            NetworkHandler.sendFTBToClient(new PacketClaimedData(c, false, true));
+            JMINetworkHandler.sendFTBToClient(new PacketClaimedData(c, false, true));
         }
     }
 
@@ -57,7 +59,7 @@ public class FTBChunksEventHandler {
 
         for (ClaimedChunk c : chunks) {
             if (c.getPos().dimension == dim) {
-                NetworkHandler.sendFTBToClient(new PacketClaimedData(c, true, false), (ServerPlayerEntity) player);
+                JMINetworkHandler.sendFTBToClient(new PacketClaimedData(c, true, false), (ServerPlayerEntity) player);
             }
         }
     }

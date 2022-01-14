@@ -1,34 +1,43 @@
 package frankv.jmi;
 
 import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
+import frankv.jmi.ftbchunks.client.ClaimingMode;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
+import frankv.jmi.ftbchunks.client.ClaimingModeHandler;
 import frankv.jmi.waypointmessage.WaypointChatMessage;
 import frankv.jmi.waystones.client.WaystoneMarker;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
+import journeymap.client.api.event.FullscreenMapEvent;
+import journeymap.client.ui.theme.ThemeLabelSource;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumSet;
 
-import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STARTED;
-import static journeymap.client.api.event.ClientEvent.Type.MAPPING_STOPPED;
+import static journeymap.client.api.event.ClientEvent.Type.*;
 
 @ParametersAreNonnullByDefault
 @journeymap.client.api.ClientPlugin
-public class JourneyMapPlugin implements IClientPlugin {
+public class JMIJourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
     private ClaimedChunkPolygon claimedChunkPolygon;
+    private ClaimingMode claimMode;
     public WaystoneMarker waystoneWaypoint;
 
     @Override
     public void initialize(final IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
+        JMIOverlayHelper.jmAPI = jmAPI;
 
         if (JMI.ftbchunks) {
             claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
+            claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
+            MinecraftForge.EVENT_BUS.register(claimMode);
+
+            ThemeLabelSource.create(JMI.MODID, "jmi.theme.lablesource.claimed", 1000L, 1L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
         }
 
         if (JMI.waystones) {
@@ -38,7 +47,7 @@ public class JourneyMapPlugin implements IClientPlugin {
 
         MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
 
-        this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED));
+        this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED));
         JMI.LOGGER.info("Initialized " + getClass().getName());
     }
 
@@ -56,9 +65,26 @@ public class JourneyMapPlugin implements IClientPlugin {
                     break;
 
                 case MAPPING_STOPPED:
-                    claimedChunkPolygon.chunkOverlays.clear();
+                    clearFTBChunksData();
                     WaystoneMarker.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
+                    JMI.LOGGER.debug("all elements removed.");
+                    break;
+
+                case MAP_CLICKED:
+                    if (event instanceof FullscreenMapEvent.ClickEvent.Pre) {
+                        ClaimingModeHandler.preClick((FullscreenMapEvent.ClickEvent) event);
+                    }
+                    break;
+
+                case MAP_DRAGGED:
+                    if (event instanceof FullscreenMapEvent.MouseDraggedEvent.Pre) {
+                        ClaimingModeHandler.preDrag((FullscreenMapEvent.MouseDraggedEvent) event);
+                    }
+                    break;
+
+                case MAP_MOUSE_MOVED:
+                    ClaimingModeHandler.mouseMove((FullscreenMapEvent.MouseMoveEvent) event);
                     break;
             }
         } catch (Throwable t) {
@@ -71,5 +97,16 @@ public class JourneyMapPlugin implements IClientPlugin {
         FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
         FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
         FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);
+    }
+
+    private void clearFTBChunksData() {
+        ClaimedChunkPolygon.chunkOverlays.clear();
+        ClaimedChunkPolygon.chunkData.clear();
+        ClaimedChunkPolygon.forceLoadedOverlays.clear();
+        ClaimedChunkPolygon.queue.clear();
+        ClaimingMode.area.clear();
+        ClaimingMode.claimAreaPolygons.clear();
+        ClaimingModeHandler.dragPolygons.clear();
+        ClaimingModeHandler.chunks.clear();
     }
 }
