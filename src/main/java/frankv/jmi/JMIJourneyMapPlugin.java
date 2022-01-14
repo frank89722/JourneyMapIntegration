@@ -10,6 +10,7 @@ import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.event.FullscreenMapEvent;
+import journeymap.client.ui.theme.ThemeLabelSource;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,6 +38,8 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimMode);
+
+            ThemeLabelSource.create(JMI.MODID, "jmi.theme.lablesource.claimed", 1000L, 1L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
         }
 
         if (JMI.waystones) {

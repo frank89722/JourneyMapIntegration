@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_17",
   "priority": 1000,
   "client": [
-    "ThemeLabelSourceMixin",
     "WaypointParserAccessor"
   ],
   "injectors": {

@@ -33,12 +33,11 @@ public class ClaimedChunkPolygon {
 
     public static String getPolygonTitleByPlayerPos() {
         if (mc.player == null) return "";
+        if (!JMI.ftbchunks) return "";
 
         var pos = new ChunkDimPos(mc.player.clientLevel.dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
-        if (chunkOverlays.containsKey(pos)) {
-            return chunkOverlays.get(pos).getTitle();
-        }
-        return "Wilderness";
+        if (!chunkOverlays.containsKey(pos)) return "Wilderness";
+        return chunkOverlays.get(pos).getTitle();
     }
 
     @SubscribeEvent
