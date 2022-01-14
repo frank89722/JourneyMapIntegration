@@ -22,7 +22,7 @@ public class ClaimedChunkPolygon {
 
     private IClientAPI jmAPI;
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();
-    public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkDatas = new HashMap<>();
+    public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
     public static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
     public static List<FTBChunkQueueData> queue = new ArrayList<>();
     private static Minecraft mc = Minecraft.getInstance();
@@ -74,7 +74,7 @@ public class ClaimedChunkPolygon {
             if (!chunkOverlays.containsKey(pos)) {
                 var overlay = createClaimedChunkOverlay(queue.get(0).chunkData);
                 chunkOverlays.put(pos, overlay);
-                chunkDatas.put(pos, data);
+                chunkData.put(pos, data);
                 jmAPI.show(overlay);
             }
         } catch (Throwable t) {
@@ -88,7 +88,7 @@ public class ClaimedChunkPolygon {
         try {
             jmAPI.remove(chunkOverlays.get(pos));
             chunkOverlays.remove(pos);
-            chunkDatas.remove(pos);
+            chunkData.remove(pos);
         } catch (Throwable t) {
             JMI.LOGGER.error(t.getMessage(), t);
         }
@@ -132,7 +132,7 @@ public class ClaimedChunkPolygon {
 
         if (!show) {
             for (var pos : forceLoadedOverlays.keySet()) {
-                chunkOverlays.get(pos).setTitle(chunkDatas.get(pos).teamName);
+                chunkOverlays.get(pos).setTitle(chunkData.get(pos).teamName);
             }
 
             removePolygons(forceLoadedOverlays.values());
@@ -147,8 +147,8 @@ public class ClaimedChunkPolygon {
     }
 
     private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
-        if (!chunkDatas.containsKey(chunkDimPos)) return;
-        var chunkData = (FTBClaimedChunkData) chunkDatas.get(chunkDimPos);
+        if (!chunkData.containsKey(chunkDimPos)) return;
+        var chunkData = (FTBClaimedChunkData) ClaimedChunkPolygon.chunkData.get(chunkDimPos);
         var teamName = chunkData.teamName;
 
         if (show && chunkData.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {

@@ -103,7 +103,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
 
     private void clearFTBChunksData() {
         ClaimedChunkPolygon.chunkOverlays.clear();
-        ClaimedChunkPolygon.chunkDatas.clear();
+        ClaimedChunkPolygon.chunkData.clear();
         ClaimedChunkPolygon.forceLoadedOverlays.clear();
         ClaimedChunkPolygon.queue.clear();
         ClaimingMode.area.clear();
