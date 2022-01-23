@@ -30,9 +30,10 @@ public class ClaimingModeHandler {
 
     public static void preClick(FullscreenMapEvent.ClickEvent event) {
         if (!ClaimingMode.activated) return;
-        var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
 
+        var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
         if (!ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z))) return;
+
         doRecord = true;
         addToWaitingList(xz);
         event.cancel();
@@ -40,9 +41,10 @@ public class ClaimingModeHandler {
 
     public static void preDrag(FullscreenMapEvent.MouseDraggedEvent event) {
         if (!ClaimingMode.activated) return;
-        var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
 
+        var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
         if (!ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z))) return;
+
         event.cancel();
     }
 
@@ -52,20 +54,22 @@ public class ClaimingModeHandler {
         var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
         if (!ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z))) return;
         if (chunks.contains(xz)) return;
+
         addToWaitingList(xz);
     }
 
     private static void addToWaitingList(XZ xz) {
         var polygon = ClaimingMode.dragPolygon(xz);
         if (!createPolygon(polygon)) return;
+
         dragPolygons.put(xz, polygon);
         chunks.add(xz);
     }
 
     private static void applyChanges(int mouseButton) {
         doRecord = false;
-
         if (chunks.isEmpty()) return;
+
         new RequestChunkChangePacket(Screen.hasShiftDown() ? mouseButton+2 : mouseButton, chunks).sendToServer();
         removePolygons(dragPolygons.values());
         chunks.clear();
@@ -78,6 +82,7 @@ public class ClaimingModeHandler {
         if (!doRecord) return;
         if (event.getAction() != GLFW.GLFW_RELEASE) return;
         if (event.getButton() > 1) return;
+
         applyChanges(event.getButton());
     }
 

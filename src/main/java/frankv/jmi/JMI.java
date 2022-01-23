@@ -22,8 +22,8 @@ public class JMI {
     public static final CommonConfig COMMON_CONFIG = new CommonConfig();
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
-    public static boolean waystones = false;
-    public static boolean ftbchunks = false;
+    public static boolean waystones;
+    public static boolean ftbchunks;
 
     public JMI() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

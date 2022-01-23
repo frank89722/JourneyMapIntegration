@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 
@@ -37,12 +37,8 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            properties 'mixin.env.remapRefMap': 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-
-            arg "-mixin.config=jmi.mixins.json"
 
             mods {
                 jmi {
@@ -53,12 +49,8 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            properties 'mixin.env.remapRefMap': 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-
-            arg "-mixin.config=jmi.mixins.json"
 
             mods {
                 jmi {
@@ -69,8 +61,6 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            properties 'mixin.env.remapRefMap': 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
@@ -121,7 +111,6 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${MC_VERSION}-${FORGE_VERSION}"
 
-    compileOnly 'org.spongepowered:mixin:0.8.5'
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
     implementation fg.deobf("dev.architectury:architectury-forge:3.4.9")
@@ -130,13 +119,20 @@ dependencies {
     implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1801.3.3-build.113")
     implementation fg.deobf("curse.maven:balm-531761:3584832")
     implementation fg.deobf("curse.maven:waystones-245755:3558793")
-    implementation fg.deobf("curse.maven:journeymap-32274:3605663")
+    implementation fg.deobf("curse.maven:journeymap-32274:3612223")
     //compileOnly fg.deobf("info.journeymap:journeymap-api:1.16.5-1.7-SNAPSHOT")
 
 }
 
 mixin {
     add sourceSets.main, "jmi.refmap.json"
+    config "jmi.mixins.json"
+
+    debug.verbose = true
+    debug.export = true
+    dumpTargetOnFailure = true
+
+    quiet
 }
 
 jar {

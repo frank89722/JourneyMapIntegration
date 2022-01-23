@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class CommonConfig {
     private ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-    private ForgeConfigSpec.BooleanValue ftbChunks;
+    private final ForgeConfigSpec.BooleanValue ftbChunks;
 
     public CommonConfig() {
         builder.comment("Server-side functions that required for Client-Side integrations to work.");
