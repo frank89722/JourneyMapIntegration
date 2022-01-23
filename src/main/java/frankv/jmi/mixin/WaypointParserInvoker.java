@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.List;
 
 @Mixin(WaypointParser.class)
-public interface WaypointParserAccessor {
-    @Invoker("addWaypointMarkup")
+public interface WaypointParserInvoker {
+    @Invoker(value = "addWaypointMarkup", remap = false)
     static Component addWaypointMarkup(String text, List<String> matches) {
         return null;
     }

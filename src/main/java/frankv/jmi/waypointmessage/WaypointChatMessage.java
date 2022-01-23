@@ -1,7 +1,7 @@
 package frankv.jmi.waypointmessage;
 
 import frankv.jmi.JMI;
-import frankv.jmi.mixin.WaypointParserAccessor;
+import frankv.jmi.mixin.WaypointParserInvoker;
 import journeymap.client.waypoint.WaypointParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ public class WaypointChatMessage {
 
         var name = block.getName().getString();
         var msg = String.format("[JMI] [name:\"%s\", x:%d, y:%d, z:%d]", name, event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
-        mc.player.sendMessage(WaypointParserAccessor.addWaypointMarkup(msg, WaypointParser.getWaypointStrings(msg)), mc.player.getUUID());
+        mc.player.sendMessage(WaypointParserInvoker.addWaypointMarkup(msg, WaypointParser.getWaypointStrings(msg)), mc.player.getUUID());
 
         prevBlock = blockPos;
         event.setCanceled(true);
