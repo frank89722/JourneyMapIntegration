@@ -10,7 +10,7 @@ import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.event.FullscreenMapEvent;
-import journeymap.client.ui.theme.ThemeLabelSource;
+import journeymap.client.api.event.RegistryEvent;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,8 +38,6 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimMode);
-
-            ThemeLabelSource.create(JMI.MODID, "jmi.theme.lablesource.claimed", 1000L, 1L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
         }
 
         if (JMI.waystones) {
@@ -62,32 +60,38 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     public void onEvent(ClientEvent event) {
         try {
             switch (event.type) {
-                case MAPPING_STARTED:
+                case MAPPING_STARTED -> {
                     if(JMI.ftbchunks) disableFTBChunksThings();
-                    break;
+                }
 
-                case MAPPING_STOPPED:
+                case MAPPING_STOPPED -> {
                     clearFTBChunksData();
                     WaystoneMarker.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
                     JMI.LOGGER.debug("all elements removed.");
-                    break;
+                }
 
-                case MAP_CLICKED:
+                case MAP_CLICKED -> {
                     if (event instanceof FullscreenMapEvent.ClickEvent.Pre) {
                         ClaimingModeHandler.preClick((FullscreenMapEvent.ClickEvent) event);
                     }
-                    break;
+                }
 
-                case MAP_DRAGGED:
+                case MAP_DRAGGED -> {
                     if (event instanceof FullscreenMapEvent.MouseDraggedEvent.Pre) {
                         ClaimingModeHandler.preDrag((FullscreenMapEvent.MouseDraggedEvent) event);
                     }
-                    break;
+                }
 
-                case MAP_MOUSE_MOVED:
-                    ClaimingModeHandler.mouseMove((FullscreenMapEvent.MouseMoveEvent) event);
-                    break;
+                case REGISTRY -> {
+                    var registryEvent = (RegistryEvent) event;
+
+                    switch (registryEvent.getRegistryType()) {
+                        case INFO_SLOT -> ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MODID, "jmi.theme.lablesource.claimed", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
+                    }
+                }
+
+                case MAP_MOUSE_MOVED -> ClaimingModeHandler.mouseMove((FullscreenMapEvent.MouseMoveEvent) event);
             }
         } catch (Throwable t) {
             JMI.LOGGER.error(t.getMessage(), t);
@@ -106,7 +110,6 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         ClaimedChunkPolygon.chunkData.clear();
         ClaimedChunkPolygon.forceLoadedOverlays.clear();
         ClaimedChunkPolygon.queue.clear();
-        ClaimingMode.area.clear();
         ClaimingMode.claimAreaPolygons.clear();
         ClaimingModeHandler.dragPolygons.clear();
         ClaimingModeHandler.chunks.clear();
