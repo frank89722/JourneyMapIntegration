@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17
-          distribution: liberica
+          distribution: temurin
 
       - uses: actions/cache@v2
         with:
