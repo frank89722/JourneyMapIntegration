@@ -8,14 +8,15 @@ import java.util.List;
 public class ClientConfig {
     private ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-    private ForgeConfigSpec.BooleanValue ftbChunks;
-    private ForgeConfigSpec.BooleanValue waystone;
-    private ForgeConfigSpec.ConfigValue<List<? extends String>> waypointMessageBlocks;
-    private ForgeConfigSpec.BooleanValue waypointMessageEmptyHandOnly;
-    private ForgeConfigSpec.DoubleValue claimedChunkOverlayOpacity;
-    private ForgeConfigSpec.BooleanValue disableFTBFunction;
-    private ForgeConfigSpec.IntValue waystoneColor;
-    private ForgeConfigSpec.IntValue defaultConfigVersion;
+    private final ForgeConfigSpec.BooleanValue ftbChunks;
+    private final ForgeConfigSpec.BooleanValue waystone;
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> waypointMessageBlocks;
+    private final ForgeConfigSpec.BooleanValue waypointMessageEmptyHandOnly;
+    private final ForgeConfigSpec.DoubleValue claimedChunkOverlayOpacity;
+    private final ForgeConfigSpec.BooleanValue disableFTBFunction;
+    private final ForgeConfigSpec.BooleanValue showClaimChunkScreen;
+    private final ForgeConfigSpec.IntValue waystoneColor;
+    private final ForgeConfigSpec.IntValue defaultConfigVersion;
 
     public ClientConfig() {
         builder.comment("Client-Side Integration");
@@ -24,6 +25,7 @@ public class ClientConfig {
         claimedChunkOverlayOpacity = builder.defineInRange("claimedChunkOverlayOpacity", 0.222223f, 0f, 1.0f);
         disableFTBFunction = builder.comment("Disable conflict functions for FTBChunks (MiniMap, Waypoint beam, Death waypoint)")
                 .define("disableFTBFunction", true);
+        showClaimChunkScreen = builder.comment("Show chunk claiming screen first instead of large map screen.").define("showClaimChunkScreen", true);
         builder.pop();
 
         builder.push("Waystones");
@@ -69,6 +71,10 @@ public class ClientConfig {
 
     public boolean getDisableFTBFunction() {
         return disableFTBFunction.get();
+    }
+
+    public boolean getShowClaimChunkScreen() {
+        return showClaimChunkScreen.get();
     }
 
     public int getWaystoneColor() {

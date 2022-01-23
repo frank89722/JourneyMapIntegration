@@ -1,11 +1,12 @@
 {
-  "required": true,
+  "required": false,
   "package": "frankv.jmi.mixin",
   "refmap": "jmi.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "priority": 1000,
   "client": [
-    "WaypointParserAccessor"
+    "FTBChunksClientMixin",
+    "WaypointParserInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
