@@ -149,10 +149,10 @@ public class ClaimedChunkPolygon {
 
     private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
         if (!chunkData.containsKey(chunkDimPos)) return;
-        FTBClaimedChunkData chunkData = ClaimedChunkPolygon.chunkData.get(chunkDimPos);
-        String teamName = chunkData.teamName;
+        FTBClaimedChunkData data = ClaimedChunkPolygon.chunkData.get(chunkDimPos);
+        String teamName = data.teamName;
 
-        if (show && chunkData.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {
+        if (show && data.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {
             PolygonOverlay claimedOverlay = ClaimingMode.forceLoadedPolygon(chunkDimPos);
             if (JMIOverlayHelper.createPolygon(claimedOverlay)) forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
 

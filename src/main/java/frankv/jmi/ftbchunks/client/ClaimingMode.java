@@ -18,18 +18,15 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ClaimingMode {
     private IClientAPI jmAPI;
     private ClaimedChunkPolygon claimedChunkPolygon;
     public static boolean activated = false;
     private static Minecraft mc = Minecraft.getInstance();
-    public static List<PolygonOverlay> claimAreaPolygons = new ArrayList<>();
-    public static Set<ChunkPos> area;
+    public static List<PolygonOverlay> claimAreaPolygons = new LinkedList<>();
+    public static Set<ChunkPos> area = new HashSet<>();
 
     public ClaimingMode(IClientAPI jmAPI, ClaimedChunkPolygon claimedChunkPolygon) {
         this.jmAPI = jmAPI;

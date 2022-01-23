@@ -43,7 +43,7 @@ public class FileManager {
         File dest = new File(System.getProperty("user.dir") + "/journeymap/");
 
         if (!source.exists() || !source.isDirectory()) {
-            JMI.LOGGER.error("No default config found.");
+            JMI.LOGGER.warn("No default config found.");
             return;
         }
 

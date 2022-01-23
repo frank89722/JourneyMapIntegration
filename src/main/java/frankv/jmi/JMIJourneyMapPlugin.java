@@ -10,7 +10,7 @@ import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.event.FullscreenMapEvent;
-import journeymap.client.ui.theme.ThemeLabelSource;
+import journeymap.client.api.event.RegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -36,8 +36,6 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimMode);
-
-            ThemeLabelSource.create(JMI.MODID, "jmi.theme.lablesource.claimed", 1000L, 1L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
         }
 
         if (JMI.waystones) {
@@ -86,6 +84,16 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                 case MAP_MOUSE_MOVED:
                     ClaimingModeHandler.mouseMove((FullscreenMapEvent.MouseMoveEvent) event);
                     break;
+
+                case REGISTRY:
+                    RegistryEvent registryEvent = (RegistryEvent) event;
+
+                    switch (registryEvent.getRegistryType()) {
+                        case INFO_SLOT:
+                            ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MODID, "jmi.theme.lablesource.claimed", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
+                            break;
+                    }
+                    break;
             }
         } catch (Throwable t) {
             JMI.LOGGER.error(t.getMessage(), t);
@@ -104,7 +112,6 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         ClaimedChunkPolygon.chunkData.clear();
         ClaimedChunkPolygon.forceLoadedOverlays.clear();
         ClaimedChunkPolygon.queue.clear();
-        ClaimingMode.area.clear();
         ClaimingMode.claimAreaPolygons.clear();
         ClaimingModeHandler.dragPolygons.clear();
         ClaimingModeHandler.chunks.clear();
