@@ -45,7 +45,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
 
         MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
 
-        this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED));
+        this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
         JMI.LOGGER.info("Initialized " + getClass().getName());
     }
 
