@@ -1,5 +1,7 @@
 package frankv.jmi.ftbchunks.client;
 
+import dev.ftb.mods.ftbchunks.client.map.MapDimension;
+import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import frankv.jmi.JMI;
 import frankv.jmi.JMIOverlayHelper;
@@ -9,7 +11,6 @@ import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
 import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -18,13 +19,11 @@ import java.util.*;
 import static frankv.jmi.JMIOverlayHelper.removePolygons;
 
 public class ClaimedChunkPolygon {
-    private record FTBChunkQueueData (FTBClaimedChunkData chunkData, boolean isAdd, boolean replace) {}
-
     private IClientAPI jmAPI;
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();
     public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
     public static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
-    public static List<FTBChunkQueueData> queue = new ArrayList<>();
+    public static List<FTBClaimedChunkData> queue = new ArrayList<>();
     private static Minecraft mc = Minecraft.getInstance();
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
@@ -33,7 +32,6 @@ public class ClaimedChunkPolygon {
 
     public static String getPolygonTitleByPlayerPos() {
         if (mc.player == null) return "";
-        if (!JMI.ftbchunks) return "";
 
         var pos = new ChunkDimPos(mc.player.clientLevel.dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
         if (!chunkOverlays.containsKey(pos)) return "Wilderness";
@@ -47,32 +45,30 @@ public class ClaimedChunkPolygon {
 
         for (var i = 0; i<60; ++i) {
             if (queue == null || queue.isEmpty()) return;
-            if (!mc.player.clientLevel.dimension().equals(queue.get(0).chunkData.chunkDimPos.dimension)) {
+
+            if (queue.get(0).team == null) {
+                removePolygon(queue.get(0));
                 queue.remove(0);
                 continue;
             }
 
-            if (queue.get(0).replace) {
-                replacePolygon(queue.get(0).chunkData);
+            if (shouldReplace(queue.get(0))) {
+                replacePolygon(queue.get(0));
                 queue.remove(0);
                 continue;
             }
 
-            if (queue.get(0).isAdd) {
-                addPolygon(queue.get(0).chunkData);
-            } else {
-                removePolygon(queue.get(0).chunkData);
-            }
-
+            addPolygon(queue.get(0));
             queue.remove(0);
         }
     }
 
     private void addPolygon(FTBClaimedChunkData data) {
         var pos = data.chunkDimPos;
+
         try {
             if (!chunkOverlays.containsKey(pos)) {
-                var overlay = createClaimedChunkOverlay(queue.get(0).chunkData);
+                var overlay = createClaimedChunkOverlay(queue.get(0));
                 chunkOverlays.put(pos, overlay);
                 chunkData.put(pos, data);
                 jmAPI.show(overlay);
@@ -165,8 +161,16 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    public static void addToQueue(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace, boolean forceLoaded) {
+    public static void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
         if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
-        queue.add(new FTBChunkQueueData(new FTBClaimedChunkData(dim, x, z, teamName, teamColor, forceLoaded), isAdd, replace));
+        queue.add(new FTBClaimedChunkData(dim, chunk, teamId));
+    }
+
+    private static boolean shouldReplace(FTBClaimedChunkData data) {
+        if (data.team == null) return false;
+
+        var that = chunkData.get(data.chunkDimPos);
+        if (that == null) return false;
+        return !data.equals(that);
     }
 }
