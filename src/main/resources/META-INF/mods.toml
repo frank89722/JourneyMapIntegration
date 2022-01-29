@@ -40,11 +40,11 @@ The mod that add mod integration for JourneyMap.
     mandatory=false
     versionRange="[1801.3.3,)"
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"
 
 [[dependencies.jmi]]
     modId="waystones"
     mandatory=false
     versionRange="[9.0.0,)"
     ordering="NONE"
-    side="BOTH"
+    side="CLIENT"
