@@ -33,7 +33,7 @@ public class WaystoneMarker {
 
         MarkerOverlay markerOverlay = new MarkerOverlay(JMI.MODID, "waystone_" + waystone.pos, waystone.pos, icon);
         markerOverlay.setDimension(waystone.dim)
-                .setTitle(waystone.name)
+                .setLabel(waystone.name)
                 .setTextProperties(textProperties);
 
         markerOverlay.setOverlayListener(new WaystoneMarkerListener(markerOverlay, jmAPI));

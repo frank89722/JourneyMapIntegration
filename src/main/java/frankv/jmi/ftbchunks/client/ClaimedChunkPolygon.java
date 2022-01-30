@@ -1,5 +1,7 @@
 package frankv.jmi.ftbchunks.client;
 
+import dev.ftb.mods.ftbchunks.client.map.MapDimension;
+import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import frankv.jmi.JMI;
 import frankv.jmi.JMIOverlayHelper;
@@ -12,7 +14,6 @@ import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.TickEvent;
@@ -25,7 +26,7 @@ public class ClaimedChunkPolygon {
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();
     public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
     public static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
-    public static List<FTBClaimedChunkData.FTBChunkQueueData> queue = new ArrayList<>();
+    public static List<FTBClaimedChunkData> queue = new LinkedList<>();
     private static Minecraft mc = Minecraft.getInstance();
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
@@ -42,27 +43,25 @@ public class ClaimedChunkPolygon {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
+        if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
         if (mc.player == null) return;
 
         for (int i = 0; i<60; i++) {
             if (queue == null || queue.isEmpty()) return;
-            if (!mc.player.clientLevel.dimension().equals(queue.get(0).chunkData.chunkDimPos.dimension)) {
+
+            if (queue.get(0).team == null) {
+                removePolygon(queue.get(0));
                 queue.remove(0);
                 continue;
             }
 
-            if (queue.get(0).replace) {
-                replacePolygon(queue.get(0).chunkData);
+            if (shouldReplace(queue.get(0))) {
+                replacePolygon(queue.get(0));
                 queue.remove(0);
                 continue;
             }
 
-            if (queue.get(0).isAdd) {
-                addPolygon(queue.get(0).chunkData);
-            } else {
-                removePolygon(queue.get(0).chunkData);
-            }
+            addPolygon(queue.get(0));
             queue.remove(0);
 
         }
@@ -73,7 +72,7 @@ public class ClaimedChunkPolygon {
 
         try {
             if(!chunkOverlays.containsKey(pos)) {
-                final PolygonOverlay overlay = createClaimedChunkOverlay(queue.get(0).chunkData);
+                final PolygonOverlay overlay = createClaimedChunkOverlay(queue.get(0));
                 chunkOverlays.put(pos, overlay);
                 chunkData.put(pos, data);
                 jmAPI.show(overlay);
@@ -166,8 +165,16 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    public static void addToQueue(ResourceLocation dim, int x, int z, String teamName, int teamColor, boolean isAdd, boolean replace, boolean forceLoaded) {
-        if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
-        queue.add(new FTBClaimedChunkData.FTBChunkQueueData(new FTBClaimedChunkData(dim, x, z, teamName, teamColor, forceLoaded), isAdd, replace));
+    public static void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
+        if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
+        queue.add(new FTBClaimedChunkData(dim, chunk, teamId));
+    }
+
+    private static boolean shouldReplace(FTBClaimedChunkData data) {
+        if (data.team == null) return false;
+
+        FTBClaimedChunkData that = chunkData.get(data.chunkDimPos);
+        if (that == null) return false;
+        return !data.equals(that);
     }
 }
