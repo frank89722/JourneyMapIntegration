@@ -91,7 +91,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                     switch (registryEvent.getRegistryType()) {
                         case INFO_SLOT -> {
                             if (!JMI.ftbchunks) break;
-                            ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MODID, "jmi.theme.lablesource.claimed", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
+                            ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MODID, "jmi.infoslot.ftbchunks", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
                         }
                     }
                 }
