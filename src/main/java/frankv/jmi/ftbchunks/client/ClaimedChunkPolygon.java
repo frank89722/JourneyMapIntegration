@@ -23,7 +23,7 @@ public class ClaimedChunkPolygon {
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();
     public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
     public static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
-    public static List<FTBClaimedChunkData> queue = new ArrayList<>();
+    public static List<FTBClaimedChunkData> queue = new LinkedList<>();
     private static Minecraft mc = Minecraft.getInstance();
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
@@ -40,7 +40,7 @@ public class ClaimedChunkPolygon {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
+        if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
         if (mc.player == null) return;
 
         for (var i = 0; i<60; ++i) {
@@ -162,7 +162,7 @@ public class ClaimedChunkPolygon {
     }
 
     public static void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
-        if (!JMI.CLIENT_CONFIG.getFtbChunks() || !JMI.COMMON_CONFIG.getFTBChunks()) return;
+        if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
         queue.add(new FTBClaimedChunkData(dim, chunk, teamId));
     }
 
