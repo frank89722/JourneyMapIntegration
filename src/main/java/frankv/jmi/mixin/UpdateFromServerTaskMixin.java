@@ -16,11 +16,11 @@ import java.util.UUID;
 @Mixin(UpdateChunkFromServerTask.class)
 public class UpdateFromServerTaskMixin {
 
-    @Shadow @Final private MapDimension dimension;
+    @Shadow(remap = false) @Final private MapDimension dimension;
 
-    @Shadow @Final private SendChunkPacket.SingleChunk chunk;
+    @Shadow(remap = false) @Final private SendChunkPacket.SingleChunk chunk;
 
-    @Shadow @Final private UUID teamId;
+    @Shadow(remap = false) @Final private UUID teamId;
 
     @Inject(method = "runMapTask", at = @At("RETURN"), remap = false)
     private void onRunMapTask(CallbackInfo ci) {

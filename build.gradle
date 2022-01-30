@@ -119,7 +119,7 @@ dependencies {
     implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1801.3.3-build.113")
     implementation fg.deobf("curse.maven:balm-531761:3584832")
     implementation fg.deobf("curse.maven:waystones-245755:3558793")
-    implementation fg.deobf("curse.maven:journeymap-32274:3612223")
+    implementation fg.deobf("curse.maven:journeymap-32274:3621130")
     //compileOnly fg.deobf("info.journeymap:journeymap-api:1.16.5-1.7-SNAPSHOT")
 
 }
