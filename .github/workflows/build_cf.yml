@@ -5,7 +5,7 @@ name: Build and upload to CF
 
 on:
   push:
-    branches: [ main, test ]
+    branches: [ 1.16.x ]
 
 jobs:
   build:
