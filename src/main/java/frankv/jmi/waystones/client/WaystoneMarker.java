@@ -31,11 +31,12 @@ public class WaystoneMarker {
                 .setColor(JMI.CLIENT_CONFIG.getWaystoneColor());
 
         var textProperties = new TextProperties()
+                .setBackgroundOpacity(0.4f)
                 .setOpacity(1.0f);
 
         var markerOverlay = new MarkerOverlay(JMI.MODID, "waystone_" + waystone.pos, waystone.pos, icon);
         markerOverlay.setDimension(waystone.dim)
-                .setTitle(waystone.name)
+                .setLabel(waystone.name)
                 .setTextProperties(textProperties);
 
         markerOverlay.setOverlayListener(new WaystoneMarkerListener(markerOverlay, jmAPI));
