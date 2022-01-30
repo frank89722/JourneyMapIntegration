@@ -4,6 +4,7 @@ import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import frankv.jmi.ftbchunks.client.ClaimingMode;
 import frankv.jmi.ftbchunks.client.ClaimingModeHandler;
+import frankv.jmi.ftbchunks.client.GeneralDataOverlay;
 import frankv.jmi.waypointmessage.WaypointChatMessage;
 import frankv.jmi.waystones.client.WaystoneMarker;
 import journeymap.client.api.IClientAPI;
@@ -38,6 +39,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimMode);
+            MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
         }
 
         if (JMI.waystones) {
