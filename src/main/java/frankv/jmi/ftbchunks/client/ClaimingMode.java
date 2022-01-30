@@ -114,7 +114,7 @@ public class ClaimingMode {
         var polygons = PolygonHelper.createChunksPolygon(this.area, 100);
 
         for (var polygon : polygons) {
-            final PolygonOverlay overlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygon);
+            var overlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygon);
             if (JMIOverlayHelper.createPolygon(overlay)) this.claimAreaPolygons.add(overlay);
         }
     }

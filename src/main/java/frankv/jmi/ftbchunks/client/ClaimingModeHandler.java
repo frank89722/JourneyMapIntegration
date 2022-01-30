@@ -5,15 +5,11 @@ import dev.ftb.mods.ftblibrary.math.XZ;
 import dev.ftb.mods.ftblibrary.ui.GuiHelper;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.event.FullscreenMapEvent;
-import journeymap.client.api.event.forge.PopupMenuEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -22,7 +18,6 @@ import java.util.Map;
 
 import static frankv.jmi.JMIOverlayHelper.*;
 
-@Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClaimingModeHandler {
     private static boolean doRecord = false;
     public static Map<XZ, PolygonOverlay> dragPolygons = new HashMap<>();
@@ -52,8 +47,7 @@ public class ClaimingModeHandler {
         if (!doRecord) return;
 
         var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
-        if (!ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z))) return;
-        if (chunks.contains(xz)) return;
+        if (!ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z)) || chunks.contains(xz)) return;
 
         addToWaitingList(xz);
     }
@@ -80,14 +74,8 @@ public class ClaimingModeHandler {
     @SubscribeEvent
     public static void mouse(InputEvent.MouseInputEvent event) {
         if (!doRecord) return;
-        if (event.getAction() != GLFW.GLFW_RELEASE) return;
-        if (event.getButton() > 1) return;
+        if (event.getAction() != GLFW.GLFW_RELEASE || event.getButton() > 1) return;
 
         applyChanges(event.getButton());
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onPopMenu(PopupMenuEvent event) {
-        if (ClaimingMode.activated) event.setCanceled(true);
     }
 }

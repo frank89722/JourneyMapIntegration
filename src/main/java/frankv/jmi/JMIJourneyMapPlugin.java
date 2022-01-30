@@ -37,8 +37,10 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         if (JMI.ftbchunks) {
             claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
             claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
+
             MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
             MinecraftForge.EVENT_BUS.register(claimMode);
+            MinecraftForge.EVENT_BUS.register(ClaimingModeHandler.class);
             MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
         }
 
