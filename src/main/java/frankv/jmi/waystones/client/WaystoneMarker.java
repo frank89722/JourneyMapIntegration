@@ -6,14 +6,18 @@ import journeymap.client.api.display.MarkerOverlay;
 import journeymap.client.api.model.MapImage;
 import journeymap.client.api.model.TextProperties;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
 
 public class WaystoneMarker {
-    private IClientAPI jmAPI;
+    private final IClientAPI jmAPI;
+    private static final Minecraft mc = Minecraft.getInstance();
     public static HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
+    public static Set<ComparableWaystone> waystones = new HashSet<>();
 
     public WaystoneMarker(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
@@ -57,6 +61,15 @@ public class WaystoneMarker {
         }
     }
 
+    public void createMarkersOnMappingStarted() {
+        World level = mc.level;
+        if (level == null) return;
+
+        for (ComparableWaystone data : waystones) {
+            if (data.dim.equals(level.dimension())) createMarker(data);
+        }
+    }
+
     @SubscribeEvent
     public void onKnownWaystones(KnownWaystonesEvent event) {
         if (!JMI.CLIENT_CONFIG.getWayStone()) return;
@@ -73,7 +86,9 @@ public class WaystoneMarker {
 
         rmvWaystones.removeAll(newWaystones);
         addWaystones.removeAll(oldWaystones);
-        rmvWaystones.forEach(w -> removeMarker(w));
-        addWaystones.forEach(w -> createMarker(w));
+        rmvWaystones.forEach(this::removeMarker);
+        addWaystones.forEach(this::createMarker);
+
+        waystones = (Set<ComparableWaystone>) ((HashSet<ComparableWaystone>) newWaystones).clone();
     }
 }
