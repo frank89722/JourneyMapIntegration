@@ -11,6 +11,9 @@ import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
 import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -20,11 +23,13 @@ import static frankv.jmi.JMIOverlayHelper.removePolygons;
 
 public class ClaimedChunkPolygon {
     private IClientAPI jmAPI;
+    private static final Minecraft mc = Minecraft.getInstance();
+
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();
     public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
     public static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
     public static List<FTBClaimedChunkData> queue = new LinkedList<>();
-    private static Minecraft mc = Minecraft.getInstance();
+
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
@@ -33,7 +38,7 @@ public class ClaimedChunkPolygon {
     public static String getPolygonTitleByPlayerPos() {
         if (mc.player == null) return "";
 
-        var pos = new ChunkDimPos(mc.player.clientLevel.dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
+        var pos = new ChunkDimPos(mc.player.level.dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
         if (!chunkOverlays.containsKey(pos)) return "Wilderness";
         return chunkOverlays.get(pos).getTitle();
     }
@@ -41,67 +46,82 @@ public class ClaimedChunkPolygon {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
-        if (mc.player == null) return;
+        if (mc.level == null) return;
 
         for (var i = 0; i<60; ++i) {
             if (queue == null || queue.isEmpty()) return;
 
-            if (queue.get(0).team == null) {
-                removePolygon(queue.get(0));
-                queue.remove(0);
-                continue;
-            }
+            var playerDim = mc.level.dimension();
+            var data = queue.get(0);
 
-            if (shouldReplace(queue.get(0))) {
-                replacePolygon(queue.get(0));
-                queue.remove(0);
-                continue;
-            }
+            if (data.team == null) removeChunk(data, playerDim);
+            else if (shouldReplace(data)) replaceChunk(data, playerDim);
+            else addChunk(data, playerDim);
 
-            addPolygon(queue.get(0));
             queue.remove(0);
         }
     }
 
-    private void addPolygon(FTBClaimedChunkData data) {
-        var pos = data.chunkDimPos;
+    public void createPolygonsOnMappingStarted() {
+        var level = mc.level;
 
-        try {
-            if (!chunkOverlays.containsKey(pos)) {
-                var overlay = createClaimedChunkOverlay(queue.get(0));
-                chunkOverlays.put(pos, overlay);
-                chunkData.put(pos, data);
-                jmAPI.show(overlay);
-            }
-        } catch (Throwable t) {
-            JMI.LOGGER.error(t.getMessage(), t);
+        if (level == null) return;
+
+        for (var data : chunkData.values()) {
+            if (data.chunkDimPos.dimension.equals(level.dimension())) createPolygon(data);
         }
     }
 
-    private void removePolygon(FTBClaimedChunkData data) {
+    private void addChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
         var pos = data.chunkDimPos;
+
+        if (chunkOverlays.containsKey(pos)) return;
+
+        chunkData.put(pos, data);
+        if (pos.dimension.equals(dim)) createPolygon(data);
+    }
+
+    private void removeChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
+        var pos = data.chunkDimPos;
+
+        if (!chunkOverlays.containsKey(pos)) return;
+
+        chunkData.remove(pos);
+
+        if (!pos.dimension.equals(dim)) return;
 
         try {
             jmAPI.remove(chunkOverlays.get(pos));
             chunkOverlays.remove(pos);
-            chunkData.remove(pos);
         } catch (Throwable t) {
             JMI.LOGGER.error(t.getMessage(), t);
         }
     }
 
-    private void replacePolygon(FTBClaimedChunkData data) {
-        removePolygon(data);
-        addPolygon(data);
+    private void replaceChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
+        removeChunk(data, dim);
+        addChunk(data, dim);
         if (ClaimingMode.activated) {
             showForceLoaded(data.chunkDimPos, false);
             showForceLoaded(data.chunkDimPos, true);
         }
     }
 
-    private static PolygonOverlay createClaimedChunkOverlay(FTBClaimedChunkData data) {
+    private void createPolygon(FTBClaimedChunkData data) {
         var player = mc.player;
+        if (player == null) return;
 
+        var overlay = createClaimedChunkOverlay(data, player);
+
+        try {
+            jmAPI.show(overlay);
+            chunkOverlays.put(data.chunkDimPos, overlay);
+        } catch (Throwable t) {
+            JMI.LOGGER.error(t.getMessage(), t);
+        }
+    }
+
+    private static PolygonOverlay createClaimedChunkOverlay(FTBClaimedChunkData data, Player player) {
         var displayId = "claimed_" + data.chunkDimPos.x + ',' + data.chunkDimPos.z;
         var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
@@ -114,7 +134,7 @@ public class ClaimedChunkPolygon {
 
         var polygon = PolygonHelper.createChunkPolygon(data.chunkDimPos.x, 1, data.chunkDimPos.z);
 
-        var ClaimedChunkOverlay = new PolygonOverlay(JMI.MODID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
+        var ClaimedChunkOverlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygon);
 
         ClaimedChunkOverlay.setOverlayGroupName("Claimed Chunks")
                 .setTitle(data.teamName)
@@ -124,7 +144,8 @@ public class ClaimedChunkPolygon {
     }
 
     public void showForceLoadedByArea(boolean show) {
-        var clientLevel = mc.player.clientLevel.dimension();
+        var level = mc.level;
+        if (level == null) return;
 
         if (!show) {
             for (var pos : forceLoadedOverlays.keySet()) {
@@ -137,14 +158,14 @@ public class ClaimedChunkPolygon {
         }
 
         for (var p : ClaimingMode.area) {
-            var chunkDimPos = new ChunkDimPos(clientLevel, p.x, p.z);
+            var chunkDimPos = new ChunkDimPos(level.dimension(), p.x, p.z);
             showForceLoaded(chunkDimPos, true);
         }
     }
 
     private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
         if (!chunkData.containsKey(chunkDimPos)) return;
-        var data = (FTBClaimedChunkData) chunkData.get(chunkDimPos);
+        var data = chunkData.get(chunkDimPos);
         var teamName = data.teamName;
 
         if (show && data.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {

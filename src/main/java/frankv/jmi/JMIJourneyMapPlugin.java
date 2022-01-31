@@ -27,7 +27,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
     private ClaimedChunkPolygon claimedChunkPolygon;
     private ClaimingMode claimMode;
-    public WaystoneMarker waystoneWaypoint;
+    public WaystoneMarker waystoneMarker;
 
     @Override
     public void initialize(final IClientAPI jmAPI) {
@@ -45,11 +45,12 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         }
 
         if (JMI.waystones) {
-            waystoneWaypoint = new WaystoneMarker(jmAPI);
-            Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneWaypoint.onKnownWaystones(event));
+            waystoneMarker = new WaystoneMarker(jmAPI);
+            Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
         }
 
         MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
+        MinecraftForge.EVENT_BUS.register(JMIForgeEventListener.class);
 
         this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
         JMI.LOGGER.info("Initialized " + getClass().getName());
@@ -65,14 +66,28 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         try {
             switch (event.type) {
                 case MAPPING_STARTED -> {
-                    if(JMI.ftbchunks) disableFTBChunksThings();
+                    if (JMI.ftbchunks) {
+                        if (JMIForgeEventListener.firstLogin) {
+                            disableFTBChunksThings();
+                        } else {
+                            claimedChunkPolygon.createPolygonsOnMappingStarted();
+                            JMI.LOGGER.debug("re-added ftbchunks overlays");
+                        }
+                    }
+
+                    if (JMI.waystones) {
+                        waystoneMarker.createMarkersOnMappingStarted();
+                        JMI.LOGGER.debug("re-added waystones overlays");
+                    }
+
+                    JMIForgeEventListener.firstLogin = false;
                 }
 
                 case MAPPING_STOPPED -> {
-                    clearFTBChunksData();
+                    clearFTBChunksOverlays();
                     WaystoneMarker.markers.clear();
                     jmAPI.removeAll(JMI.MODID);
-                    JMI.LOGGER.debug("all elements removed.");
+                    JMI.LOGGER.debug("all overlays removed");
                 }
 
                 case MAP_CLICKED -> {
@@ -112,13 +127,10 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);
     }
 
-    private void clearFTBChunksData() {
+    private void clearFTBChunksOverlays() {
         ClaimedChunkPolygon.chunkOverlays.clear();
-        ClaimedChunkPolygon.chunkData.clear();
         ClaimedChunkPolygon.forceLoadedOverlays.clear();
-        ClaimedChunkPolygon.queue.clear();
         ClaimingMode.claimAreaPolygons.clear();
         ClaimingModeHandler.dragPolygons.clear();
-        ClaimingModeHandler.chunks.clear();
     }
 }
