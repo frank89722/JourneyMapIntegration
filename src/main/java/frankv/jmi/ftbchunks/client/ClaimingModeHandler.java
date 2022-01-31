@@ -36,17 +36,14 @@ public class ClaimingModeHandler {
         if (!ClaimingMode.activated) return;
         XZ xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
 
-        if (!ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z))) return;
-        event.cancel();
+        if (doRecord || ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z))) event.cancel();
     }
 
     public static void mouseMove(FullscreenMapEvent.MouseMoveEvent event) {
         if (!doRecord) return;
 
         XZ xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
-        if (!ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z)) || chunks.contains(xz)) return;
-
-        addToWaitingList(xz);
+        if (ClaimingMode.area.contains(new ChunkPos(xz.x, xz.z)) || chunks.contains(xz)) addToWaitingList(xz);
     }
 
     private static void addToWaitingList(XZ xz) {
