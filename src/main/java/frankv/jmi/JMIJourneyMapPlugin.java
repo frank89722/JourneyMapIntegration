@@ -32,7 +32,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     @Override
     public void initialize(final IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
-        JMIOverlayHelper.jmAPI = jmAPI;
+        JMIOverlayHelper.setJmAPI(jmAPI);
 
         if (JMI.ftbchunks) {
             claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
@@ -130,7 +130,6 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     private void clearFTBChunksOverlays() {
         ClaimedChunkPolygon.chunkOverlays.clear();
         ClaimedChunkPolygon.forceLoadedOverlays.clear();
-        ClaimingMode.claimAreaPolygons.clear();
         ClaimingModeHandler.dragPolygons.clear();
     }
 }

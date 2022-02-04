@@ -18,7 +18,7 @@ public class GeneralDataOverlay {
 
     @SubscribeEvent
     public static void onScreenDraw(ScreenEvent.DrawScreenEvent event) {
-        if (!(event.getScreen() instanceof Fullscreen) || !ClaimingMode.activated) return;
+        if (!(event.getScreen() instanceof Fullscreen screen) || !ClaimingMode.activated) return;
 
         var d = FTBChunksClient.generalData;
         if (d == null) return;
@@ -26,7 +26,7 @@ public class GeneralDataOverlay {
         var font = mc.font;
         var stack = event.getPoseStack();
         var list = new LinkedList<Component>();
-        var screenHeight = (float)mc.screen.height;
+        var screenHeight = (float)screen.height;
         var width = 0.0f;
 
         list.add((new TextComponent(d.loaded + " / " + d.maxForceLoadChunks)).withStyle(d.loaded > d.maxForceLoadChunks ? ChatFormatting.RED : (d.loaded == d.maxForceLoadChunks ? ChatFormatting.YELLOW : ChatFormatting.GREEN)));

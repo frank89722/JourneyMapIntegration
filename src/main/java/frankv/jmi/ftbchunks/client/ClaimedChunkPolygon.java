@@ -6,7 +6,6 @@ import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.event.ClientTeamPropertiesChangedEvent;
 import dev.ftb.mods.ftbteams.event.TeamEvent;
 import frankv.jmi.JMI;
-import frankv.jmi.JMIOverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
 import net.minecraft.client.Minecraft;
@@ -17,6 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
 
+import static frankv.jmi.JMIOverlayHelper.*;
 import static frankv.jmi.JMIOverlayHelper.removePolygons;
 
 public class ClaimedChunkPolygon {
@@ -67,7 +67,8 @@ public class ClaimedChunkPolygon {
         if (level == null) return;
 
         for (var data : chunkData.values()) {
-            if (data.chunkDimPos.dimension.equals(level.dimension())) createPolygon(data);
+            if (!data.chunkDimPos.dimension.equals(level.dimension())) continue;
+            if (createPolygon(data.overlay)) chunkOverlays.put(data.chunkDimPos, data.overlay);
         }
     }
 
@@ -77,7 +78,10 @@ public class ClaimedChunkPolygon {
         if (chunkOverlays.containsKey(pos)) return;
 
         chunkData.put(pos, data);
-        if (pos.dimension.equals(dim)) createPolygon(data);
+        if (!pos.dimension.equals(dim)) return;
+
+        if (createPolygon(data.overlay)) chunkOverlays.put(data.chunkDimPos, data.overlay);
+
     }
 
     private void removeChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
@@ -103,20 +107,6 @@ public class ClaimedChunkPolygon {
         if (ClaimingMode.activated) {
             showForceLoaded(data.chunkDimPos, false);
             showForceLoaded(data.chunkDimPos, true);
-        }
-    }
-
-    private void createPolygon(FTBClaimedChunkData data) {
-        var player = mc.player;
-        if (player == null) return;
-
-        var overlay = data.overlay;
-
-        try {
-            jmAPI.show(overlay);
-            chunkOverlays.put(data.chunkDimPos, overlay);
-        } catch (Throwable t) {
-            JMI.LOGGER.error(t.getMessage(), t);
         }
     }
 
@@ -147,7 +137,7 @@ public class ClaimedChunkPolygon {
 
         if (show && data.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {
             var claimedOverlay = ClaimingMode.forceLoadedPolygon(chunkDimPos);
-            if (JMIOverlayHelper.createPolygon(claimedOverlay)) forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
+            if (createPolygon(claimedOverlay)) forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
 
             chunkOverlays.get(chunkDimPos).setTitle(teamName + "\nForce Loaded");
 
