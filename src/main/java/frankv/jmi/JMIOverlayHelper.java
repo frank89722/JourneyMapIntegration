@@ -6,7 +6,11 @@ import journeymap.client.api.display.PolygonOverlay;
 import java.util.Collection;
 
 public class JMIOverlayHelper {
-    public static IClientAPI jmAPI = null;
+    private static IClientAPI jmAPI = null;
+
+    public static void setJmAPI(IClientAPI api) {
+        jmAPI = api;
+    }
 
     public static boolean createPolygon(PolygonOverlay overlay) {
         try {

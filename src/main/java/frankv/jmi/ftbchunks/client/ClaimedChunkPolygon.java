@@ -3,16 +3,13 @@ package frankv.jmi.ftbchunks.client;
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
 import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
+import dev.ftb.mods.ftbteams.event.ClientTeamPropertiesChangedEvent;
+import dev.ftb.mods.ftbteams.event.TeamEvent;
 import frankv.jmi.JMI;
 import frankv.jmi.JMIOverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.model.MapPolygon;
-import journeymap.client.api.model.ShapeProperties;
-import journeymap.client.api.model.TextProperties;
-import journeymap.client.api.util.PolygonHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.RegistryKey;
@@ -22,6 +19,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
+
+import static frankv.jmi.JMIOverlayHelper.*;
+import static frankv.jmi.JMIOverlayHelper.createPolygon;
 
 public class ClaimedChunkPolygon {
     private IClientAPI jmAPI;
@@ -35,6 +35,7 @@ public class ClaimedChunkPolygon {
 
     public ClaimedChunkPolygon(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
+        TeamEvent.CLIENT_PROPERTIES_CHANGED.register(this::onTeamPropsChanged);
     }
 
     public static String getPolygonTitleByPlayerPos() {
@@ -50,7 +51,7 @@ public class ClaimedChunkPolygon {
         if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
         if (mc.level == null) return;
 
-        for (int i = 0; i<60; i++) {
+        for (int i = 0; i<200; i++) {
             if (queue == null || queue.isEmpty()) return;
 
             RegistryKey<World> playerDim = mc.level.dimension();
@@ -70,7 +71,8 @@ public class ClaimedChunkPolygon {
         if (level == null) return;
 
         for (FTBClaimedChunkData data : chunkData.values()) {
-            if (data.chunkDimPos.dimension.equals(level.dimension())) createPolygon(data);
+            if (!data.chunkDimPos.dimension.equals(level.dimension())) continue;
+            if (createPolygon(data.overlay)) chunkOverlays.put(data.chunkDimPos, data.overlay);
         }
     }
 
@@ -80,7 +82,10 @@ public class ClaimedChunkPolygon {
         if (chunkOverlays.containsKey(pos)) return;
 
         chunkData.put(pos, data);
-        if (pos.dimension.equals(dim)) createPolygon(data);
+        if (!pos.dimension.equals(dim)) return;
+
+        if (createPolygon(data.overlay)) chunkOverlays.put(data.chunkDimPos, data.overlay);
+
     }
 
     private void removeChunk(FTBClaimedChunkData data, RegistryKey<World> dim) {
@@ -110,52 +115,16 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    private void createPolygon(FTBClaimedChunkData data) {
-        PlayerEntity player = mc.player;
-        if (player == null) return;
-
-        PolygonOverlay overlay = createClaimedChunkOverlay(data, player);
-
-        try {
-            jmAPI.show(overlay);
-            chunkOverlays.put(data.chunkDimPos, overlay);
-        } catch (Throwable t) {
-            JMI.LOGGER.error(t.getMessage(), t);
-        }
-    }
-
-    private static PolygonOverlay createClaimedChunkOverlay(FTBClaimedChunkData data, PlayerEntity player) {
-        String displayId = "claimed_" + data.chunkDimPos.x + ',' + data.chunkDimPos.z;
-        ShapeProperties shapeProps = new ShapeProperties()
-                .setStrokeWidth(0)
-                .setFillColor(data.teamColor).setFillOpacity((float) JMI.CLIENT_CONFIG.getClaimedChunkOverlayOpacity());
-
-        TextProperties textProps = new TextProperties()
-                .setColor(data.teamColor)
-                .setOpacity(1f)
-                .setFontShadow(true);
-
-        MapPolygon polygon = PolygonHelper.createChunkPolygon(data.chunkDimPos.x, 1, data.chunkDimPos.z);
-
-        PolygonOverlay ClaimedChunkOverlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygon);
-
-        ClaimedChunkOverlay.setOverlayGroupName("Claimed Chunks")
-                .setTitle(data.teamName)
-                .setTextProperties(textProps);
-
-        return ClaimedChunkOverlay;
-    }
-
     public void showForceLoadedByArea(boolean show) {
         World level = mc.player.level;
         if (level == null) return;
 
         if (!show) {
             for (ChunkDimPos pos : forceLoadedOverlays.keySet()) {
-                chunkOverlays.get(pos).setTitle(chunkData.get(pos).teamName);
+                chunkOverlays.get(pos).setTitle(chunkData.get(pos).team.getDisplayName());
             }
 
-            JMIOverlayHelper.removePolygons(forceLoadedOverlays.values());
+            removePolygons(forceLoadedOverlays.values());
             forceLoadedOverlays.clear();
             return;
         }
@@ -169,11 +138,11 @@ public class ClaimedChunkPolygon {
     private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
         if (!chunkData.containsKey(chunkDimPos)) return;
         FTBClaimedChunkData data = chunkData.get(chunkDimPos);
-        String teamName = data.teamName;
+        String teamName = data.team.getDisplayName();
 
         if (show && data.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {
             PolygonOverlay claimedOverlay = ClaimingMode.forceLoadedPolygon(chunkDimPos);
-            if (JMIOverlayHelper.createPolygon(claimedOverlay)) forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
+            if (createPolygon(claimedOverlay)) forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
 
             chunkOverlays.get(chunkDimPos).setTitle(teamName + "\nForce Loaded");
 
@@ -185,8 +154,20 @@ public class ClaimedChunkPolygon {
         }
     }
 
+    public void onTeamPropsChanged(ClientTeamPropertiesChangedEvent event) {
+        UUID teamId = event.getTeam().getId();
+        RegistryKey<World> dim = mc.level.dimension();
+
+        for (FTBClaimedChunkData data : new HashSet<>(chunkData.values())) {
+            if (!data.teamId.equals(teamId)) continue;
+
+            data.updateOverlayProps();
+            replaceChunk(data, dim);
+        }
+    }
+
     public static void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
-        if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
+        if (!JMI.ftbchunks) return;
         queue.add(new FTBClaimedChunkData(dim, chunk, teamId));
     }
 

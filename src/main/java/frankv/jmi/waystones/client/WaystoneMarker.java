@@ -14,8 +14,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.*;
 
 public class WaystoneMarker {
-    private final IClientAPI jmAPI;
-    private static final Minecraft mc = Minecraft.getInstance();
+    private IClientAPI jmAPI;
+    private static Minecraft mc = Minecraft.getInstance();
     public static HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
     public static Set<ComparableWaystone> waystones = new HashSet<>();
 

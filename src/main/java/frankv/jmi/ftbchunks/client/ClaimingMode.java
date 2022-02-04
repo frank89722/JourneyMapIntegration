@@ -25,7 +25,7 @@ public class ClaimingMode {
     private ClaimedChunkPolygon claimedChunkPolygon;
     public static boolean activated = false;
     private static Minecraft mc = Minecraft.getInstance();
-    public static List<PolygonOverlay> claimAreaPolygons = new LinkedList<>();
+    public static PolygonOverlay claimAreaPolygon = null;
     public static Set<ChunkPos> area = new HashSet<>();
 
     public ClaimingMode(IClientAPI jmAPI, ClaimedChunkPolygon claimedChunkPolygon) {
@@ -63,12 +63,12 @@ public class ClaimingMode {
     }
 
     private void removeOverlays() {
-        for (PolygonOverlay o : this.claimAreaPolygons) {
-            jmAPI.remove(o);
-        }
+        if (claimAreaPolygon == null) return;
+        jmAPI.remove(claimAreaPolygon);
+
         claimedChunkPolygon.showForceLoadedByArea(false);
-        this.area.clear();
-        this.claimAreaPolygons.clear();
+        claimAreaPolygon = null;
+        area.clear();
     }
 
     public static PolygonOverlay dragPolygon(XZ xz) {
@@ -120,9 +120,7 @@ public class ClaimingMode {
 
         final List<MapPolygonWithHoles> polygons = PolygonHelper.createChunksPolygon(this.area, 100);
 
-        for (final MapPolygonWithHoles polygon : polygons) {
-            final PolygonOverlay overlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygon);
-            if (JMIOverlayHelper.createPolygon(overlay)) this.claimAreaPolygons.add(overlay);
-        }
+        PolygonOverlay overlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygons.get(0));
+        if (JMIOverlayHelper.createPolygon(overlay)) claimAreaPolygon = overlay;
     }
 }
