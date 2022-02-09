@@ -1,6 +1,7 @@
 package frankv.jmi;
 
 import journeymap.client.api.IClientAPI;
+import journeymap.client.api.display.Displayable;
 import journeymap.client.api.display.PolygonOverlay;
 
 import java.util.Collection;
@@ -12,7 +13,7 @@ public class JMIOverlayHelper {
         jmAPI = api;
     }
 
-    public static boolean createPolygon(PolygonOverlay overlay) {
+    public static boolean showOverlay(Displayable overlay) {
         try {
             jmAPI.show(overlay);
         } catch (Throwable t) {

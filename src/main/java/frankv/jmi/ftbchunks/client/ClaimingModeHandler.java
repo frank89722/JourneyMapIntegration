@@ -50,7 +50,7 @@ public class ClaimingModeHandler {
 
     private static void addToWaitingList(XZ xz) {
         var polygon = ClaimingMode.dragPolygon(xz);
-        if (!createPolygon(polygon)) return;
+        if (!showOverlay(polygon)) return;
 
         dragPolygons.put(xz, polygon);
         chunks.add(xz);

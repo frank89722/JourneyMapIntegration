@@ -20,7 +20,7 @@ public class FTBClaimedChunkData {
     public final boolean forceLoaded;
     public final UUID teamId;
     public final ClientTeam team;
-    public final PolygonOverlay overlay;
+    //public final PolygonOverlay overlay;
 
     public FTBClaimedChunkData(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
         this.chunk = chunk;
@@ -29,38 +29,38 @@ public class FTBClaimedChunkData {
         this.teamId = teamId;
         this.team = ClientTeamManager.INSTANCE.getTeam(teamId);
 
-        if (team == null) this.overlay = null;
-        else this.overlay = makeOverlay();
+//        if (team == null) this.overlay = null;
+//        else this.overlay = makeOverlay();
     }
 
-    private PolygonOverlay makeOverlay() {
-        var color = team.getColor();
-        var displayId = "claimed_" + chunkDimPos.x + ',' + chunkDimPos.z;
-        var shapeProps = new ShapeProperties()
-                .setStrokeWidth(0)
-                .setFillColor(color).setFillOpacity((float) JMI.CLIENT_CONFIG.getClaimedChunkOverlayOpacity());
-
-        var textProps = new TextProperties()
-                .setColor(color)
-                .setOpacity(1f)
-                .setFontShadow(true);
-
-        var polygon = PolygonHelper.createChunkPolygon(chunkDimPos.x, 1, chunkDimPos.z);
-
-        var overlay = new PolygonOverlay(JMI.MODID, displayId, chunkDimPos.dimension, shapeProps, polygon);
-
-        overlay.setOverlayGroupName("Claimed Chunks")
-                .setTitle(team.getDisplayName())
-                .setTextProperties(textProps);
-
-        return overlay;
-    }
+//    private PolygonOverlay makeOverlay() {
+//        var color = team.getColor();
+//        var displayId = "claimed_" + chunkDimPos.x + ',' + chunkDimPos.z;
+//        var shapeProps = new ShapeProperties()
+//                .setStrokeWidth(0)
+//                .setFillColor(color).setFillOpacity((float) JMI.CLIENT_CONFIG.getClaimedChunkOverlayOpacity());
+//
+//        var textProps = new TextProperties()
+//                .setColor(color)
+//                .setOpacity(1f)
+//                .setFontShadow(true);
+//
+//        var polygon = PolygonHelper.createChunkPolygon(chunkDimPos.x, 1, chunkDimPos.z);
+//
+//        var overlay = new PolygonOverlay(JMI.MODID, displayId, chunkDimPos.dimension, shapeProps, polygon);
+//
+//        overlay.setOverlayGroupName("Claimed Chunks")
+//                .setTitle(team.getDisplayName())
+//                .setTextProperties(textProps);
+//
+//        return overlay;
+//    }
 
     public void updateOverlayProps() {
         var color = team.getColor();
 
-        overlay.getTextProperties().setColor(color);
-        overlay.getShapeProperties().setFillColor(color);
+//        overlay.getTextProperties().setColor(color);
+//        overlay.getShapeProperties().setFillColor(color);
     }
 
     @Override

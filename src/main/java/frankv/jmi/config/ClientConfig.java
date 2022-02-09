@@ -22,7 +22,7 @@ public class ClientConfig {
         builder.comment("Client-Side Integration");
         builder.push("FTBChunks");
         ftbChunks = builder.comment("Enable FTBChunks Integration").define("ftbChunks", true);
-        claimedChunkOverlayOpacity = builder.defineInRange("claimedChunkOverlayOpacity", 0.222223f, 0f, 1.0f);
+        claimedChunkOverlayOpacity = builder.defineInRange("claimedChunkOverlayOpacity", 0.2f, 0f, 1.0f);
         disableFTBFunction = builder.comment("Disable conflict functions for FTBChunks (MiniMap, Waypoint beam, Death waypoint)")
                 .define("disableFTBFunction", true);
         showClaimChunkScreen = builder.comment("Show chunk claiming screen first instead of large map screen.").define("showClaimChunkScreen", true);
