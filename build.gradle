@@ -136,7 +136,7 @@ dependencies {
     implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1605.2.3-build.40")
     implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1605.3.2-build.95")
     implementation fg.deobf("curse.maven:waystones-245755:3440017")
-    implementation fg.deobf("curse.maven:journeymap-32274:3634141")
+    implementation fg.deobf("curse.maven:journeymap-32274:3696399")
     implementation fg.deobf("curse.maven:smoothboot-420913:3224252")
     //compileOnly fg.deobf("info.journeymap:journeymap-api:1.16.5-1.7-SNAPSHOT")
 
