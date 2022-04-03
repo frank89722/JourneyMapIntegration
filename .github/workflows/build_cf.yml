@@ -24,22 +24,16 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-18-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
         id: build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
-        run: ./gradlew build
 
       - name: Changelog
         uses: metcalfc/changelog-generator@v1.0.0

@@ -35,8 +35,8 @@ public class WaypointChatMessage {
         event.setCanceled(true);
     }
 
-    private static boolean checkBlockTags(Block block){
-        return block.getTags().stream().anyMatch(e -> JMI.CLIENT_CONFIG.getWaypointMessageBlocks().contains('#' + e.toString())) ||
+    private static boolean checkBlockTags(Block block) {
+        return block.defaultBlockState().m_204343_().anyMatch(e -> JMI.CLIENT_CONFIG.getWaypointMessageBlocks().contains('#' + e.f_203868_().toString())) ||
                 JMI.CLIENT_CONFIG.getWaypointMessageBlocks().contains(block.getRegistryName().toString());
     }
 }

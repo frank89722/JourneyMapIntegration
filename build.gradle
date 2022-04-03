@@ -113,13 +113,13 @@ dependencies {
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
-    implementation fg.deobf("dev.architectury:architectury-forge:3.4.9")
-    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1801.3.5-build.109")
-    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1801.2.4-build.46")
-    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1801.3.3-build.113")
-    implementation fg.deobf("curse.maven:balm-531761:3584832")
-    implementation fg.deobf("curse.maven:waystones-245755:3558793")
-    implementation fg.deobf("curse.maven:journeymap-32274:3696402")
+    implementation fg.deobf("dev.architectury:architectury-forge:4.1.39")
+    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1802.3.6-build.115")
+    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1802.2.6-build.51")
+    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1802.3.5-build.130")
+    implementation fg.deobf("curse.maven:balm-531761:3710117")
+    implementation fg.deobf("curse.maven:waystones-245755:3684732")
+    implementation fg.deobf("curse.maven:journeymap-32274:3696405")
     //compileOnly fg.deobf("info.journeymap:journeymap-api:1.16.5-1.7-SNAPSHOT")
 
 }
