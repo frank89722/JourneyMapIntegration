@@ -1,0 +1,177 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7.+'
+    }
+}
+
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+}
+
+def ENV = System.getenv()
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
+
+version = "${minecraft_version}-${version}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
+group = 'frankv.jmi'
+archivesBaseName = "${mod_name}-forge-${minecraft_version}"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+println("##[set-output name=modid;]${archivesBaseName}")
+println("##[set-output name=version;]${version}")
+
+minecraft {
+    mappings channel: 'official', version: '1.18.2'
+
+    if (project.hasProperty('forge_ats_enabled') && project.findProperty('forge_ats_enabled').toBoolean()) {
+        // This location is hardcoded in Forge and can not be changed.
+        // https://github.com/MinecraftForge/MinecraftForge/blob/be1698bb1554f9c8fa2f58e32b9ab70bc4385e60/fmlloader/src/main/java/net/minecraftforge/fml/loading/moddiscovery/ModFile.java#L123
+        accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+        project.logger.debug('Forge Access Transformers are enabled for this project.')
+    }
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName 'Client'
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                jmi {
+                    source sourceSets.main
+                    source project(":Common").sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            taskName 'Server'
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                jmi {
+                    source sourceSets.main
+                    source project(":Common").sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            ideaModule "${rootProject.name}.${project.name}.main"
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            taskName 'Data'
+            args '--mod', 'jmi', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                jmi {
+                    source sourceSets.main
+                    source project(":Common").sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+
+    implementation project(":Common")
+
+    implementation fg.deobf("dev.architectury:architectury-forge:4.2.50")
+    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1802.3.6-build.115")
+    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1802.2.6-build.51")
+    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1802.3.5-build.130")
+    implementation fg.deobf("curse.maven:balm-531761:3710117")
+    implementation fg.deobf("curse.maven:waystones-245755:3684732")
+    implementation fg.deobf("curse.maven:journeymap-32274:3764158")
+
+}
+
+mixin {
+    add sourceSets.main, "jmi.refmap.json"
+    config "jmi.mixins.json"
+
+    debug.verbose = true
+    debug.export = true
+    dumpTargetOnFailure = true
+
+    quiet
+}
+
+tasks.withType(JavaCompile) {
+    source(project(":Common").sourceSets.main.allSource)
+}
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "jmi",
+            "Specification-Vendor": "frankV",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"frankV",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "jmi.mixins.json"
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+if (ENV.CF_TOKEN) {
+    curseforge {
+        apiKey = ENV.CF_TOKEN
+        project {
+            id = "${curse_id}"
+            releaseType = "${release_type}"
+            addGameVersion "Forge"
+            addGameVersion "${minecraft_version}"
+            mainArtifact(jar)
+            relations {
+                requiredDependency 'journeymap'
+                optionalDependency 'ftb-chunks-forge'
+                optionalDependency 'waystones'
+            }
+            changelog = ENV.CHANGELOG
+            changelogType = 'markdown'
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}

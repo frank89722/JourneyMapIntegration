@@ -1,0 +1,39 @@
+{
+    "schemaVersion": 1,
+    "id": "jmi",
+    "version": "${version}",
+  
+    "name": "JourneyMapIntegration",
+    "description": "This is an example description! Tell everyone what your mod is about!",
+    "authors": [
+      "frankV"
+    ],
+    "contact": {
+      "homepage": "https://fabricmc.net/",
+      "sources": "https://github.com/frank89722/JourneyMapIntegration"
+    },
+  
+    "license": "MIT",
+    "icon": "assets/modid/icon.png",
+  
+    "environment": "*",
+    "entrypoints": {
+      "main": [
+        "frankv.jmi.JMI"
+      ],
+      "journeymap": [
+        "frankv.jmi.JMIJourneyMapPlugin"
+      ]
+    },
+    "mixins": [
+      "jmi.mixins.json"
+    ],
+  
+    "depends": {
+      "fabricloader": ">=0.13",
+      "fabric": "*",
+      "minecraft": "1.18.x",
+      "java": ">=17"
+    }
+  }
+  

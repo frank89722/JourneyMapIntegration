@@ -1,186 +1,88 @@
-buildscript {
+
+subprojects {
+    apply plugin: 'java'
+    
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.withSourcesJar()
+    java.withJavadocJar()
+        
+    jar {
+        manifest {
+            attributes([
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_author,
+                'Specification-Version'   : project.jar.archiveVersion,
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_author,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'Timestampe'              : System.currentTimeMillis(),
+                'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                'Build-On-Minecraft'      : minecraft_version
+            ])
+        }
+    }
+    
     repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
+
         mavenCentral()
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
-}
 
-plugins {
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-}
-
-def ENV = System.getenv()
-
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
-
-version = "${MC_VERSION}-${VERSION}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
-group = 'frankv.jmi'
-archivesBaseName = 'jmi'
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-
-println("##[set-output name=modid;]${archivesBaseName}")
-println("##[set-output name=version;]${version}")
-
-minecraft {
-    mappings channel: 'official', version: '1.18.1'
-    runs {
-        client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                jmi {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                jmi {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'jmi', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                jmi {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    maven {
-        url "https://maven.architectury.dev"
-        content {
-        }
-    }
-
-    maven {
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-
-    maven {
-        url "https://maven.saps.dev/minecraft"
-        content {
-            includeGroup "dev.latvian.mods"
-            includeGroup "dev.ftb.mods"
-        }
-    }
-
-    maven {
-        url "https://jm.gserv.me/repository/maven-snapshots/"
-        content {
-            includeGroup "info.journeymap"
-        }
-    }
-    mavenCentral()
-}
-
-dependencies {
-    minecraft "net.minecraftforge:forge:${MC_VERSION}-${FORGE_VERSION}"
-
-    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-
-    implementation fg.deobf("dev.architectury:architectury-forge:4.1.39")
-    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1802.3.6-build.115")
-    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1802.2.6-build.51")
-    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1802.3.5-build.130")
-    implementation fg.deobf("curse.maven:balm-531761:3710117")
-    implementation fg.deobf("curse.maven:waystones-245755:3684732")
-    implementation fg.deobf("curse.maven:journeymap-32274:3696405")
-    //compileOnly fg.deobf("info.journeymap:journeymap-api:1.16.5-1.7-SNAPSHOT")
-
-}
-
-mixin {
-    add sourceSets.main, "jmi.refmap.json"
-    config "jmi.mixins.json"
-
-    debug.verbose = true
-    debug.export = true
-    dumpTargetOnFailure = true
-
-    quiet
-}
-
-jar {
-    manifest {
-        attributes([
-            "Specification-Title": "jmi",
-            "Specification-Vendor": "frankV",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"frankV",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "jmi.mixins.json"
-        ])
-    }
-}
-
-jar.finalizedBy('reobfJar')
-
-if (ENV.CF_TOKEN) {
-    curseforge {
-        apiKey = ENV.CF_TOKEN
-        project {
-            id = "${CURSE_ID}"
-            releaseType = "${RELEASE_TYPE}"
-            addGameVersion "Forge"
-            addGameVersion "${MC_VERSION}"
-            mainArtifact(jar)
-            relations {
-                requiredDependency 'journeymap'
-                optionalDependency 'ftb-chunks-forge'
-                optionalDependency 'waystones'
-            }
-            changelog = ENV.CHANGELOG
-            changelogType = 'markdown'
-        }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            name = 'Sponge / Mixin'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
+//
+//        maven {
+//            name = 'BlameJared Maven (CrT / Bookshelf)'
+//            url = 'https://maven.blamejared.com'
+//        }
+
+        maven {
+            url "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+
+        maven {
+            url "https://maven.architectury.dev"
+            content {
+            }
+        }
+
+        maven {
+            url "https://maven.saps.dev/minecraft"
+            content {
+                includeGroup "dev.latvian.mods"
+                includeGroup "dev.ftb.mods"
+            }
+        }
+
+        maven {
+            url "https://jm.gserv.me/repository/maven-public/"
+            content {
+                includeGroup "info.journeymap"
+            }
+        }
+    }
+
+    dependencies {
+//        implementation "io.reactivex.rxjava3:rxjava:${rxjava_version}"
+        compileOnly "org.projectlombok:lombok:${lombok_version}"
+        annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+    
+        it.options.encoding = 'UTF-8'
+        it.options.release = 17
+    }
+
+    // Disables Gradle's custom module metadata from being published to maven. The
+    // metadata includes mapped dependencies which are not reasonably consumable by
+    // other mod developers.
+    tasks.withType(GenerateModuleMetadata) {
+
+        enabled = false
     }
 }
