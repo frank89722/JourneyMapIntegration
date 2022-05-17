@@ -5,7 +5,7 @@ import dev.ftb.mods.ftblibrary.math.XZ;
 import dev.ftb.mods.ftblibrary.ui.GuiHelper;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.event.FullscreenMapEvent;
-import journeymap.client.ui.fullscreen.Fullscreen;
+import journeymap.client.api.model.IFullscreen;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.Minecraft;
@@ -27,7 +27,7 @@ public class ClaimingModeHandler {
 
     public ClaimingModeHandler() {
         ScreenEvents.AFTER_INIT.register((Minecraft mc, Screen screen, int i, int i1) -> {
-            if (!(screen instanceof Fullscreen)) return;
+            if (!(screen instanceof IFullscreen)) return;
 
             ScreenMouseEvents.afterMouseRelease(screen).register((screenE, mouseX, mouseY, button) -> {
                 if (!doRecord) return;

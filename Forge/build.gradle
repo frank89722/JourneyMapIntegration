@@ -103,7 +103,11 @@ dependencies {
     implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1802.3.5-build.130")
     implementation fg.deobf("curse.maven:balm-531761:3710117")
     implementation fg.deobf("curse.maven:waystones-245755:3684732")
-    implementation fg.deobf("curse.maven:journeymap-32274:3764158")
+
+    compileOnly fg.deobf(group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_forge_version, changing: true)
+    // this should be updated to runtimeOnly -> though you have some hard dependencies on the base mod.
+//    runtimeOnly fg.deobf("curse.maven:journeymap-${project.jm_project_id}:${project.jm_forge_file_id}")
+    implementation fg.deobf("curse.maven:journeymap-${project.jm_project_id}:${project.jm_forge_file_id}")
 
 }
 

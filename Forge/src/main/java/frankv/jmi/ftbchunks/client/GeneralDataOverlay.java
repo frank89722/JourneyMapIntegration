@@ -1,8 +1,9 @@
 package frankv.jmi.ftbchunks.client;
 
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
+import frankv.jmi.util.Draw;
+import journeymap.client.api.model.IFullscreen;
 import journeymap.client.render.draw.DrawUtil;
-import journeymap.client.ui.fullscreen.Fullscreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -18,7 +19,7 @@ public class GeneralDataOverlay {
 
     @SubscribeEvent
     public static void onScreenDraw(ScreenEvent.DrawScreenEvent event) {
-        if (!(event.getScreen() instanceof Fullscreen screen) || !ClaimingMode.activated) return;
+        if (!(event.getScreen() instanceof IFullscreen screen) || !ClaimingMode.activated) return;
 
         var d = FTBChunksClient.generalData;
         if (d == null) return;
@@ -26,7 +27,7 @@ public class GeneralDataOverlay {
         var font = mc.font;
         var stack = event.getPoseStack();
         var list = new LinkedList<Component>();
-        var screenHeight = (float)screen.height;
+        var screenHeight = (float)screen.getScreen().height;
         var width = 0.0f;
 
         list.add((new TextComponent(d.loaded + " / " + d.maxForceLoadChunks)).withStyle(d.loaded > d.maxForceLoadChunks ? ChatFormatting.RED : (d.loaded == d.maxForceLoadChunks ? ChatFormatting.YELLOW : ChatFormatting.GREEN)));
@@ -41,7 +42,7 @@ public class GeneralDataOverlay {
 
         var backgroundH = font.lineHeight * list.size() + 6;
 
-        DrawUtil.drawRectangle(stack, 3, screenHeight - backgroundH - 4, width, backgroundH, 0x000000, 0.5f);
+        Draw.drawRectangle(stack, 3, screenHeight - backgroundH - 4, width, backgroundH, 0x000000, 0.5f);
 
         for(var comp : list) {
             font.draw(stack, comp, 8f, screenHeight - 15, 1);
