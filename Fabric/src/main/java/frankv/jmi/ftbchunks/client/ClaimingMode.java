@@ -7,7 +7,6 @@ import frankv.jmi.JMIOverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.event.fabric.FabricEvent;
 import journeymap.client.api.event.fabric.FabricEvents;
 import journeymap.client.api.event.fabric.FullscreenDisplayEvent;
 import journeymap.client.api.model.ShapeProperties;
@@ -42,10 +41,12 @@ public class ClaimingMode {
     }
 
     public void onGuiScreen(Minecraft minecraft, Screen screen, int i, int i1) {
-        if (!activated) return;
-        if (screen instanceof JmUI && screen != null) return;
-        activated = false;
-        removeOverlays();
+        ScreenEvents.remove(screen).register(event -> {
+            if (!activated) return;
+            if (!(screen instanceof JmUI)) return;
+            activated = false;
+            removeOverlays();
+        });
     }
 
     private void buttonControl(IThemeButton button) {
