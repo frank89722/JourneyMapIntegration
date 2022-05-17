@@ -38,10 +38,17 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             new ClaimingModeHandler();
             new GeneralDataOverlay();
         }
-
-        if (JMI.waystones) {
-            waystoneMarker = new WaystoneMarker(jmAPI);
-            Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
+        try
+        {
+            if (JMI.waystones)
+            {
+                waystoneMarker = new WaystoneMarker(jmAPI);
+                Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
+            }
+        }
+        catch (Exception e)
+        {
+            JMI.waystones = false;
         }
 
         new WaypointChatMessage(JMI.CLIENT_CONFIG);

@@ -44,11 +44,18 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
         }
 
-        if (JMI.waystones) {
-            waystoneMarker = new WaystoneMarker(jmAPI);
-            Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
+        try
+        {
+            if (JMI.waystones)
+            {
+                waystoneMarker = new WaystoneMarker(jmAPI);
+                Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
+            }
         }
-
+        catch (Exception e)
+        {
+            JMI.waystones = false;
+        }
         MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
         MinecraftForge.EVENT_BUS.register(JMIForgeEventListener.class);
 
