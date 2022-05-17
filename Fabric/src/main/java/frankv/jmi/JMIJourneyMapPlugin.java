@@ -24,11 +24,6 @@ import static journeymap.client.api.event.ClientEvent.Type.*;
 public class JMIJourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
     private ClaimedChunkPolygon claimedChunkPolygon;
-    private ClaimingMode claimMode;
-    private ClaimingModeHandler claimingModeHandler;
-    private GeneralDataOverlay generalDataOverlay;
-    private WaypointChatMessage waypointChatMessage;
-    private JMIFabricEventListener jmiFabricEventListener;
 
     public WaystoneMarker waystoneMarker;
 
@@ -39,13 +34,9 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
 
         if (JMI.ftbchunks) {
             claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
-            claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
-            claimingModeHandler = new ClaimingModeHandler();
-            generalDataOverlay = new GeneralDataOverlay();
-//            MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
-//            MinecraftForge.EVENT_BUS.register(claimMode);
-//            MinecraftForge.EVENT_BUS.register(ClaimingModeHandler.class);
-//            MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
+            new ClaimingMode(jmAPI, claimedChunkPolygon);
+            new ClaimingModeHandler();
+            new GeneralDataOverlay();
         }
 
         if (JMI.waystones) {
@@ -53,11 +44,8 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
         }
 
-        waypointChatMessage = new WaypointChatMessage(JMI.CLIENT_CONFIG);
-        jmiFabricEventListener = new JMIFabricEventListener();
-
-//        MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
-//        MinecraftForge.EVENT_BUS.register(JMIForgeEventListener.class);
+        new WaypointChatMessage(JMI.CLIENT_CONFIG);
+        new JMIFabricEventListener();
 
         this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
         JMI.LOGGER.info("Initialized " + getClass().getName());
