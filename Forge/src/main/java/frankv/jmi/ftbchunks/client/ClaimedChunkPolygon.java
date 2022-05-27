@@ -8,7 +8,6 @@ import dev.ftb.mods.ftbteams.event.TeamEvent;
 import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.option.BooleanOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;

@@ -1,11 +1,8 @@
 package frankv.jmi.ftbchunks.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
-import journeymap.client.api.event.fabric.FabricEvent;
-import journeymap.client.api.event.fabric.FabricEvents;
-import journeymap.client.render.draw.DrawUtil;
-import journeymap.client.ui.fullscreen.Fullscreen;
+import frankv.jmi.util.Draw;
+import journeymap.client.api.model.IFullscreen;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -24,7 +21,7 @@ public class GeneralDataOverlay {
     }
 
     public void onScreen(Minecraft mc, Screen screen, int i, int i1) {
-        if (!(screen instanceof Fullscreen)) return;
+        if (!(screen instanceof IFullscreen)) return;
 
         ScreenEvents.afterRender(screen).register((screenE, stack, mouseX, mouseY, tickDelta) -> {
             if (!ClaimingMode.activated) return;
@@ -49,7 +46,7 @@ public class GeneralDataOverlay {
 
             var backgroundH = font.lineHeight * list.size() + 6;
 
-            DrawUtil.drawRectangle(stack, 3, screenHeight - backgroundH - 4, width, backgroundH, 0x000000, 0.5f);
+            Draw.drawRectangle(stack, 3, screenHeight - backgroundH - 4, width, backgroundH, 0x000000, 0.5f);
 
             for(var comp : list) {
                 font.draw(stack, comp, 8f, screenHeight - 15, 1);

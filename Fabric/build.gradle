@@ -21,7 +21,10 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation project(":Common")
 
-    modImplementation "info.journeymap:journeymap-api:1.18.2-1.8-fabric-SNAPSHOT"
+    modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
+    // this should be updated to runtimeOnly -> though you have some hard dependencies on the base mod.
+//    modRuntimeOnly "curse.maven:journeymap-${project.jm_project_id}:${project.jm_fabric_file_id}"
+    modImplementation "curse.maven:journeymap-${project.jm_project_id}:${project.jm_fabric_file_id}"
 
     modImplementation "dev.architectury:architectury-fabric:4.2.50"
     modImplementation "dev.ftb.mods:ftb-library-fabric:1802.3.6-build.115"
@@ -29,7 +32,6 @@ dependencies {
     modImplementation "dev.ftb.mods:ftb-chunks-fabric:1802.3.5-build.130"
     modImplementation "curse.maven:balm-500525:3684724"
     modImplementation "curse.maven:waystones-500087:3684734"
-    modImplementation "curse.maven:journeymap-32274:3764162"
 }
 
 loom {
