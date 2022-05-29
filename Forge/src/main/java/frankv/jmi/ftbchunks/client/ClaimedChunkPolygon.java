@@ -5,6 +5,7 @@ import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.event.ClientTeamPropertiesChangedEvent;
 import dev.ftb.mods.ftbteams.event.TeamEvent;
+import frankv.jmi.JMIForge;
 import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
@@ -44,7 +45,7 @@ public class ClaimedChunkPolygon {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (!JMI.CLIENT_CONFIG.getFtbChunks()) return;
+        if (!JMIForge.CLIENT_CONFIG.getFtbChunks()) return;
         if (mc.level == null) return;
 
         for (var i = 0; i<200; ++i) {

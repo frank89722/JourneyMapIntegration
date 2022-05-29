@@ -3,19 +3,11 @@ package frankv.jmi;
 import frankv.jmi.config.ClientConfig;
 import frankv.jmi.config.IClientConfig;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-public class JMI implements ModInitializer {
-    public static final String MODID = "assets/jmi";
-    public static final Logger LOGGER = LogManager.getLogger();
+public class JMIFabric implements ModInitializer {
     public static final IClientConfig CLIENT_CONFIG = new ClientConfig();
 
-    public static boolean waystones;
-    public static boolean ftbchunks;
-
-    public JMI() {
+    public JMIFabric() {
 //        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
 //        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
 //
@@ -42,8 +34,6 @@ public class JMI implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        waystones = FabricLoader.getInstance().isModLoaded("waystones");
-        ftbchunks = FabricLoader.getInstance().isModLoaded("ftbchunks");
-        CommonClass.init();
+        JMI.init(CLIENT_CONFIG);
     }
 }

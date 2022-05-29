@@ -19,7 +19,7 @@
     "environment": "*",
     "entrypoints": {
       "main": [
-        "frankv.jmi.JMI"
+        "frankv.jmi.JMIFabric"
       ],
       "journeymap": [
         "frankv.jmi.JMIJourneyMapPlugin"

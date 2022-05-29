@@ -1,6 +1,6 @@
 package frankv.jmi.jmdefaultconfig;
 
-import frankv.jmi.Constants;
+import frankv.jmi.JMI;
 import frankv.jmi.config.IClientConfig;
 import frankv.jmi.util.FileManager;
 import org.apache.commons.io.FileUtils;
@@ -33,17 +33,17 @@ public class JMDefualtConfig {
         var dest = new File(System.getProperty("user.dir") + "/journeymap/");
 
         if (!source.exists() || !source.isDirectory()) {
-            Constants.LOGGER.warn("No default config found.");
+            JMI.LOGGER.warn("No default config found.");
             return;
         }
 
-        Constants.LOGGER.info("Writing default configs for Journeymap...");
+        JMI.LOGGER.info("Writing default configs for Journeymap...");
         try {
             fileManager.write(new Version(newVersion));
             FileUtils.copyDirectory(source, dest);
-            Constants.LOGGER.info("Journeymap configs updated.");
+            JMI.LOGGER.info("Journeymap configs updated.");
         } catch (IOException e) {
-            Constants.LOGGER.error("Failed to write default configs " + e);
+            JMI.LOGGER.error("Failed to write default configs " + e);
         }
     }
 }

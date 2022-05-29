@@ -31,11 +31,11 @@ subprojects {
             name = 'Sponge / Mixin'
             url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
-//
-//        maven {
-//            name = 'BlameJared Maven (CrT / Bookshelf)'
-//            url = 'https://maven.blamejared.com'
-//        }
+
+        maven {
+            name = 'BlameJared Maven (CrT / Bookshelf)'
+            url = 'https://maven.blamejared.com'
+        }
 
         maven {
             url "https://www.cursemaven.com"
@@ -67,7 +67,6 @@ subprojects {
     }
 
     dependencies {
-//        implementation "io.reactivex.rxjava3:rxjava:${rxjava_version}"
         compileOnly "org.projectlombok:lombok:${lombok_version}"
         annotationProcessor "org.projectlombok:lombok:${lombok_version}"
     }

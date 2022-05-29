@@ -51,7 +51,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             JMI.waystones = false;
         }
 
-        new WaypointChatMessage(JMI.CLIENT_CONFIG);
+        new WaypointChatMessage(JMIFabric.CLIENT_CONFIG);
         new JMIFabricEventListener();
 
         this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
@@ -60,7 +60,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
 
     @Override
     public String getModId() {
-        return JMI.MODID;
+        return JMI.MOD_ID;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                 case MAPPING_STOPPED -> {
                     clearFTBChunksOverlays();
                     WaystoneMarker.markers.clear();
-                    jmAPI.removeAll(JMI.MODID);
+                    jmAPI.removeAll(JMI.MOD_ID);
                     JMI.LOGGER.debug("all overlays removed");
                 }
 
@@ -110,7 +110,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                     switch (registryEvent.getRegistryType()) {
                         case INFO_SLOT -> {
                             if (!JMI.ftbchunks) break;
-                            ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MODID, "jmi.infoslot.ftbchunks", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
+                            ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MOD_ID, "jmi.infoslot.ftbchunks", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
                         }
                     }
                 }
@@ -123,7 +123,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     }
 
     private void disableFTBChunksThings() {
-        if (!JMI.CLIENT_CONFIG.getDisableFTBFunction()) return;
+        if (!JMIFabric.CLIENT_CONFIG.getDisableFTBFunction()) return;
         FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
         FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
         FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);

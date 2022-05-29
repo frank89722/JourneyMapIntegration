@@ -15,6 +15,9 @@ import net.minecraft.world.level.Level;
 import java.util.*;
 
 public class WaystoneMarker {
+
+    //TODO: add config back
+
     private IClientAPI jmAPI;
     private static Minecraft mc = Minecraft.getInstance();
     public static HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
@@ -30,14 +33,14 @@ public class WaystoneMarker {
                 .setAnchorX(12.0d)
                 .setAnchorY(24.0d)
                 .setDisplayWidth(24.0d)
-                .setDisplayHeight(24.0d)
-                .setColor(JMI.CLIENT_CONFIG.getWaystoneColor());
+                .setDisplayHeight(24.0d);
+//                .setColor(JMIForge.CLIENT_CONFIG.getWaystoneColor());
 
         var textProperties = new TextProperties()
                 .setBackgroundOpacity(0.4f)
                 .setOpacity(1.0f);
 
-        var markerOverlay = new MarkerOverlay(JMI.MODID, "waystone_" + waystone.pos, waystone.pos, icon);
+        var markerOverlay = new MarkerOverlay(JMI.MOD_ID, "waystone_" + waystone.pos, waystone.pos, icon);
         markerOverlay.setDimension(waystone.dim)
                 .setLabel(waystone.name)
                 .setTextProperties(textProperties);
@@ -48,7 +51,7 @@ public class WaystoneMarker {
             jmAPI.show(markerOverlay);
             markers.put(waystone, markerOverlay);
         } catch (Exception e) {
-            JMI.LOGGER.error(e);
+            JMI.LOGGER.error(String.valueOf(e));
         }
     }
 
@@ -59,7 +62,7 @@ public class WaystoneMarker {
             jmAPI.remove(markers.remove(waystone));
             markers.remove(waystone);
         } catch (Exception e) {
-            JMI.LOGGER.error(e);
+            JMI.LOGGER.error(String.valueOf(e));
         }
     }
 
@@ -86,7 +89,7 @@ public class WaystoneMarker {
     }
 
     public void onKnownWaystones(KnownWaystonesEvent event) {
-        if (!JMI.CLIENT_CONFIG.getWaystone()) return;
+//        if (!JMIForge.CLIENT_CONFIG.getWaystone()) return;
         var newWaystones = new HashSet<>(ComparableWaystone.fromEvent(event));
         var oldWaystones = new HashSet<>(markers.keySet());
 

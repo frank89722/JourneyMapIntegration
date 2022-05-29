@@ -44,18 +44,16 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
         }
 
-        try
-        {
-            if (JMI.waystones)
-            {
+        try {
+            if (JMI.waystones) {
                 waystoneMarker = new WaystoneMarker(jmAPI);
                 Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             JMI.waystones = false;
         }
+
         MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
         MinecraftForge.EVENT_BUS.register(JMIForgeEventListener.class);
 
@@ -65,7 +63,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
 
     @Override
     public String getModId() {
-        return JMI.MODID;
+        return JMI.MOD_ID;
     }
 
     @Override
@@ -93,7 +91,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                 case MAPPING_STOPPED -> {
                     clearFTBChunksOverlays();
                     WaystoneMarker.markers.clear();
-                    jmAPI.removeAll(JMI.MODID);
+                    jmAPI.removeAll(JMI.MOD_ID);
                     JMI.LOGGER.debug("all overlays removed");
                 }
 
@@ -115,7 +113,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                     switch (registryEvent.getRegistryType()) {
                         case INFO_SLOT -> {
                             if (!JMI.ftbchunks) break;
-                            ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MODID, "jmi.infoslot.ftbchunks", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
+                            ((RegistryEvent.InfoSlotRegistryEvent)registryEvent).register(JMI.MOD_ID, "jmi.infoslot.ftbchunks", 1000L, ClaimedChunkPolygon::getPolygonTitleByPlayerPos);
                         }
                     }
                 }
@@ -128,7 +126,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     }
 
     private void disableFTBChunksThings() {
-        if (!JMI.CLIENT_CONFIG.getDisableFTBFunction()) return;
+        if (!JMIForge.CLIENT_CONFIG.getDisableFTBFunction()) return;
         FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
         FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
         FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);

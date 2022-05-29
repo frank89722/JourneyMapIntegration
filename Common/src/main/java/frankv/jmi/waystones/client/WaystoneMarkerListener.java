@@ -21,28 +21,28 @@ public class WaystoneMarkerListener implements IOverlayListener {
     }
 
     @Override
-    public void onActivate(UIState mapState) {
+    public void onActivate(UIState uiState) {
 
     }
 
     @Override
-    public void onDeactivate(UIState mapState) {
+    public void onDeactivate(UIState uiState) {
 
     }
 
     @Override
-    public void onMouseMove(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
+    public void onMouseMove(UIState uiState, Point2D.Double aDouble, BlockPos blockPos) {
 
     }
 
     @Override
-    public void onMouseOut(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
+    public void onMouseOut(UIState uiState, Point2D.Double aDouble, BlockPos blockPos) {
 
     }
 
     @Override
-    public boolean onMouseClick(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition, int button, boolean doubleClick) {
-        Waypoint waypoint = new Waypoint(JMI.MODID, String.format("waystone_%s_%s_%s", overlay.getTitle(), overlay.getDimension(), overlay.getPoint()), overlay.getTitle(), overlay.getDimension(), overlay.getPoint());
+    public boolean onMouseClick(UIState uiState, Point2D.Double aDouble, BlockPos blockPos, int i, boolean b) {
+        Waypoint waypoint = new Waypoint(JMI.MOD_ID, String.format("waystone_%s_%s_%s", overlay.getTitle(), overlay.getDimension(), overlay.getPoint()), overlay.getTitle(), overlay.getDimension(), overlay.getPoint());
 
         try {
             jmAPI.show(waypoint);
@@ -54,7 +54,7 @@ public class WaystoneMarkerListener implements IOverlayListener {
     }
 
     @Override
-    public void onOverlayMenuPopup(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition, ModPopupMenu modPopupMenu) {
+    public void onOverlayMenuPopup(UIState uiState, Point2D.Double aDouble, BlockPos blockPos, ModPopupMenu modPopupMenu) {
 
     }
 }

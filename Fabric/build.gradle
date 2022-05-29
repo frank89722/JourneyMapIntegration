@@ -22,16 +22,14 @@ dependencies {
     implementation project(":Common")
 
     modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
-    // this should be updated to runtimeOnly -> though you have some hard dependencies on the base mod.
-//    modRuntimeOnly "curse.maven:journeymap-${project.jm_project_id}:${project.jm_fabric_file_id}"
     modImplementation "curse.maven:journeymap-${project.jm_project_id}:${project.jm_fabric_file_id}"
 
-    modImplementation "dev.architectury:architectury-fabric:4.2.50"
-    modImplementation "dev.ftb.mods:ftb-library-fabric:1802.3.6-build.115"
-    modImplementation "dev.ftb.mods:ftb-teams-fabric:1802.2.6-build.51"
-    modImplementation "dev.ftb.mods:ftb-chunks-fabric:1802.3.5-build.130"
-    modImplementation "curse.maven:balm-500525:3684724"
-    modImplementation "curse.maven:waystones-500087:3684734"
+    modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
+    modImplementation "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
+    modImplementation "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
+    modImplementation "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
+    modImplementation "curse.maven:balm-${project.balm_fabric_project_id}:${project.balm_fabric_file_id}"
+    modImplementation "curse.maven:waystones-${project.waystones_fabric_project_id}:${project.waystones_fabric_file_id}"
 }
 
 loom {

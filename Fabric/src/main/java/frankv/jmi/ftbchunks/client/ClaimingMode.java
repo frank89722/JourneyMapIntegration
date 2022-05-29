@@ -81,7 +81,7 @@ public class ClaimingMode {
 
         var polygon = PolygonHelper.createChunkPolygon(xz.x, 10, xz.z);
 
-        return new PolygonOverlay(JMI.MODID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
+        return new PolygonOverlay(JMI.MOD_ID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
     public static PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
@@ -94,7 +94,7 @@ public class ClaimingMode {
 
         var polygon = PolygonHelper.createChunkPolygon(pos.x, 10, pos.z);
 
-        return new PolygonOverlay(JMI.MODID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
+        return new PolygonOverlay(JMI.MOD_ID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
     private void createClaimingAreaOverlays() {
@@ -117,7 +117,7 @@ public class ClaimingMode {
 
         var polygons = PolygonHelper.createChunksPolygon(this.area, 100);
 
-        var overlay = new PolygonOverlay(JMI.MODID, displayId, player.level.dimension(), shapeProps, polygons.get(0));
+        var overlay = new PolygonOverlay(JMI.MOD_ID, displayId, player.level.dimension(), shapeProps, polygons.get(0));
         if (JMIOverlayHelper.createPolygon(overlay)) claimAreaPolygon = overlay;
     }
 }

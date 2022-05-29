@@ -97,16 +97,14 @@ dependencies {
 
     implementation project(":Common")
 
-    implementation fg.deobf("dev.architectury:architectury-forge:4.2.50")
-    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:1802.3.6-build.115")
-    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:1802.2.6-build.51")
-    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:1802.3.5-build.130")
-    implementation fg.deobf("curse.maven:balm-531761:3710117")
-    implementation fg.deobf("curse.maven:waystones-245755:3684732")
+    implementation fg.deobf("dev.architectury:architectury-forge:${project.architectury_version}")
+    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${project.ftb_library_version}")
+    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:${project.ftb_teams_version}")
+    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:${project.ftb_chunks_version}")
+    implementation fg.deobf("curse.maven:balm-${project.balm_forge_project_id}:${project.balm_forge_file_id}")
+    implementation fg.deobf("curse.maven:waystones-${project.waystones_forge_project_id}:${project.waystones_forge_file_id}")
 
     compileOnly fg.deobf(group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_forge_version, changing: true)
-    // this should be updated to runtimeOnly -> though you have some hard dependencies on the base mod.
-//    runtimeOnly fg.deobf("curse.maven:journeymap-${project.jm_project_id}:${project.jm_forge_file_id}")
     implementation fg.deobf("curse.maven:journeymap-${project.jm_project_id}:${project.jm_forge_file_id}")
 
 }

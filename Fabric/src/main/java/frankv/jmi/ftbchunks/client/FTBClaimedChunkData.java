@@ -6,6 +6,7 @@ import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.data.ClientTeam;
 import dev.ftb.mods.ftbteams.data.ClientTeamManager;
 import frankv.jmi.JMI;
+import frankv.jmi.JMIFabric;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
@@ -38,7 +39,7 @@ public class FTBClaimedChunkData {
         var displayId = "claimed_" + chunkDimPos.x + ',' + chunkDimPos.z;
         var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
-                .setFillColor(color).setFillOpacity(JMI.CLIENT_CONFIG.getClaimedChunkOverlayOpacity().floatValue());
+                .setFillColor(color).setFillOpacity(JMIFabric.CLIENT_CONFIG.getClaimedChunkOverlayOpacity().floatValue());
 
         var textProps = new TextProperties()
                 .setColor(color)
@@ -47,7 +48,7 @@ public class FTBClaimedChunkData {
 
         var polygon = PolygonHelper.createChunkPolygon(chunkDimPos.x, 1, chunkDimPos.z);
 
-        var overlay = new PolygonOverlay(JMI.MODID, displayId, chunkDimPos.dimension, shapeProps, polygon);
+        var overlay = new PolygonOverlay(JMI.MOD_ID, displayId, chunkDimPos.dimension, shapeProps, polygon);
 
         overlay.setOverlayGroupName("Claimed Chunks")
                 .setTitle(team.getDisplayName())

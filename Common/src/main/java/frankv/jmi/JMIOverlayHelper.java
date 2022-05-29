@@ -16,7 +16,7 @@ public class JMIOverlayHelper {
         try {
             jmAPI.show(overlay);
         } catch (Throwable t) {
-            JMI.LOGGER.error(t);
+            JMI.LOGGER.error(String.valueOf(t));
             return false;
         }
         return true;
