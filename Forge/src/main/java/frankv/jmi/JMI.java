@@ -11,13 +11,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import net.minecraftforge.network.NetworkConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-@Mod(JMI.MODID)
+@Mod(Constants.MOD_ID)
 public class JMI {
-    public static final String MODID = "assets/jmi";
-    public static final Logger LOGGER = LogManager.getLogger();
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
     public static boolean waystones;
@@ -38,15 +34,13 @@ public class JMI {
     private void setupClient(final FMLClientSetupEvent event) {
 
         if (ftbchunks) {
-            LOGGER.info("FTBChunk integration loaded.");
+            Constants.LOGGER.info("FTBChunk integration loaded.");
         }
 
         if (waystones) {
-            LOGGER.info("Waystones integration loaded.");
+            Constants.LOGGER.info("Waystones integration loaded.");
         }
 
-        if (CLIENT_CONFIG.getDefaultConfigVersion() != -1) {
-            JMDefualtConfig.tryWriteJMDefaultConfig();
-        }
+        new JMDefualtConfig(CLIENT_CONFIG).tryWriteJMDefaultConfig();
     }
 }
