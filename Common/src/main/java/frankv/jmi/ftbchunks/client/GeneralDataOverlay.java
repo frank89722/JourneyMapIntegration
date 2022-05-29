@@ -1,33 +1,31 @@
 package frankv.jmi.ftbchunks.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
 import frankv.jmi.util.Draw;
 import journeymap.client.api.model.IFullscreen;
-import journeymap.client.render.draw.DrawUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.LinkedList;
 
 public class GeneralDataOverlay {
     private static Minecraft mc = Minecraft.getInstance();
 
-    @SubscribeEvent
-    public static void onScreenDraw(ScreenEvent.DrawScreenEvent event) {
-        if (!(event.getScreen() instanceof IFullscreen screen) || !ClaimingMode.activated) return;
+//    @SubscribeEvent
+    public static void onScreenDraw(Screen screen, PoseStack stack) {
+        if (!(screen instanceof IFullscreen) || !ClaimingMode.activated) return;
 
         var d = FTBChunksClient.generalData;
         if (d == null) return;
 
         var font = mc.font;
-        var stack = event.getPoseStack();
         var list = new LinkedList<Component>();
-        var screenHeight = (float)screen.getScreen().height;
+        var screenHeight = (float)screen.height;
         var width = 0.0f;
 
         list.add((new TextComponent(d.loaded + " / " + d.maxForceLoadChunks)).withStyle(d.loaded > d.maxForceLoadChunks ? ChatFormatting.RED : (d.loaded == d.maxForceLoadChunks ? ChatFormatting.YELLOW : ChatFormatting.GREEN)));

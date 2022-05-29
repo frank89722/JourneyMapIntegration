@@ -6,7 +6,6 @@ import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.data.ClientTeam;
 import dev.ftb.mods.ftbteams.data.ClientTeamManager;
 import frankv.jmi.JMI;
-import frankv.jmi.JMIForge;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.model.TextProperties;
@@ -16,6 +15,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class FTBClaimedChunkData {
+    //TODO: add config back
+
     public final SendChunkPacket.SingleChunk chunk;
     public final ChunkDimPos chunkDimPos;
     public final boolean forceLoaded;
@@ -39,7 +40,9 @@ public class FTBClaimedChunkData {
         var displayId = "claimed_" + chunkDimPos.x + ',' + chunkDimPos.z;
         var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
-                .setFillColor(color).setFillOpacity(JMIForge.CLIENT_CONFIG.getClaimedChunkOverlayOpacity().floatValue());
+                .setFillColor(color)
+//                .setFillOpacity(JMIForge.CLIENT_CONFIG.getClaimedChunkOverlayOpacity().floatValue());
+                .setFillOpacity(0.5f);
 
         var textProps = new TextProperties()
                 .setColor(color)

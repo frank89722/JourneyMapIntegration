@@ -23,7 +23,6 @@ import static journeymap.client.api.event.ClientEvent.Type.*;
 @ParametersAreNonnullByDefault
 public class JMIJourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
-    private ClaimedChunkPolygon claimedChunkPolygon;
 
     public WaystoneMarker waystoneMarker;
 
@@ -33,21 +32,16 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         JMIOverlayHelper.setJmAPI(jmAPI);
 
         if (JMI.ftbchunks) {
-            claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
-            new ClaimingMode(jmAPI, claimedChunkPolygon);
-            new ClaimingModeHandler();
-            new GeneralDataOverlay();
+            ClaimedChunkPolygon.init(jmAPI);
+            ClaimingMode.init(jmAPI);
         }
-        try
-        {
-            if (JMI.waystones)
-            {
+
+        try {
+            if (JMI.waystones) {
                 waystoneMarker = new WaystoneMarker(jmAPI);
                 Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             JMI.waystones = false;
         }
 
@@ -72,7 +66,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                         if (JMIFabricEventListener.firstLogin) {
                             disableFTBChunksThings();
                         } else {
-                            claimedChunkPolygon.createPolygonsOnMappingStarted();
+                            ClaimedChunkPolygon.createPolygonsOnMappingStarted();
                             JMI.LOGGER.debug("re-added ftbchunks overlays");
                         }
                     }

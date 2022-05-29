@@ -33,20 +33,13 @@ dependencies {
 
     modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_common_version, changing: true
 
-    modCompileOnly("curse.maven:balm-${project.balm_fabric_project_id}:${project.balm_fabric_file_id}")
-//            {
-//        exclude(group: "net.fabricmc", module: "fabric-loader")
-//        exclude(group: "net.fabricmc.fabric-api")
-//    }
-    modCompileOnly("curse.maven:waystones-${project.waystones_fabric_project_id}:${project.waystones_fabric_file_id}")
-//            {
-//        exclude(group: "net.fabricmc", module: "fabric-loader")
-//        exclude(group: "net.fabricmc.fabric-api")
-//    }
-    modCompileOnly "dev.architectury:architectury:${project.architectury_version}"
-    modCompileOnly "dev.ftb.mods:ftb-library:${project.ftb_library_version}"
-    modCompileOnly "dev.ftb.mods:ftb-teams:${project.ftb_teams_version}"
-    modCompileOnly "dev.ftb.mods:ftb-chunks:${project.ftb_chunks_version}"
+    modCompileOnly "dev.architectury:architectury-fabric:${project.architectury_version}"
+    modCompileOnly "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
+    modCompileOnly "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
+    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
+    modCompileOnly "curse.maven:balm-${project.balm_fabric_project_id}:${project.balm_fabric_file_id}"
+    modCompileOnly "curse.maven:waystones-${project.waystones_fabric_project_id}:${project.waystones_fabric_file_id}"
+
 }
 
 processResources {

@@ -25,8 +25,8 @@ import static journeymap.client.api.event.ClientEvent.Type.*;
 @journeymap.client.api.ClientPlugin
 public class JMIJourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
-    private ClaimedChunkPolygon claimedChunkPolygon;
-    private ClaimingMode claimMode;
+//    private ClaimedChunkPolygon claimedChunkPolygon;
+//    private ClaimingMode claimMode;
     public WaystoneMarker waystoneMarker;
 
     @Override
@@ -35,13 +35,14 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         JMIOverlayHelper.setJmAPI(jmAPI);
 
         if (JMI.ftbchunks) {
-            claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
-            claimMode = new ClaimingMode(jmAPI, claimedChunkPolygon);
+//            claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
+            ClaimedChunkPolygon.init(jmAPI);
+            ClaimingMode.init(jmAPI);
 
-            MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
-            MinecraftForge.EVENT_BUS.register(claimMode);
-            MinecraftForge.EVENT_BUS.register(ClaimingModeHandler.class);
-            MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
+//            MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
+//            MinecraftForge.EVENT_BUS.register(claimMode);
+//            MinecraftForge.EVENT_BUS.register(ClaimingModeHandler.class);
+//            MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
         }
 
         try {
@@ -75,7 +76,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                         if (JMIForgeEventListener.firstLogin) {
                             disableFTBChunksThings();
                         } else {
-                            claimedChunkPolygon.createPolygonsOnMappingStarted();
+                            ClaimedChunkPolygon.createPolygonsOnMappingStarted();
                             JMI.LOGGER.debug("re-added ftbchunks overlays");
                         }
                     }

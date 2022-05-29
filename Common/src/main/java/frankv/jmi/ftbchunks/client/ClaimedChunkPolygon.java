@@ -5,11 +5,9 @@ import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.event.ClientTeamPropertiesChangedEvent;
 import dev.ftb.mods.ftbteams.event.TeamEvent;
-import frankv.jmi.JMIFabric;
 import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -20,7 +18,9 @@ import static frankv.jmi.JMIOverlayHelper.createPolygon;
 import static frankv.jmi.JMIOverlayHelper.removePolygons;
 
 public class ClaimedChunkPolygon {
-    private IClientAPI jmAPI;
+    //TODO: add config back
+
+    private static IClientAPI jmAPI;
     private static final Minecraft mc = Minecraft.getInstance();
 
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();
@@ -29,10 +29,9 @@ public class ClaimedChunkPolygon {
     public static List<FTBClaimedChunkData> queue = new LinkedList<>();
 
 
-    public ClaimedChunkPolygon(IClientAPI jmAPI) {
-        this.jmAPI = jmAPI;
-        TeamEvent.CLIENT_PROPERTIES_CHANGED.register(this::onTeamPropsChanged);
-        ClientTickEvents.START_CLIENT_TICK.register(this::onClientTick);
+    public static void init(IClientAPI jmAPI) {
+        ClaimedChunkPolygon.jmAPI = jmAPI;
+        TeamEvent.CLIENT_PROPERTIES_CHANGED.register(ClaimedChunkPolygon::onTeamPropsChanged);
     }
 
     public static String getPolygonTitleByPlayerPos() {
@@ -43,8 +42,9 @@ public class ClaimedChunkPolygon {
         return chunkOverlays.get(pos).getTitle();
     }
 
-    public void onClientTick(Minecraft minecraft) {
-        if (!JMIFabric.CLIENT_CONFIG.getFtbChunks()) return;
+//    @SubscribeEvent
+    public static void onClientTick() {
+//        if (!JMIForge.CLIENT_CONFIG.getFtbChunks()) return;
         if (mc.level == null) return;
 
         for (var i = 0; i<200; ++i) {
@@ -61,7 +61,7 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    public void createPolygonsOnMappingStarted() {
+    public static void createPolygonsOnMappingStarted() {
         var level = mc.level;
 
         if (level == null) return;
@@ -72,7 +72,7 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    private void addChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
+    private static void addChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
         var pos = data.chunkDimPos;
 
         if (chunkOverlays.containsKey(pos)) return;
@@ -84,7 +84,7 @@ public class ClaimedChunkPolygon {
 
     }
 
-    private void removeChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
+    private static void removeChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
         var pos = data.chunkDimPos;
 
         if (!chunkOverlays.containsKey(pos)) return;
@@ -101,7 +101,7 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    private void replaceChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
+    private static void replaceChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
         removeChunk(data, dim);
         addChunk(data, dim);
         if (ClaimingMode.activated) {
@@ -110,7 +110,7 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    public void showForceLoadedByArea(boolean show) {
+    public static void showForceLoadedByArea(boolean show) {
         var level = mc.level;
         if (level == null) return;
 
@@ -130,7 +130,7 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
+    private static void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
         if (!chunkData.containsKey(chunkDimPos)) return;
         var data = chunkData.get(chunkDimPos);
         var teamName = data.team.getDisplayName();
@@ -149,7 +149,7 @@ public class ClaimedChunkPolygon {
         }
     }
 
-    public void onTeamPropsChanged(ClientTeamPropertiesChangedEvent event) {
+    public static void onTeamPropsChanged(ClientTeamPropertiesChangedEvent event) {
         var teamId = event.getTeam().getId();
         var dim = mc.level.dimension();
 

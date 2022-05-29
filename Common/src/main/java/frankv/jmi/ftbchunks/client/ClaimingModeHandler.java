@@ -8,15 +8,13 @@ import journeymap.client.api.event.FullscreenMapEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static frankv.jmi.JMIOverlayHelper.*;
+import static frankv.jmi.JMIOverlayHelper.createPolygon;
+import static frankv.jmi.JMIOverlayHelper.removePolygons;
 
 public class ClaimingModeHandler {
     private static boolean doRecord = false;
@@ -67,11 +65,18 @@ public class ClaimingModeHandler {
         GuiHelper.playSound(SoundEvents.UI_BUTTON_CLICK, 1.0F);
     }
 
-    @SubscribeEvent
-    public static void mouse(InputEvent.MouseInputEvent event) {
-        if (!doRecord) return;
-        if (event.getAction() != GLFW.GLFW_RELEASE || event.getButton() > 1) return;
+//    @SubscribeEvent
+//    public static void mouse(InputEvent.MouseInputEvent event) {
+//        if (!doRecord) return;
+//        if (event.getAction() != GLFW.GLFW_RELEASE || event.getButton() > 1) return;
+//
+//        applyChanges(event.getButton());
+//    }
 
-        applyChanges(event.getButton());
+    public static void onMouseReleased(int mouseButton) {
+        if (!doRecord) return;
+        if (mouseButton > 1) return;
+
+        applyChanges(mouseButton);
     }
 }
