@@ -9,14 +9,14 @@ import java.io.IOException;
 
 public class JMDefualtConfig {
     private Version existVersion;
-    private FileManager<Version> fileManager;
+    private FileManager fileManager;
 
     public JMDefualtConfig() {
         fileManager = new FileManager<>("/journeymap/defaultconfig.json");
         if (!fileManager.getFile().exists()) {
             fileManager.write(new Version(-1));
         }
-        existVersion = fileManager.read(Version.class);
+        existVersion = (Version)fileManager.read(Version.class);
     }
 
     public void tryWriteJMDefaultConfig() {

@@ -19,9 +19,9 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${minecraft_version}-${version}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
+version = "${version}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
 group = 'frankv.jmi'
-archivesBaseName = "${mod_name}-forge-${minecraft_version}"
+archivesBaseName = "${mod_id}-forge-${minecraft_version}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 

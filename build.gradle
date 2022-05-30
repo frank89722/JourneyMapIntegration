@@ -3,8 +3,8 @@ subprojects {
     apply plugin: 'java'
     
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-    java.withSourcesJar()
-    java.withJavadocJar()
+//    java.withSourcesJar()
+//    java.withJavadocJar()
         
     jar {
         manifest {
@@ -67,8 +67,10 @@ subprojects {
     }
 
     dependencies {
-        compileOnly "org.projectlombok:lombok:${lombok_version}"
-        annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+        compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+        annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+        testCompileOnly "org.projectlombok:lombok:${project.lombok_version}"
+        testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
     }
 
     tasks.withType(JavaCompile).configureEach {

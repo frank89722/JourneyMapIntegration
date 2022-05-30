@@ -7,7 +7,8 @@ plugins {
 
 def ENV = System.getenv()
 
-archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
+version = "${version}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
+archivesBaseName = "${mod_id}-fabric-${minecraft_version}"
 
 repositories {
     maven { url "https://maven.shedaniel.me/" }
@@ -94,18 +95,23 @@ if (ENV.CF_TOKEN) {
             releaseType = "${release_type}"
             addGameVersion "Fabric"
             addGameVersion "${minecraft_version}"
-            mainArtifact(jar)
+            mainArtifact(remapJar.archivePath)
             relations {
                 requiredDependency 'journeymap'
+                requiredLibrary 'fabric-api'
                 optionalDependency 'ftb-chunks-fabric'
                 optionalDependency 'waystones-fabric'
             }
             changelog = ENV.CHANGELOG
             changelogType = 'markdown'
-        }
-    }
 
-    afterEvaluate {
-        tasks.curseforge525447.dependsOn remapJar
+//            afterEvaluate {
+//                tasks.curseforge525447.dependsOn remapJar
+//            }
+        }
+
+        options {
+            forgeGradleIntegration = false
+        }
     }
 }
