@@ -4,8 +4,6 @@ import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
 import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
 import frankv.jmi.ftbchunks.client.ClaimingMode;
 import frankv.jmi.ftbchunks.client.ClaimingModeHandler;
-import frankv.jmi.ftbchunks.client.GeneralDataOverlay;
-import frankv.jmi.waypointmessage.WaypointChatMessage;
 import frankv.jmi.waystones.client.WaystoneMarker;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
@@ -14,7 +12,6 @@ import journeymap.client.api.event.FullscreenMapEvent;
 import journeymap.client.api.event.RegistryEvent;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumSet;
@@ -25,8 +22,6 @@ import static journeymap.client.api.event.ClientEvent.Type.*;
 @journeymap.client.api.ClientPlugin
 public class JMIJourneyMapPlugin implements IClientPlugin {
     private IClientAPI jmAPI = null;
-//    private ClaimedChunkPolygon claimedChunkPolygon;
-//    private ClaimingMode claimMode;
     public WaystoneMarker waystoneMarker;
 
     @Override
@@ -35,14 +30,8 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         JMIOverlayHelper.setJmAPI(jmAPI);
 
         if (JMI.ftbchunks) {
-//            claimedChunkPolygon = new ClaimedChunkPolygon(jmAPI);
             ClaimedChunkPolygon.init(jmAPI);
             ClaimingMode.init(jmAPI);
-
-//            MinecraftForge.EVENT_BUS.register(claimedChunkPolygon);
-//            MinecraftForge.EVENT_BUS.register(claimMode);
-//            MinecraftForge.EVENT_BUS.register(ClaimingModeHandler.class);
-//            MinecraftForge.EVENT_BUS.register(GeneralDataOverlay.class);
         }
 
         try {
@@ -50,13 +39,9 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                 waystoneMarker = new WaystoneMarker(jmAPI);
                 Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             JMI.waystones = false;
         }
-
-        MinecraftForge.EVENT_BUS.register(WaypointChatMessage.class);
-        MinecraftForge.EVENT_BUS.register(JMIForgeEventListener.class);
 
         this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
         JMI.LOGGER.info("Initialized " + getClass().getName());
@@ -73,7 +58,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
             switch (event.type) {
                 case MAPPING_STARTED -> {
                     if (JMI.ftbchunks) {
-                        if (JMIForgeEventListener.firstLogin) {
+                        if (JMI.platformEventListener.isFirstLogin()) {
                             disableFTBChunksThings();
                         } else {
                             ClaimedChunkPolygon.createPolygonsOnMappingStarted();
@@ -86,7 +71,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                         JMI.LOGGER.debug("re-added waystones overlays");
                     }
 
-                    JMIForgeEventListener.firstLogin = false;
+                    JMI.platformEventListener.setFirstLogin(false);
                 }
 
                 case MAPPING_STOPPED -> {
@@ -127,7 +112,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     }
 
     private void disableFTBChunksThings() {
-        if (!JMIForge.CLIENT_CONFIG.getDisableFTBFunction()) return;
+        if (!JMI.clientConfig.getDisableFTBFunction()) return;
         FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
         FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
         FTBChunksClientConfig.IN_WORLD_WAYPOINTS.set(false);

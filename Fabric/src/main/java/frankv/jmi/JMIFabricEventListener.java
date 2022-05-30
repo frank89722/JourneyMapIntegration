@@ -8,6 +8,8 @@ import frankv.jmi.waystones.client.WaystoneMarker;
 import journeymap.client.api.event.fabric.FabricEvents;
 import journeymap.client.api.event.fabric.FullscreenDisplayEvent;
 import journeymap.client.api.model.IFullscreen;
+import lombok.Getter;
+import lombok.Setter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
@@ -17,11 +19,13 @@ import net.minecraft.client.gui.screens.Screen;
 import static frankv.jmi.ftbchunks.client.ClaimingMode.activated;
 import static frankv.jmi.ftbchunks.client.ClaimingMode.buttonControl;
 
-public class JMIFabricEventListener {
-    public static boolean firstLogin;
-    private static boolean haveDim;
+public class JMIFabricEventListener implements PlatformEventListener {
 
-    public JMIFabricEventListener() {
+    @Getter @Setter
+    private boolean firstLogin;
+    private boolean haveDim;
+
+    public void register() {
         ClientTickEvents.START_CLIENT_TICK.register(this::onClientTick);
         FabricEvents.ADDON_BUTTON_DISPLAY_EVENT.register(this::onAddonButtonDisplay);
         ScreenEvents.AFTER_INIT.register(this::onGuiScreen);
@@ -62,7 +66,6 @@ public class JMIFabricEventListener {
                 ScreenMouseEvents.afterMouseRelease(screen).register((screenE, mouseX, mouseY, button) -> ClaimingModeHandler.onMouseReleased(button));
                 ScreenEvents.afterRender(screen).register((screenE, stack, mouseX, mouseY, tickDelta) -> GeneralDataOverlay.onScreenDraw(screen, stack));
             }
-
         }
     }
 }

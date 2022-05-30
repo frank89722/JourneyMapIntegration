@@ -8,7 +8,8 @@
     "client": [
       "FTBChunksClientMixin",
       "UpdateFromServerTaskMixin",
-      "WaypointParserInvoker"
+      "WaypointParserInvoker",
+      "MouseHandlerMixin"
     ],
     "injectors": {
       "defaultRequire": 1
