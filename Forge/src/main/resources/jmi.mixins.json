@@ -6,8 +6,7 @@
   "priority": 1000,
   "client": [
     "FTBChunksClientMixin",
-    "UpdateFromServerTaskMixin",
-    "WaypointParserInvoker"
+    "UpdateFromServerTaskMixin"
   ],
   "injectors": {
     "defaultRequire": 1
