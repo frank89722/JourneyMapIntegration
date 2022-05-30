@@ -2,35 +2,36 @@ package frankv.jmi.config;
 
 import com.google.common.collect.Lists;
 import frankv.jmi.util.FileManager;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class ClientConfig implements IClientConfig {
 
-    @Getter
+    private static final FileManager FILE_MANAGER = new FileManager("/config/jmi-client.json");
+
     private Boolean ftbChunks = true;
-    @Getter
     private Boolean waystone = true;
-    @Getter
     private List<String> waypointMessageBlocks = Lists.newArrayList();
-    @Getter
     private Boolean waypointMessageEmptyHandOnly = true;
-    @Getter
     private Double claimedChunkOverlayOpacity = 0.222223;
-    @Getter
     private Boolean disableFTBFunction = true;
-    @Getter
     private Boolean showClaimChunkScreen = true;
-    @Getter
     private Integer waystoneColor = 0xffffff;
-    @Getter
     private Integer defaultConfigVersion = -1;
 
-    public ClientConfig() {
-    }
+    public static ClientConfig loadConfig() {
 
+        if (FILE_MANAGER.getFile().exists()) {
+            return (ClientConfig)FILE_MANAGER.read(ClientConfig.class);
+        }
+
+        var config = new ClientConfig();
+        FILE_MANAGER.write(config);
+        return config;
+    }
 
 }

@@ -5,7 +5,7 @@ import frankv.jmi.config.IClientConfig;
 import net.fabricmc.api.ModInitializer;
 
 public class JMIFabric implements ModInitializer {
-    public static final IClientConfig CLIENT_CONFIG = new ClientConfig();
+    public static final IClientConfig CLIENT_CONFIG = ClientConfig.loadConfig();
 
     @Override
     public void onInitialize() {
