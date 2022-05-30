@@ -16,7 +16,6 @@ import java.util.LinkedList;
 public class GeneralDataOverlay {
     private static Minecraft mc = Minecraft.getInstance();
 
-//    @SubscribeEvent
     public static void onScreenDraw(Screen screen, PoseStack stack) {
         if (!(screen instanceof IFullscreen) || !ClaimingMode.activated) return;
 

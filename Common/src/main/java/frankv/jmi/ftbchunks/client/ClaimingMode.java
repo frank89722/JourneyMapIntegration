@@ -7,7 +7,6 @@ import frankv.jmi.JMIOverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.event.forge.FullscreenDisplayEvent;
 import journeymap.client.api.model.IFullscreen;
 import journeymap.client.api.model.ShapeProperties;
 import journeymap.client.api.util.PolygonHelper;
@@ -29,13 +28,6 @@ public class ClaimingMode {
         ClaimingMode.jmAPI = jmAPI;
     }
 
-//    @SubscribeEvent
-//    public static void onAddonButtonDisplay(FullscreenDisplayEvent.AddonButtonDisplayEvent event) {
-//        var buttonDisplay = event.getThemeButtonDisplay();
-//        buttonDisplay.addThemeToggleButton("FTBChunks Claiming Mode", "FTBChunks Claiming Mode", "grid", activated, b -> buttonControl(b));
-//    }
-
-//    @SubscribeEvent
     public static void onGuiScreen(Screen screen) {
         if (!activated) return;
         if (screen instanceof IFullscreen && screen != null) return;

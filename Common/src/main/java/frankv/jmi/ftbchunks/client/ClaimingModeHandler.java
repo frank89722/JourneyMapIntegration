@@ -65,14 +65,6 @@ public class ClaimingModeHandler {
         GuiHelper.playSound(SoundEvents.UI_BUTTON_CLICK, 1.0F);
     }
 
-//    @SubscribeEvent
-//    public static void mouse(InputEvent.MouseInputEvent event) {
-//        if (!doRecord) return;
-//        if (event.getAction() != GLFW.GLFW_RELEASE || event.getButton() > 1) return;
-//
-//        applyChanges(event.getButton());
-//    }
-
     public static void onMouseReleased(int mouseButton) {
         if (!doRecord) return;
         if (mouseButton > 1) return;

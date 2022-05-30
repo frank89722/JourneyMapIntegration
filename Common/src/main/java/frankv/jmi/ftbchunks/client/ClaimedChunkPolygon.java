@@ -18,7 +18,6 @@ import static frankv.jmi.JMIOverlayHelper.createPolygon;
 import static frankv.jmi.JMIOverlayHelper.removePolygons;
 
 public class ClaimedChunkPolygon {
-    //TODO: add config back
 
     private static IClientAPI jmAPI;
     private static final Minecraft mc = Minecraft.getInstance();
@@ -26,7 +25,7 @@ public class ClaimedChunkPolygon {
     public static HashMap<ChunkDimPos, PolygonOverlay> chunkOverlays = new HashMap<>();
     public static HashMap<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
     public static HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
-    public static List<FTBClaimedChunkData> queue = new LinkedList<>();
+    public static Queue<FTBClaimedChunkData> queue = new LinkedList<>();
 
 
     public static void init(IClientAPI jmAPI) {
@@ -42,22 +41,19 @@ public class ClaimedChunkPolygon {
         return chunkOverlays.get(pos).getTitle();
     }
 
-//    @SubscribeEvent
     public static void onClientTick() {
-//        if (!JMIForge.CLIENT_CONFIG.getFtbChunks()) return;
+        if (!JMI.clientConfig.getFtbChunks()) return;
         if (mc.level == null) return;
 
         for (var i = 0; i<200; ++i) {
             if (queue == null || queue.isEmpty()) return;
 
             var playerDim = mc.level.dimension();
-            var data = queue.get(0);
+            var data = queue.poll();
 
             if (data.team == null) removeChunk(data, playerDim);
             else if (shouldReplace(data)) replaceChunk(data, playerDim);
             else addChunk(data, playerDim);
-
-            queue.remove(0);
         }
     }
 
@@ -163,7 +159,7 @@ public class ClaimedChunkPolygon {
 
     public static void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
         if (!JMI.ftbchunks) return;
-        queue.add(new FTBClaimedChunkData(dim, chunk, teamId));
+        queue.offer(new FTBClaimedChunkData(dim, chunk, teamId));
     }
 
     private static boolean shouldReplace(FTBClaimedChunkData data) {

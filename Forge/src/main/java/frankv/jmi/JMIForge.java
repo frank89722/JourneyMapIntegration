@@ -2,7 +2,6 @@ package frankv.jmi;
 
 import frankv.jmi.config.ClientConfig;
 import frankv.jmi.jmdefaultconfig.JMDefualtConfig;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -26,6 +25,6 @@ public class JMIForge {
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
-        new JMDefualtConfig(CLIENT_CONFIG).tryWriteJMDefaultConfig();
+        new JMDefualtConfig().tryWriteJMDefaultConfig();
     }
 }

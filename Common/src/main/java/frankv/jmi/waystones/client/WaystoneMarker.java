@@ -16,8 +16,6 @@ import java.util.*;
 
 public class WaystoneMarker {
 
-    //TODO: add config back
-
     private IClientAPI jmAPI;
     private static Minecraft mc = Minecraft.getInstance();
     public static HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
@@ -33,8 +31,8 @@ public class WaystoneMarker {
                 .setAnchorX(12.0d)
                 .setAnchorY(24.0d)
                 .setDisplayWidth(24.0d)
-                .setDisplayHeight(24.0d);
-//                .setColor(JMIForge.CLIENT_CONFIG.getWaystoneColor());
+                .setDisplayHeight(24.0d)
+                .setColor(JMI.clientConfig.getWaystoneColor());
 
         var textProperties = new TextProperties()
                 .setBackgroundOpacity(0.4f)
@@ -89,7 +87,7 @@ public class WaystoneMarker {
     }
 
     public void onKnownWaystones(KnownWaystonesEvent event) {
-//        if (!JMIForge.CLIENT_CONFIG.getWaystone()) return;
+        if (!JMI.clientConfig.getWaystone()) return;
         var newWaystones = new HashSet<>(ComparableWaystone.fromEvent(event));
         var oldWaystones = new HashSet<>(markers.keySet());
 

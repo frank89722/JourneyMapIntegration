@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class FTBClaimedChunkData {
-    //TODO: add config back
 
     public final SendChunkPacket.SingleChunk chunk;
     public final ChunkDimPos chunkDimPos;
@@ -41,8 +40,7 @@ public class FTBClaimedChunkData {
         var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
                 .setFillColor(color)
-//                .setFillOpacity(JMIForge.CLIENT_CONFIG.getClaimedChunkOverlayOpacity().floatValue());
-                .setFillOpacity(0.5f);
+                .setFillOpacity(JMI.clientConfig.getClaimedChunkOverlayOpacity().floatValue());
 
         var textProps = new TextProperties()
                 .setColor(color)

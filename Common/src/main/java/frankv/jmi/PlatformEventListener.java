@@ -5,6 +5,4 @@ public interface PlatformEventListener {
     void setFirstLogin(boolean firstLogin);
 
     void register();
-//    boolean isHaveDim();
-//    boolean setHaveDim(boolean haveDim);
 }

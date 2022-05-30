@@ -2,7 +2,6 @@ package frankv.jmi.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import frankv.jmi.jmdefaultconfig.Version;
 import lombok.Getter;
 
 import java.io.File;
