@@ -171,7 +171,7 @@ if (ENV.MODRINTH_TOKEN) {
         token = ENV.MODRINTH_TOKEN
         projectId = "${modrinth_id}"
         versionType = "${release_type}"
-        versionNumber = "forge-${minecraft_version}-${version}"
+        versionNumber = "${archivesBaseName}-${version}"
         uploadFile = jar
         gameVersions = ["${minecraft_version}"]
         changelog = ENV.CHANGELOG

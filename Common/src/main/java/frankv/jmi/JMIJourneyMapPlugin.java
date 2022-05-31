@@ -39,7 +39,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
                 waystoneMarker = new WaystoneMarker(jmAPI);
                 Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> waystoneMarker.onKnownWaystones(event));
             }
-        } catch (Exception e) {
+        } catch (NoClassDefFoundError e) {
             JMI.waystones = false;
         }
 

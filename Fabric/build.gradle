@@ -119,7 +119,7 @@ if (ENV.MODRINTH_TOKEN) {
         token = ENV.MODRINTH_TOKEN
         projectId = "${modrinth_id}"
         versionType = "${release_type}"
-        versionNumber = "fabric-${minecraft_version}-${version}"
+        versionNumber = "${archivesBaseName}-${version}"
         uploadFile = remapJar
         gameVersions = ["${minecraft_version}"]
         changelog = ENV.CHANGELOG

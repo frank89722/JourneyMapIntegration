@@ -4,12 +4,12 @@
     "version": "${version}",
   
     "name": "JourneyMapIntegration",
-    "description": "This is an example description! Tell everyone what your mod is about!",
+    "description": "The mod that adds mod integration for JourneyMap.",
     "authors": [
       "frankV"
     ],
     "contact": {
-      "homepage": "https://fabricmc.net/",
+      "homepage": "https://www.curseforge.com/minecraft/mc-mods/journeymap-integration",
       "sources": "https://github.com/frank89722/JourneyMapIntegration"
     },
   
