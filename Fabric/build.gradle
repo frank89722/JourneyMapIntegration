@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'idea'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 def ENV = System.getenv()
@@ -105,13 +106,25 @@ if (ENV.CF_TOKEN) {
             changelog = ENV.CHANGELOG
             changelogType = 'markdown'
 
-//            afterEvaluate {
-//                tasks.curseforge525447.dependsOn remapJar
-//            }
         }
 
         options {
             forgeGradleIntegration = false
+        }
+    }
+}
+
+if (ENV.MODRINTH_TOKEN) {
+    modrinth {
+        token = ENV.MODRINTH_TOKEN
+        projectId = "${modrinth_id}"
+        versionType = "${release_type}"
+        versionNumber = "fabric-${version}"
+        uploadFile = remapJar
+        gameVersions = ["${minecraft_version}"]
+        dependencies {
+            required.project "P7dR8mSH" // fabric-api
+            required.project "lfHFW1mp" // journeymap
         }
     }
 }

@@ -10,6 +10,7 @@ buildscript {
 
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 def ENV = System.getenv()
@@ -161,6 +162,20 @@ if (ENV.CF_TOKEN) {
             }
             changelog = ENV.CHANGELOG
             changelogType = 'markdown'
+        }
+    }
+}
+
+if (ENV.MODRINTH_TOKEN) {
+    modrinth {
+        token = ENV.MODRINTH_TOKEN
+        projectId = "${modrinth_id}"
+        versionType = "${release_type}"
+        versionNumber = "forge-${version}"
+        uploadFile = jar
+        gameVersions = ["${minecraft_version}"]
+        dependencies {
+            required.project "lfHFW1mp" // journeymap
         }
     }
 }
