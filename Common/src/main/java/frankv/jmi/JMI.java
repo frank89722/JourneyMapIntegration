@@ -19,6 +19,7 @@ public class JMI {
 
     public static void init(IClientConfig clientConfig, PlatformEventListener platformEventListener) {
         JMI.clientConfig = clientConfig;
+        JMI.platformEventListener = platformEventListener;
 
         waystones = Services.PLATFORM.isModLoaded("waystones");
         ftbchunks = Services.PLATFORM.isModLoaded("ftbchunks");
@@ -32,8 +33,6 @@ public class JMI {
             LOGGER.info("Waystones integration loaded.");
         }
 
-        JMI.platformEventListener = platformEventListener;
-        platformEventListener.register();
     }
 
 }
