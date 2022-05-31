@@ -119,9 +119,10 @@ if (ENV.MODRINTH_TOKEN) {
         token = ENV.MODRINTH_TOKEN
         projectId = "${modrinth_id}"
         versionType = "${release_type}"
-        versionNumber = "fabric-${version}"
+        versionNumber = "fabric-${minecraft_version}-${version}"
         uploadFile = remapJar
         gameVersions = ["${minecraft_version}"]
+        changelog = ENV.CHANGELOG
         dependencies {
             required.project "P7dR8mSH" // fabric-api
             required.project "lfHFW1mp" // journeymap
