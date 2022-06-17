@@ -1,4 +1,4 @@
-package frankv.jmi.waystones.client;
+package frankv.jmi.jmoverlay.waystones;
 
 import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;

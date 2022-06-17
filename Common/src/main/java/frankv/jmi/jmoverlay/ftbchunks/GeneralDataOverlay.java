@@ -1,7 +1,8 @@
-package frankv.jmi.ftbchunks.client;
+package frankv.jmi.jmoverlay.ftbchunks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
+import frankv.jmi.JMI;
 import frankv.jmi.util.Draw;
 import journeymap.client.api.model.IFullscreen;
 import net.minecraft.ChatFormatting;
@@ -17,12 +18,12 @@ public class GeneralDataOverlay {
     private static Minecraft mc = Minecraft.getInstance();
 
     public static void onScreenDraw(Screen screen, PoseStack stack) {
-        if (!(screen instanceof IFullscreen) || !ClaimingMode.activated) return;
+        if (!(screen instanceof IFullscreen) || !JMI.ftbchunks || !ClaimingMode.INSTANCE.isActivated()) return;
 
-        var d = FTBChunksClient.generalData;
+        final var d = FTBChunksClient.generalData;
         if (d == null) return;
 
-        var font = mc.font;
+        final var font = mc.font;
         var list = new LinkedList<Component>();
         var screenHeight = (float)screen.height;
         var width = 0.0f;
@@ -33,7 +34,7 @@ public class GeneralDataOverlay {
         list.add(new TranslatableComponent("ftbchunks.gui.claimed").withStyle(ChatFormatting.WHITE));
 
         for(var comp : list) {
-            var l = font.width(comp) + 9f;
+            final var l = font.width(comp) + 9f;
             if (l > width) width = l;
         }
 

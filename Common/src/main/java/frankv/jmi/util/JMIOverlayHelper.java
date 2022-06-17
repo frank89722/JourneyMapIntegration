@@ -1,5 +1,6 @@
-package frankv.jmi;
+package frankv.jmi.util;
 
+import frankv.jmi.JMI;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.PolygonOverlay;
 

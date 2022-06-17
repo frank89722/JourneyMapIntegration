@@ -1,10 +1,10 @@
 package frankv.jmi;
 
-import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
-import frankv.jmi.ftbchunks.client.ClaimingMode;
-import frankv.jmi.ftbchunks.client.ClaimingModeHandler;
-import frankv.jmi.ftbchunks.client.GeneralDataOverlay;
-import frankv.jmi.waystones.client.WaystoneMarker;
+import frankv.jmi.jmoverlay.JMOverlayManager;
+import frankv.jmi.jmoverlay.ftbchunks.ClaimedChunkPolygon;
+import frankv.jmi.jmoverlay.ftbchunks.ClaimingMode;
+import frankv.jmi.jmoverlay.ftbchunks.GeneralDataOverlay;
+import frankv.jmi.jmoverlay.waystones.WaystoneMarker;
 import journeymap.client.api.event.fabric.FabricEvents;
 import journeymap.client.api.event.fabric.FullscreenDisplayEvent;
 import journeymap.client.api.model.IFullscreen;
@@ -16,8 +16,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
-import static frankv.jmi.ftbchunks.client.ClaimingMode.activated;
-import static frankv.jmi.ftbchunks.client.ClaimingMode.buttonControl;
+import java.util.Comparator;
 
 public class JMIFabricEventListener implements PlatformEventListener {
 
@@ -32,13 +31,13 @@ public class JMIFabricEventListener implements PlatformEventListener {
     }
 
     public void onClientTick(Minecraft mc) {
-        var level = mc.level;
+        final var level = mc.level;
 
         if (level == null) {
             if (haveDim) {
                 haveDim = false;
-                ClaimedChunkPolygon.chunkData.clear();
-                WaystoneMarker.waystones.clear();
+                ClaimedChunkPolygon.INSTANCE.getChunkData().clear();
+                WaystoneMarker.INSTANCE.getWaystones().clear();
                 JMI.LOGGER.debug("all data cleared");
             }
             return;
@@ -46,26 +45,26 @@ public class JMIFabricEventListener implements PlatformEventListener {
 
         if (!haveDim) firstLogin = haveDim = true;
 
-        if (JMI.ftbchunks) {
-            ClaimedChunkPolygon.onClientTick();
-        }
+        ClaimedChunkPolygon.INSTANCE.onClientTick();
     }
 
     public void onAddonButtonDisplay(FullscreenDisplayEvent.AddonButtonDisplayEvent event) {
-        if (JMI.ftbchunks) {
-            var buttonDisplay = event.getThemeButtonDisplay();
-            buttonDisplay.addThemeToggleButton("FTBChunks Claiming Mode", "FTBChunks Claiming Mode", "grid", activated, b -> buttonControl(b));
-        }
+        var buttonDisplay = event.getThemeButtonDisplay();
+
+        JMOverlayManager.INSTANCE.getToggleableOverlays().values().stream()
+                .sorted(Comparator.comparing(o -> o.getOrder()))
+                .forEach(t -> {
+                    if (!t.isEnabled()) return;
+                    buttonDisplay.addThemeToggleButton(t.getButtonLabel(), t.getButtonLabel(), t.getButtonIconName(), t.isActivated(), b -> t.onToggle(b));
+                });
     }
 
     private void onGuiScreen(Minecraft minecraft, Screen screen, int i, int i1) {
-        if (JMI.ftbchunks) {
-            ScreenEvents.remove(screen).register(event -> ClaimingMode.onGuiScreen(screen));
+        ScreenEvents.remove(screen).register(event -> ClaimingMode.INSTANCE.onGuiScreen(screen));
 
-            if (screen instanceof IFullscreen) {
-                ScreenMouseEvents.afterMouseRelease(screen).register((screenE, mouseX, mouseY, button) -> ClaimingModeHandler.onMouseReleased(button));
-                ScreenEvents.afterRender(screen).register((screenE, stack, mouseX, mouseY, tickDelta) -> GeneralDataOverlay.onScreenDraw(screen, stack));
-            }
+        if (screen instanceof IFullscreen) {
+            ScreenMouseEvents.afterMouseRelease(screen).register((screenE, mouseX, mouseY, button) -> ClaimingMode.INSTANCE.getHandler().onMouseReleased(button));
+            ScreenEvents.afterRender(screen).register((screenE, stack, mouseX, mouseY, tickDelta) -> GeneralDataOverlay.onScreenDraw(screen, stack));
         }
     }
 }

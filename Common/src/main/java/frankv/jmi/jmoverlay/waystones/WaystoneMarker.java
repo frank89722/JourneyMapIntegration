@@ -1,10 +1,15 @@
-package frankv.jmi.waystones.client;
+package frankv.jmi.jmoverlay.waystones;
 
 import frankv.jmi.JMI;
+import frankv.jmi.jmoverlay.JMOverlayManager;
+import frankv.jmi.jmoverlay.ToggleableOverlay;
 import journeymap.client.api.IClientAPI;
+import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.MarkerOverlay;
+import journeymap.client.api.event.ClientEvent;
 import journeymap.client.api.model.MapImage;
 import journeymap.client.api.model.TextProperties;
+import lombok.Getter;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -14,14 +19,30 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-public class WaystoneMarker {
+public enum WaystoneMarker implements ToggleableOverlay {
+    INSTANCE;
 
     private IClientAPI jmAPI;
-    private static Minecraft mc = Minecraft.getInstance();
-    public static HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
-    public static Set<ComparableWaystone> waystones = new HashSet<>();
+    private Minecraft mc = Minecraft.getInstance();
 
-    public WaystoneMarker(IClientAPI jmAPI) {
+    @Getter
+    private boolean activated = true;
+
+    @Getter
+    private final String buttonLabel = "Waystones Overlay";
+    @Getter
+    private final int order = 2;
+
+    private HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
+    @Getter
+    private Set<ComparableWaystone> waystones = new HashSet<>();
+
+    WaystoneMarker() {
+        JMOverlayManager.INSTANCE.registerOverlay(this);
+    }
+
+    @Override
+    public void init(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
     }
 
@@ -62,6 +83,36 @@ public class WaystoneMarker {
         } catch (Exception e) {
             JMI.LOGGER.error(String.valueOf(e));
         }
+    }
+
+    @Override
+    public void onToggle(IThemeButton button) {
+
+    }
+
+    @Override
+    public void onJMEvent(ClientEvent event) {
+        if (!isEnabled()) return;
+
+        switch (event.type) {
+            case MAPPING_STARTED -> {
+                createMarkersOnMappingStarted();
+                JMI.LOGGER.debug("re-added waystones overlays");
+            }
+
+            case MAPPING_STOPPED -> markers.clear();
+        }
+
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return JMI.waystones;
+    }
+
+    @Override
+    public String getButtonIconName() {
+        return "waypoints";
     }
 
     public record ComparableWaystone(UUID uuid, String name, BlockPos pos, ResourceKey<Level> dim) {

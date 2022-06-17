@@ -1,13 +1,12 @@
 package frankv.jmi;
 
-import frankv.jmi.ftbchunks.client.ClaimedChunkPolygon;
-import frankv.jmi.ftbchunks.client.ClaimingMode;
-import frankv.jmi.ftbchunks.client.ClaimingModeHandler;
-import frankv.jmi.ftbchunks.client.GeneralDataOverlay;
+import frankv.jmi.jmoverlay.JMOverlayManager;
+import frankv.jmi.jmoverlay.ftbchunks.ClaimedChunkPolygon;
+import frankv.jmi.jmoverlay.ftbchunks.ClaimingMode;
+import frankv.jmi.jmoverlay.ftbchunks.GeneralDataOverlay;
 import frankv.jmi.waypointmessage.WaypointChatMessage;
-import frankv.jmi.waystones.client.WaystoneMarker;
+import frankv.jmi.jmoverlay.waystones.WaystoneMarker;
 import journeymap.client.api.event.forge.FullscreenDisplayEvent;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.blay09.mods.balm.api.event.client.screen.ScreenDrawEvent;
@@ -19,8 +18,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.lwjgl.glfw.GLFW;
 
-import static frankv.jmi.ftbchunks.client.ClaimingMode.activated;
-import static frankv.jmi.ftbchunks.client.ClaimingMode.buttonControl;
+import java.util.Comparator;
 
 public class JMIForgeEventListener implements PlatformEventListener {
     private static final Minecraft mc = Minecraft.getInstance();
@@ -39,13 +37,13 @@ public class JMIForgeEventListener implements PlatformEventListener {
     }
 
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        var level = mc.level;
+        final var level = mc.level;
 
         if (level == null) {
             if (haveDim) {
                 haveDim = false;
-                ClaimedChunkPolygon.chunkData.clear();
-                WaystoneMarker.waystones.clear();
+                ClaimedChunkPolygon.INSTANCE.getChunkData().clear();
+                WaystoneMarker.INSTANCE.getWaystones().clear();
                 JMI.LOGGER.debug("all data cleared");
             }
             return;
@@ -53,41 +51,35 @@ public class JMIForgeEventListener implements PlatformEventListener {
 
         if (!haveDim) firstLogin = haveDim = true;
 
-        if (JMI.ftbchunks) {
-            ClaimedChunkPolygon.onClientTick();
-        }
+        ClaimedChunkPolygon.INSTANCE.onClientTick();
     }
 
     public void onAddonButtonDisplay(FullscreenDisplayEvent.AddonButtonDisplayEvent event) {
-        if (JMI.ftbchunks) {
-            var buttonDisplay = event.getThemeButtonDisplay();
-            buttonDisplay.addThemeToggleButton("FTBChunks Claiming Mode", "FTBChunks Claiming Mode", "grid", activated, b -> buttonControl(b));
-        }
+        final var buttonDisplay = event.getThemeButtonDisplay();
+
+        JMOverlayManager.INSTANCE.getToggleableOverlays().values().stream()
+                .sorted(Comparator.comparing(o -> o.getOrder()))
+                .forEach(t -> {
+                    if (!t.isEnabled()) return;
+                    buttonDisplay.addThemeToggleButton(t.getButtonLabel(), t.getButtonLabel(), t.getButtonIconName(), t.isActivated(), b -> t.onToggle(b));
+                });
     }
 
     public void onGuiScreen(ScreenEvent event) {
-        if (JMI.ftbchunks) {
-            ClaimingMode.onGuiScreen(event.getScreen());
-        }
+        ClaimingMode.INSTANCE.onGuiScreen(event.getScreen());
     }
 
     public void onMouse(InputEvent.MouseInputEvent event) {
-        if (JMI.ftbchunks) {
-            if (event.getAction() == GLFW.GLFW_RELEASE) {
-                ClaimingModeHandler.onMouseReleased(event.getButton());
-            }
+        if (event.getAction() == GLFW.GLFW_RELEASE) {
+            ClaimingMode.INSTANCE.getHandler().onMouseReleased(event.getButton());
         }
     }
 
     public void onScreenDraw(ScreenDrawEvent.Post event) {
-        if (JMI.ftbchunks) {
-            GeneralDataOverlay.onScreenDraw(event.getScreen(), event.getPoseStack());
-        }
+        GeneralDataOverlay.onScreenDraw(event.getScreen(), event.getPoseStack());
     }
 
     public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-        if (JMI.ftbchunks) {
-            WaypointChatMessage.onRightClickOnBlock(event.getPos(), event.getItemStack());
-        }
+        WaypointChatMessage.onRightClickOnBlock(event.getPos(), event.getItemStack());
     }
 }

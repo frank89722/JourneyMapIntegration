@@ -1,4 +1,4 @@
-package frankv.jmi.ftbchunks.client;
+package frankv.jmi.jmoverlay.ftbchunks;
 
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
 import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
@@ -59,7 +59,7 @@ public class FTBClaimedChunkData {
     }
 
     public void updateOverlayProps() {
-        var color = team.getColor();
+        final var color = team.getColor();
 
         overlay.getTextProperties().setColor(color);
         overlay.getShapeProperties().setFillColor(color);
