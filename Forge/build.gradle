@@ -111,7 +111,8 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, "jmi.refmap.json"
+//    add sourceSets.main, "jmi.refmap.json"
+    add project(":Common").sourceSets.main, "jmi.refmap.json"
     config "jmi.mixins.json"
 
     debug.verbose = true
@@ -127,21 +128,6 @@ tasks.withType(JavaCompile) {
 
 processResources {
     from project(":Common").sourceSets.main.resources
-}
-
-jar {
-    manifest {
-        attributes([
-            "Specification-Title": "jmi",
-            "Specification-Vendor": "frankV",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"frankV",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "jmi.mixins.json"
-        ])
-    }
 }
 
 jar.finalizedBy('reobfJar')

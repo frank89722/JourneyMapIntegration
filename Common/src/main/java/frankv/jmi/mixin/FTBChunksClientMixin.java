@@ -2,7 +2,7 @@ package frankv.jmi.mixin;
 
 import dev.ftb.mods.ftbchunks.client.ChunkScreen;
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
-import frankv.jmi.JMIForge;
+import frankv.jmi.JMI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,7 +13,7 @@ public class FTBChunksClientMixin {
 
     @Inject(method = "openGui", at = @At("HEAD"), cancellable = true, remap = false)
     private static void regionScreenFirst(CallbackInfo ci) {
-        if (!JMIForge.CLIENT_CONFIG.getShowClaimChunkScreen()) return;
+        if (!JMI.clientConfig.getShowClaimChunkScreen()) return;
         (new ChunkScreen()).openGui();
         ci.cancel();
     }
