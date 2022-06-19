@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static frankv.jmi.util.JMIOverlayHelper.createPolygon;
-import static frankv.jmi.util.JMIOverlayHelper.removePolygons;
+import static frankv.jmi.util.OverlayHelper.showOverlay;
+import static frankv.jmi.util.OverlayHelper.removeOverlays;
 
 public class ClaimingModeHandler {
     private boolean doRecord = false;
@@ -52,8 +52,7 @@ public class ClaimingModeHandler {
 
     private void addToWaitingList(XZ xz) {
         final var polygon = ClaimingMode.INSTANCE.dragPolygon(xz);
-        if (!createPolygon(polygon)) return;
-
+        showOverlay(polygon);
         dragPolygons.put(xz, polygon);
         chunks.add(xz);
     }
@@ -63,7 +62,7 @@ public class ClaimingModeHandler {
         if (chunks.isEmpty()) return;
 
         new RequestChunkChangePacket(Screen.hasShiftDown() ? mouseButton+2 : mouseButton, chunks).sendToServer();
-        removePolygons(dragPolygons.values());
+        removeOverlays(dragPolygons.values());
         chunks.clear();
         dragPolygons.clear();
         GuiHelper.playSound(SoundEvents.UI_BUTTON_CLICK, 1.0F);

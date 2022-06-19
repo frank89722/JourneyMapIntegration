@@ -9,7 +9,9 @@ import dev.ftb.mods.ftbteams.event.TeamEvent;
 import frankv.jmi.JMI;
 import frankv.jmi.jmoverlay.JMOverlayManager;
 import frankv.jmi.jmoverlay.ToggleableOverlay;
+import frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
+import journeymap.client.api.display.Context;
 import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.event.ClientEvent;
@@ -21,8 +23,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-import static frankv.jmi.util.JMIOverlayHelper.createPolygon;
-import static frankv.jmi.util.JMIOverlayHelper.removePolygons;
+import static frankv.jmi.util.OverlayHelper.*;
 
 public enum ClaimedChunkPolygon implements ToggleableOverlay {
     INSTANCE;
@@ -88,7 +89,8 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         for (var data : chunkData.values()) {
             if (!data.chunkDimPos.dimension.equals(level.dimension())) continue;
-            if (createPolygon(data.overlay)) chunkOverlays.put(data.chunkDimPos, data.overlay);
+            showOverlay(data.overlay);
+            chunkOverlays.put(data.chunkDimPos, data.overlay);
         }
     }
 
@@ -100,7 +102,12 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         chunkData.put(pos, data);
         if (!pos.dimension.equals(dim)) return;
 
-        if (createPolygon(data.overlay)) chunkOverlays.put(data.chunkDimPos, data.overlay);
+        if (!activated) {
+            data.overlay.setActiveMapTypes(EnumSet.of(Context.MapType.Topo));
+        }
+
+        chunkOverlays.put(data.chunkDimPos, data.overlay);
+        if (activated) showOverlay(data.overlay);
 
     }
 
@@ -139,7 +146,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
                 chunkOverlays.get(pos).setTitle(chunkData.get(pos).team.getDisplayName());
             }
 
-            removePolygons(forceLoadedOverlays.values());
+            removeOverlays(forceLoadedOverlays.values());
             forceLoadedOverlays.clear();
             return;
         }
@@ -157,7 +164,8 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         if (show && data.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {
             var claimedOverlay = ClaimingMode.INSTANCE.forceLoadedPolygon(chunkDimPos);
-            if (createPolygon(claimedOverlay)) forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
+            showOverlay(claimedOverlay);
+            forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
 
             chunkOverlays.get(chunkDimPos).setTitle(teamName + "\nForce Loaded");
 
@@ -183,11 +191,6 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         }
     }
 
-    public void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
-        if (!JMI.ftbchunks) return;
-        queue.offer(new FTBClaimedChunkData(dim, chunk, teamId));
-    }
-
     private boolean shouldReplace(FTBClaimedChunkData data) {
         if (data.team == null) return false;
 
@@ -210,7 +213,14 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
     @Override
     public void onToggle(IThemeButton button) {
+        if (activated) {
+            OverlayHelper.removeOverlays(chunkOverlays.values());
+        } else {
+            OverlayHelper.showOverlays(chunkOverlays.values());
+        }
 
+        activated = !activated;
+        button.setToggled(activated);
     }
 
     @Override
@@ -249,5 +259,10 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     @Override
     public String getButtonIconName() {
         return "ftb";
+    }
+
+    public void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
+        if (!JMI.ftbchunks) return;
+        queue.offer(new FTBClaimedChunkData(dim, chunk, teamId));
     }
 }

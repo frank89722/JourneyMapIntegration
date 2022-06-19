@@ -1,15 +1,11 @@
 package frankv.jmi;
 
 import frankv.jmi.jmoverlay.JMOverlayManager;
-import frankv.jmi.jmoverlay.ftbchunks.ClaimedChunkPolygon;
-import frankv.jmi.jmoverlay.ftbchunks.ClaimingMode;
 import frankv.jmi.jmoverlay.waystones.WaystoneMarker;
-import frankv.jmi.util.JMIOverlayHelper;
+import frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
-import journeymap.client.api.event.FullscreenMapEvent;
-import lombok.Getter;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 
@@ -38,7 +34,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         JMI.platformEventListener.register();
 
         JMOverlayManager.INSTANCE.setJmAPI(jmAPI);
-        JMIOverlayHelper.setJmAPI(jmAPI);
+        OverlayHelper.setJmAPI(jmAPI);
 
         this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
         JMI.LOGGER.info("Initialized " + getClass().getName());

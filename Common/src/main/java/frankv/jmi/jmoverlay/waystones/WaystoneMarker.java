@@ -3,6 +3,7 @@ package frankv.jmi.jmoverlay.waystones;
 import frankv.jmi.JMI;
 import frankv.jmi.jmoverlay.JMOverlayManager;
 import frankv.jmi.jmoverlay.ToggleableOverlay;
+import frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.MarkerOverlay;
@@ -66,12 +67,9 @@ public enum WaystoneMarker implements ToggleableOverlay {
 
         markerOverlay.setOverlayListener(new WaystoneMarkerListener(markerOverlay, jmAPI));
 
-        try {
-            jmAPI.show(markerOverlay);
-            markers.put(waystone, markerOverlay);
-        } catch (Exception e) {
-            JMI.LOGGER.error(String.valueOf(e));
-        }
+        markers.put(waystone, markerOverlay);
+
+        if (activated) OverlayHelper.showOverlay(markerOverlay);
     }
 
     private void removeMarker(ComparableWaystone waystone) {
@@ -83,36 +81,6 @@ public enum WaystoneMarker implements ToggleableOverlay {
         } catch (Exception e) {
             JMI.LOGGER.error(String.valueOf(e));
         }
-    }
-
-    @Override
-    public void onToggle(IThemeButton button) {
-
-    }
-
-    @Override
-    public void onJMEvent(ClientEvent event) {
-        if (!isEnabled()) return;
-
-        switch (event.type) {
-            case MAPPING_STARTED -> {
-                createMarkersOnMappingStarted();
-                JMI.LOGGER.debug("re-added waystones overlays");
-            }
-
-            case MAPPING_STOPPED -> markers.clear();
-        }
-
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return JMI.waystones;
-    }
-
-    @Override
-    public String getButtonIconName() {
-        return "waypoints";
     }
 
     public record ComparableWaystone(UUID uuid, String name, BlockPos pos, ResourceKey<Level> dim) {
@@ -137,6 +105,31 @@ public enum WaystoneMarker implements ToggleableOverlay {
         }
     }
 
+    @Override
+    public void onToggle(IThemeButton button) {
+        if (activated) {
+            OverlayHelper.removeOverlays(markers.values());
+        } else {
+            OverlayHelper.showOverlays(markers.values());
+        }
+        activated = !activated;
+        button.setToggled(activated);
+    }
+
+    @Override
+    public void onJMEvent(ClientEvent event) {
+        if (!isEnabled()) return;
+
+        switch (event.type) {
+            case MAPPING_STARTED -> {
+                createMarkersOnMappingStarted();
+                JMI.LOGGER.debug("re-added waystones overlays");
+            }
+
+            case MAPPING_STOPPED -> markers.clear();
+        }
+    }
+
     public void onKnownWaystones(KnownWaystonesEvent event) {
         if (!JMI.clientConfig.getWaystone()) return;
         var newWaystones = new HashSet<>(ComparableWaystone.fromEvent(event));
@@ -157,5 +150,15 @@ public enum WaystoneMarker implements ToggleableOverlay {
 
         waystones = (Set<ComparableWaystone>) newWaystones.clone();
 
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return JMI.waystones;
+    }
+
+    @Override
+    public String getButtonIconName() {
+        return "waypoints";
     }
 }

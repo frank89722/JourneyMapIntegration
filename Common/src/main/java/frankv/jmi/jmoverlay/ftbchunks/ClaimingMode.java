@@ -5,7 +5,7 @@ import dev.ftb.mods.ftblibrary.math.XZ;
 import frankv.jmi.JMI;
 import frankv.jmi.jmoverlay.JMOverlayManager;
 import frankv.jmi.jmoverlay.ToggleableOverlay;
-import frankv.jmi.util.JMIOverlayHelper;
+import frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.PolygonOverlay;
@@ -63,14 +63,12 @@ public enum ClaimingMode implements ToggleableOverlay {
     public void onToggle(IThemeButton button) {
         if (mc.player == null) return;
         if (!activated) {
-            activated = true;
             createClaimingAreaOverlays();
-            button.setToggled(true);
         } else {
-            activated = false;
             removeOverlays();
-            button.setToggled(false);
         }
+        activated = !activated;
+        button.setToggled(activated);
     }
 
     private void removeOverlays() {
@@ -129,7 +127,8 @@ public enum ClaimingMode implements ToggleableOverlay {
         final var polygons = PolygonHelper.createChunksPolygon(area, 100);
 
         final var overlay = new PolygonOverlay(JMI.MOD_ID, displayId, player.level.dimension(), shapeProps, polygons.get(0));
-        if (JMIOverlayHelper.createPolygon(overlay)) claimAreaPolygon = overlay;
+        OverlayHelper.showOverlay(overlay);
+        claimAreaPolygon = overlay;
     }
 
     @Override
