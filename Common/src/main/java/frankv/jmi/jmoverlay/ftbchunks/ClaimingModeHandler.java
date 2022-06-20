@@ -19,7 +19,7 @@ import static frankv.jmi.util.OverlayHelper.showOverlay;
 import static frankv.jmi.util.OverlayHelper.removeOverlays;
 
 public class ClaimingModeHandler {
-    private boolean doRecord = false;
+    private boolean mouseTracking = false;
 
     @Getter
     private Map<XZ, PolygonOverlay> dragPolygons = new HashMap<>();
@@ -31,7 +31,7 @@ public class ClaimingModeHandler {
         final var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
         if (!ClaimingMode.INSTANCE.getArea().contains(new ChunkPos(xz.x, xz.z))) return;
 
-        doRecord = true;
+        mouseTracking = true;
         addToWaitingList(xz);
         event.cancel();
     }
@@ -40,14 +40,20 @@ public class ClaimingModeHandler {
         if (!JMI.ftbchunks || !ClaimingMode.INSTANCE.isActivated()) return;
 
         final var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
-        if (doRecord || ClaimingMode.INSTANCE.getArea().contains(new ChunkPos(xz.x, xz.z))) event.cancel();
+        if (mouseTracking || ClaimingMode.INSTANCE.getArea().contains(new ChunkPos(xz.x, xz.z))) event.cancel();
     }
 
     public void onMouseMove(FullscreenMapEvent.MouseMoveEvent event) {
-        if (!JMI.ftbchunks || !doRecord) return;
+        if (!JMI.ftbchunks || !mouseTracking) return;
 
         final var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
         if (ClaimingMode.INSTANCE.getArea().contains(new ChunkPos(xz.x, xz.z)) || chunks.contains(xz)) addToWaitingList(xz);
+    }
+
+    public void onMouseReleased(int mouseButton) {
+        if (!JMI.ftbchunks || !mouseTracking || mouseButton > 1) return;
+
+        applyChanges(mouseButton);
     }
 
     private void addToWaitingList(XZ xz) {
@@ -58,7 +64,7 @@ public class ClaimingModeHandler {
     }
 
     private void applyChanges(int mouseButton) {
-        doRecord = false;
+        mouseTracking = false;
         if (chunks.isEmpty()) return;
 
         new RequestChunkChangePacket(Screen.hasShiftDown() ? mouseButton+2 : mouseButton, chunks).sendToServer();
@@ -66,11 +72,5 @@ public class ClaimingModeHandler {
         chunks.clear();
         dragPolygons.clear();
         GuiHelper.playSound(SoundEvents.UI_BUTTON_CLICK, 1.0F);
-    }
-
-    public void onMouseReleased(int mouseButton) {
-        if (!JMI.ftbchunks || !doRecord || mouseButton > 1) return;
-
-        applyChanges(mouseButton);
     }
 }

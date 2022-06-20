@@ -24,15 +24,8 @@ public class JMI {
         waystones = Services.PLATFORM.isModLoaded("waystones");
         ftbchunks = Services.PLATFORM.isModLoaded("ftbchunks");
 
-
-        if (ftbchunks) {
-            LOGGER.info("FTBChunks integration loaded.");
-        }
-
-        if (waystones) {
-            LOGGER.info("Waystones integration loaded.");
-        }
-
+        if (ftbchunks) LOGGER.info("FTBChunks integration loaded.");
+        if (waystones) LOGGER.info("Waystones integration loaded.");
     }
 
 }

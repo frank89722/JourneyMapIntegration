@@ -5,13 +5,14 @@ import frankv.jmi.util.FileManager;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 public class ClientConfig implements IClientConfig {
 
-    private static final FileManager FILE_MANAGER = new FileManager("/config/jmi-client.json");
+    private static final FileManager<ClientConfig> FILE_MANAGER = new FileManager<>("/config/jmi-client.json", ClientConfig.class);
 
     private Boolean ftbChunks = true;
     private Boolean waystone = true;
@@ -26,10 +27,10 @@ public class ClientConfig implements IClientConfig {
     public static ClientConfig loadConfig() {
 
         if (FILE_MANAGER.getFile().exists()) {
-            return (ClientConfig)FILE_MANAGER.read(ClientConfig.class);
+            return FILE_MANAGER.read();
         }
 
-        var config = new ClientConfig();
+        final var config = new ClientConfig();
         FILE_MANAGER.write(config);
         return config;
     }

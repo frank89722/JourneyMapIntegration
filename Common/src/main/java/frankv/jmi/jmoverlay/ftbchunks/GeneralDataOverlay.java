@@ -24,7 +24,7 @@ public class GeneralDataOverlay {
         if (d == null) return;
 
         final var font = mc.font;
-        var list = new LinkedList<Component>();
+        final var list = new LinkedList<Component>();
         var screenHeight = (float)screen.height;
         var width = 0.0f;
 

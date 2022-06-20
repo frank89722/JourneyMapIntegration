@@ -7,16 +7,16 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class JMDefualtConfig {
+public class JMDefaultConfig {
     private Version existVersion;
-    private FileManager fileManager;
+    private final FileManager<Version> fileManager;
 
-    public JMDefualtConfig() {
-        fileManager = new FileManager<>("/journeymap/defaultconfig.json");
+    public JMDefaultConfig() {
+        fileManager = new FileManager<>("/journeymap/defaultconfig.json", Version.class);
         if (!fileManager.getFile().exists()) {
             fileManager.write(new Version(-1));
         }
-        existVersion = (Version)fileManager.read(Version.class);
+        existVersion = fileManager.read();
     }
 
     public void tryWriteJMDefaultConfig() {
@@ -28,8 +28,8 @@ public class JMDefualtConfig {
     }
 
     private void writeJMDefaultConfig(int newVersion) {
-        var source = new File(System.getProperty("user.dir") + "/config/jmdefaultconfig");
-        var dest = new File(System.getProperty("user.dir") + "/journeymap/");
+        final var source = new File(System.getProperty("user.dir") + "/config/jmdefaultconfig");
+        final var dest = new File(System.getProperty("user.dir") + "/journeymap/");
 
         if (!source.exists() || !source.isDirectory()) {
             JMI.LOGGER.warn("No default config found.");

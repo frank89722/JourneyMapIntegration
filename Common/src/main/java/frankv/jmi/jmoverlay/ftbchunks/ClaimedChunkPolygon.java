@@ -40,7 +40,6 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     private HashMap<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
     @Getter
     private HashMap<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
-    @Getter
     private Queue<FTBClaimedChunkData> queue = new LinkedList<>();
 
     @Getter
@@ -58,44 +57,28 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         TeamEvent.CLIENT_PROPERTIES_CHANGED.register(this::onTeamPropsChanged);
     }
 
-    public String getPolygonTitleByPlayerPos() {
+    private String getPolygonTitleByPlayerPos() {
         if (mc.player == null) return "";
 
-        var pos = new ChunkDimPos(mc.player.level.dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
+        final var pos = new ChunkDimPos(mc.player.level.dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
         if (!chunkOverlays.containsKey(pos)) return "Wilderness";
         return chunkOverlays.get(pos).getTitle();
     }
 
-    public void onClientTick() {
-        if (!isEnabled() || !JMI.clientConfig.getFtbChunks()) return;
-        if (mc.level == null) return;
-
-        for (var i = 0; i < 200; ++i) {
-            if (queue == null || queue.isEmpty()) return;
-
-            var playerDim = mc.level.dimension();
-            var data = queue.poll();
-
-            if (data.team == null) removeChunk(data, playerDim);
-            else if (shouldReplace(data)) replaceChunk(data, playerDim);
-            else addChunk(data, playerDim);
-        }
-    }
-
-    public void createPolygonsOnMappingStarted() {
-        var level = mc.level;
+    private void createPolygonsOnMappingStarted() {
+        final var level = mc.level;
 
         if (level == null) return;
 
-        for (var data : chunkData.values()) {
-            if (!data.chunkDimPos.dimension.equals(level.dimension())) continue;
+        chunkData.values().forEach(data -> {
+            if (!data.chunkDimPos.dimension.equals(level.dimension())) return;
             showOverlay(data.overlay);
             chunkOverlays.put(data.chunkDimPos, data.overlay);
-        }
+        });
     }
 
     private void addChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
-        var pos = data.chunkDimPos;
+        final var pos = data.chunkDimPos;
 
         if (chunkOverlays.containsKey(pos)) return;
 
@@ -112,7 +95,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     }
 
     private void removeChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
-        var pos = data.chunkDimPos;
+        final var pos = data.chunkDimPos;
 
         if (!chunkOverlays.containsKey(pos)) return;
 
@@ -138,63 +121,45 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     }
 
     public void showForceLoadedByArea(boolean show) {
-        var level = mc.level;
+        final var level = mc.level;
         if (level == null) return;
 
         if (!show) {
-            for (var pos : forceLoadedOverlays.keySet()) {
-                chunkOverlays.get(pos).setTitle(chunkData.get(pos).team.getDisplayName());
-            }
+            forceLoadedOverlays.keySet()
+                    .forEach(pos -> chunkOverlays.get(pos).setTitle(chunkData.get(pos).team.getDisplayName()));
 
             removeOverlays(forceLoadedOverlays.values());
             forceLoadedOverlays.clear();
             return;
         }
 
-        for (var p : ClaimingMode.INSTANCE.getArea()) {
-            var chunkDimPos = new ChunkDimPos(level.dimension(), p.x, p.z);
+        ClaimingMode.INSTANCE.getArea().forEach(p -> {
+            final var chunkDimPos = new ChunkDimPos(level.dimension(), p.x, p.z);
             showForceLoaded(chunkDimPos, true);
-        }
+        });
     }
 
     private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
         if (!chunkData.containsKey(chunkDimPos)) return;
-        var data = chunkData.get(chunkDimPos);
-        var teamName = data.team.getDisplayName();
+        final var data = chunkData.get(chunkDimPos);
+        final var teamName = data.team.getDisplayName();
 
         if (show && data.forceLoaded && !forceLoadedOverlays.containsKey(chunkDimPos)) {
-            var claimedOverlay = ClaimingMode.INSTANCE.forceLoadedPolygon(chunkDimPos);
+            final var claimedOverlay = ClaimingMode.INSTANCE.forceLoadedPolygon(chunkDimPos);
             showOverlay(claimedOverlay);
             forceLoadedOverlays.put(chunkDimPos, claimedOverlay);
-
             chunkOverlays.get(chunkDimPos).setTitle(teamName + "\nForce Loaded");
-
         } else if (!show && forceLoadedOverlays.containsKey(chunkDimPos)) {
             jmAPI.remove(forceLoadedOverlays.get(chunkDimPos));
             forceLoadedOverlays.remove(chunkDimPos);
-
             chunkOverlays.get(chunkDimPos).setTitle(teamName);
-        }
-    }
-
-    public void onTeamPropsChanged(ClientTeamPropertiesChangedEvent event) {
-        if (!isEnabled()) return;
-
-        var teamId = event.getTeam().getId();
-        var dim = mc.level.dimension();
-
-        for (var data : new HashSet<>(chunkData.values())) {
-            if (!data.teamId.equals(teamId)) continue;
-
-            data.updateOverlayProps();
-            replaceChunk(data, dim);
         }
     }
 
     private boolean shouldReplace(FTBClaimedChunkData data) {
         if (data.team == null) return false;
 
-        var that = chunkData.get(data.chunkDimPos);
+        final var that = chunkData.get(data.chunkDimPos);
         if (that == null) return false;
         return !data.equals(that);
     }
@@ -209,6 +174,36 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     private void clearOverlays() {
         chunkOverlays.clear();
         forceLoadedOverlays.clear();
+    }
+
+    private void onTeamPropsChanged(ClientTeamPropertiesChangedEvent event) {
+        if (!isEnabled()) return;
+
+        final var teamId = event.getTeam().getId();
+        final var dim = mc.level.dimension();
+
+        new HashSet<>(chunkData.values()).forEach(data -> {
+            if (!data.teamId.equals(teamId)) return;
+
+            data.updateOverlayProps();
+            replaceChunk(data, dim);
+        });
+    }
+
+    public void onClientTick() {
+        if (!isEnabled() || !JMI.clientConfig.getFtbChunks()) return;
+        if (mc.level == null) return;
+
+        for (var i = 0; i < 200; ++i) {
+            if (queue == null || queue.isEmpty()) return;
+
+            final var playerDim = mc.level.dimension();
+            final var data = queue.poll();
+
+            if (data.team == null) removeChunk(data, playerDim);
+            else if (shouldReplace(data)) replaceChunk(data, playerDim);
+            else addChunk(data, playerDim);
+        }
     }
 
     @Override
@@ -240,7 +235,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
             case MAPPING_STOPPED -> clearOverlays();
 
             case REGISTRY -> {
-                var registryEvent = (RegistryEvent) event;
+                final var registryEvent = (RegistryEvent) event;
 
                 switch (registryEvent.getRegistryType()) {
                     case INFO_SLOT -> ((RegistryEvent.InfoSlotRegistryEvent) registryEvent)
@@ -249,6 +244,11 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
             }
         }
 
+    }
+
+    public void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
+        if (!JMI.ftbchunks) return;
+        queue.offer(new FTBClaimedChunkData(dim, chunk, teamId));
     }
 
     @Override
@@ -261,8 +261,5 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         return "ftb";
     }
 
-    public void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
-        if (!JMI.ftbchunks) return;
-        queue.offer(new FTBClaimedChunkData(dim, chunk, teamId));
-    }
+
 }

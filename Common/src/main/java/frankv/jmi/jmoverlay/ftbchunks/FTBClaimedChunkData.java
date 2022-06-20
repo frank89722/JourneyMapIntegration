@@ -58,7 +58,7 @@ public class FTBClaimedChunkData {
         return overlay;
     }
 
-    public void updateOverlayProps() {
+    void updateOverlayProps() {
         final var color = team.getColor();
 
         overlay.getTextProperties().setColor(color);

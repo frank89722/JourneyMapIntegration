@@ -52,25 +52,6 @@ public enum ClaimingMode implements ToggleableOverlay {
         this.jmAPI = jmAPI;
     }
 
-    public void onGuiScreen(Screen screen) {
-        if (!isEnabled() || !activated) return;
-        if (screen instanceof IFullscreen && screen != null) return;
-        activated = false;
-        removeOverlays();
-    }
-
-    @Override
-    public void onToggle(IThemeButton button) {
-        if (mc.player == null) return;
-        if (!activated) {
-            createClaimingAreaOverlays();
-        } else {
-            removeOverlays();
-        }
-        activated = !activated;
-        button.setToggled(activated);
-    }
-
     private void removeOverlays() {
         if (claimAreaPolygon == null) return;
         jmAPI.remove(claimAreaPolygon);
@@ -80,7 +61,7 @@ public enum ClaimingMode implements ToggleableOverlay {
         area.clear();
     }
 
-    public PolygonOverlay dragPolygon(XZ xz) {
+    PolygonOverlay dragPolygon(XZ xz) {
         final var player = Minecraft.getInstance().player;
         final var displayId = "drag_polygon_" + xz.x + "_" + xz.z;
 
@@ -93,7 +74,7 @@ public enum ClaimingMode implements ToggleableOverlay {
         return new PolygonOverlay(JMI.MOD_ID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
-    public PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
+    PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
         final var player = Minecraft.getInstance().player;
         final var displayId = "ftb_force_loaded_" + pos.x + "_" + pos.z;
 
@@ -129,6 +110,25 @@ public enum ClaimingMode implements ToggleableOverlay {
         final var overlay = new PolygonOverlay(JMI.MOD_ID, displayId, player.level.dimension(), shapeProps, polygons.get(0));
         OverlayHelper.showOverlay(overlay);
         claimAreaPolygon = overlay;
+    }
+
+    public void onGuiScreen(Screen screen) {
+        if (!isEnabled() || !activated) return;
+        if (screen instanceof IFullscreen && screen != null) return;
+        activated = false;
+        removeOverlays();
+    }
+
+    @Override
+    public void onToggle(IThemeButton button) {
+        if (mc.player == null) return;
+        if (!activated) {
+            createClaimingAreaOverlays();
+        } else {
+            removeOverlays();
+        }
+        activated = !activated;
+        button.setToggled(activated);
     }
 
     @Override

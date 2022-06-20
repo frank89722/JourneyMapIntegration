@@ -2,7 +2,7 @@ package frankv.jmi;
 
 import frankv.jmi.config.ClientConfig;
 import frankv.jmi.config.IClientConfig;
-import frankv.jmi.jmdefaultconfig.JMDefualtConfig;
+import frankv.jmi.jmdefaultconfig.JMDefaultConfig;
 import net.fabricmc.api.ModInitializer;
 
 public class JMIFabric implements ModInitializer {
@@ -11,6 +11,6 @@ public class JMIFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         JMI.init(CLIENT_CONFIG, new JMIFabricEventListener());
-        new JMDefualtConfig().tryWriteJMDefaultConfig();
+        new JMDefaultConfig().tryWriteJMDefaultConfig();
     }
 }
