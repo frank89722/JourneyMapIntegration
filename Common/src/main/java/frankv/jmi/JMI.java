@@ -14,10 +14,10 @@ public class JMI {
     public static boolean waystones;
     public static boolean ftbchunks;
 
-    public static PlatformEventListener platformEventListener;
+    public static IPlatformEventListener platformEventListener;
     public static IClientConfig clientConfig;
 
-    public static void init(IClientConfig clientConfig, PlatformEventListener platformEventListener) {
+    public static void init(IClientConfig clientConfig, IPlatformEventListener platformEventListener) {
         JMI.clientConfig = clientConfig;
         JMI.platformEventListener = platformEventListener;
 
