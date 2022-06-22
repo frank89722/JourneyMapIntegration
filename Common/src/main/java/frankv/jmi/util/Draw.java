@@ -10,15 +10,12 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.renderer.GameRenderer;
 
-public class Draw
-{
-    public static void drawRectangle(PoseStack poseStack, double x, double y, double width, double height, int color, float alpha)
-    {
+public class Draw {
+    public static void drawRectangle(PoseStack poseStack, double x, double y, double width, double height, int color, float alpha) {
         drawRectangle(poseStack, x, y, width, height, color, alpha, 0.0F);
     }
 
-    public static void drawRectangle(PoseStack poseStack, double x, double y, double width, double height, int color, float alpha, float level)
-    {
+    public static void drawRectangle(PoseStack poseStack, double x, double y, double width, double height, int color, float alpha, float level) {
         float red = (float) (color >> 16 & 255) / 255.0F;
         float green = (float) (color >> 8 & 255) / 255.0F;
         float blue = (float) (color & 255) / 255.0F;
@@ -33,8 +30,7 @@ public class Draw
         bufferbuilder.vertex(matrix4f, (float) (x + width), (float) (height + y), level).color(red, green, blue, alpha).endVertex();
         bufferbuilder.vertex(matrix4f, (float) (x + width), (float) y, level).color(red, green, blue, alpha).endVertex();
         bufferbuilder.vertex(matrix4f, (float) x, (float) y, level).color(red, green, blue, alpha).endVertex();
-        bufferbuilder.end();
-        BufferUploader.end(bufferbuilder);
+        BufferUploader.drawWithShader(bufferbuilder.end());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
         RenderSystem.enableTexture();

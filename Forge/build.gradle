@@ -32,7 +32,7 @@ println("##[set-output name=modid;]${archivesBaseName}")
 println("##[set-output name=version;]${version}")
 
 minecraft {
-    mappings channel: 'official', version: '1.18.2'
+    mappings channel: 'official', version: minecraft_version
 
     if (project.hasProperty('forge_ats_enabled') && project.findProperty('forge_ats_enabled').toBoolean()) {
         // This location is hardcoded in Forge and can not be changed.

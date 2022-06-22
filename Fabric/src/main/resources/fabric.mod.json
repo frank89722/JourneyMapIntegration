@@ -30,10 +30,13 @@
     ],
   
     "depends": {
-      "fabricloader": ">=0.13",
+      "fabricloader": ">=0.14",
       "fabric": "*",
-      "minecraft": "1.18.x",
-      "java": ">=17"
+      "minecraft": "1.19.x",
+      "java": ">=17",
+      "journeymap": "*",
+      "ftbchunks": ">=1900",
+      "waystones": ">=11"
     }
   }
   

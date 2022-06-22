@@ -5,7 +5,7 @@ name: Build and upload
 
 on:
   push:
-    branches: [ 1.18.x ]
+    branches: [ 1.19.x ]
 
 jobs:
   build:

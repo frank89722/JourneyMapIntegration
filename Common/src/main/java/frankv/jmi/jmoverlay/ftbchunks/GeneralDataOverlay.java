@@ -9,8 +9,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.LinkedList;
 
@@ -28,10 +26,10 @@ public class GeneralDataOverlay {
         var screenHeight = (float)screen.height;
         var width = 0.0f;
 
-        list.add((new TextComponent(d.loaded + " / " + d.maxForceLoadChunks)).withStyle(d.loaded > d.maxForceLoadChunks ? ChatFormatting.RED : (d.loaded == d.maxForceLoadChunks ? ChatFormatting.YELLOW : ChatFormatting.GREEN)));
-        list.add(new TranslatableComponent("ftbchunks.gui.force_loaded").withStyle(ChatFormatting.WHITE));
-        list.add((new TextComponent(d.claimed + " / " + d.maxClaimChunks)).withStyle(d.claimed > d.maxClaimChunks ? ChatFormatting.RED : (d.claimed == d.maxClaimChunks ? ChatFormatting.YELLOW : ChatFormatting.GREEN)));
-        list.add(new TranslatableComponent("ftbchunks.gui.claimed").withStyle(ChatFormatting.WHITE));
+        list.add((Component.literal(d.loaded + " / " + d.maxForceLoadChunks)).withStyle(d.loaded > d.maxForceLoadChunks ? ChatFormatting.RED : (d.loaded == d.maxForceLoadChunks ? ChatFormatting.YELLOW : ChatFormatting.GREEN)));
+        list.add(Component.translatable("ftbchunks.gui.force_loaded").withStyle(ChatFormatting.WHITE));
+        list.add((Component.literal(d.claimed + " / " + d.maxClaimChunks)).withStyle(d.claimed > d.maxClaimChunks ? ChatFormatting.RED : (d.claimed == d.maxClaimChunks ? ChatFormatting.YELLOW : ChatFormatting.GREEN)));
+        list.add(Component.translatable("ftbchunks.gui.claimed").withStyle(ChatFormatting.WHITE));
 
         for(var comp : list) {
             final var l = font.width(comp) + 9f;
