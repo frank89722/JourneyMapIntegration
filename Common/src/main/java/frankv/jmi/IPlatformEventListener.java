@@ -1,6 +1,6 @@
 package frankv.jmi;
 
-public interface PlatformEventListener {
+public interface IPlatformEventListener {
     boolean isFirstLogin();
     void setFirstLogin(boolean firstLogin);
 
