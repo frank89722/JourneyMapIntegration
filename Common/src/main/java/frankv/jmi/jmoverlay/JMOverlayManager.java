@@ -2,7 +2,6 @@ package frankv.jmi.jmoverlay;
 
 import journeymap.client.api.IClientAPI;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,7 @@ public class JMOverlayManager {
     @Getter
     private Map<Class<? extends ToggleableOverlay>, ToggleableOverlay> toggleableOverlays = new HashMap<>();
 
-    public void registerOverlay(@NotNull ToggleableOverlay overlay) {
+    public void registerOverlay(ToggleableOverlay overlay) {
         overlay.init(jmAPI);
         toggleableOverlays.put(overlay.getClass(), overlay);
     }

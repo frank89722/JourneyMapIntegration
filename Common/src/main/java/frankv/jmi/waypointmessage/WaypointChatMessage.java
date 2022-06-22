@@ -32,8 +32,9 @@ public class WaypointChatMessage {
     }
 
     private static boolean checkBlockTags(Block block) {
+        final var blockStrLen = block.toString().length();
         return block.defaultBlockState().getTags()
                 .anyMatch(e -> clientConfig.getWaypointMessageBlocks().contains('#' + e.location().toString())) ||
-                clientConfig.getWaypointMessageBlocks().contains(block.getName().toString());
+                clientConfig.getWaypointMessageBlocks().contains(block.toString().substring(6, blockStrLen - 1));
     }
 }
