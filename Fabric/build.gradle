@@ -95,6 +95,7 @@ if (ENV.CF_TOKEN) {
             id = "${curse_id}"
             releaseType = "${release_type}"
             addGameVersion "Fabric"
+            addGameVersion "Quilt"
             addGameVersion "${minecraft_version}"
             mainArtifact(remapJar.archivePath)
             relations {
@@ -122,6 +123,7 @@ if (ENV.MODRINTH_TOKEN) {
         versionNumber = "${archivesBaseName}-${version}"
         uploadFile = remapJar
         gameVersions = ["${minecraft_version}"]
+        loaders = ["fabric", "quilt"]
         changelog = ENV.CHANGELOG
         dependencies {
             required.project "P7dR8mSH" // fabric-api
