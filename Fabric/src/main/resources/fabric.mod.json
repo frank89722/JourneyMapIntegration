@@ -34,7 +34,10 @@
       "fabric": "*",
       "minecraft": "1.19.x",
       "java": ">=17",
-      "journeymap": "*",
+      "journeymap": "*"
+    },
+
+    "recommends": {
       "ftbchunks": ">=1900",
       "waystones": ">=11"
     }
