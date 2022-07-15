@@ -104,7 +104,7 @@ if (ENV.CF_TOKEN) {
                 optionalDependency 'ftb-chunks-fabric'
                 optionalDependency 'waystones-fabric'
             }
-            changelog = ENV.CHANGELOG
+            changelog = rootProject.file('changelog.md')
             changelogType = 'markdown'
 
         }
@@ -124,7 +124,7 @@ if (ENV.MODRINTH_TOKEN) {
         uploadFile = remapJar
         gameVersions = ["${minecraft_version}"]
         loaders = ["fabric", "quilt"]
-        changelog = ENV.CHANGELOG
+        changelog = rootProject.file('changelog.md')
         dependencies {
             required.project "P7dR8mSH" // fabric-api
             required.project "lfHFW1mp" // journeymap

@@ -146,7 +146,7 @@ if (ENV.CF_TOKEN) {
                 optionalDependency 'ftb-chunks-forge'
                 optionalDependency 'waystones'
             }
-            changelog = ENV.CHANGELOG
+            changelog = rootProject.file('changelog.md')
             changelogType = 'markdown'
         }
     }
@@ -160,7 +160,7 @@ if (ENV.MODRINTH_TOKEN) {
         versionNumber = "${archivesBaseName}-${version}"
         uploadFile = jar
         gameVersions = ["${minecraft_version}"]
-        changelog = ENV.CHANGELOG
+        changelog = rootProject.file('changelog.md')
         dependencies {
             required.project "lfHFW1mp" // journeymap
         }
