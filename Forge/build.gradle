@@ -106,7 +106,7 @@ dependencies {
     implementation fg.deobf("curse.maven:waystones-${project.waystones_forge_project_id}:${project.waystones_forge_file_id}")
 
     compileOnly fg.deobf(group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_forge_version, changing: true)
-    implementation fg.deobf("curse.maven:journeymap-${project.jm_project_id}:${project.jm_forge_file_id}")
+    runtimeOnly fg.deobf("curse.maven:journeymap-${project.jm_project_id}:${project.jm_forge_file_id}")
 
 }
 
