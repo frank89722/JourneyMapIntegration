@@ -37,9 +37,10 @@ subprojects {
         }
 
         maven {
-            url "https://www.cursemaven.com"
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
             content {
-                includeGroup "curse.maven"
+                includeGroup "maven.modrinth"
             }
         }
 

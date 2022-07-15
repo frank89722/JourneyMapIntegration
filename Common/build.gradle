@@ -33,8 +33,8 @@ dependencies {
     modCompileOnly "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
     modCompileOnly "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
     modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
-    modCompileOnly "curse.maven:balm-${project.balm_fabric_project_id}:${project.balm_fabric_file_id}"
-    modCompileOnly "curse.maven:waystones-${project.waystones_fabric_project_id}:${project.waystones_fabric_file_id}"
+    modCompileOnly "maven.modrinth:balm:${project.balm_fabric_version}"
+    modCompileOnly "maven.modrinth:waystones:${project.waystones_fabric_version}"
 
 }
 
