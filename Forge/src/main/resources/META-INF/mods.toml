@@ -17,7 +17,7 @@ The mod that adds mod integration for JourneyMap.
 [[dependencies.jmi]]
     modId="forge"
     mandatory=true
-    versionRange="[41,)"
+    versionRange="[41.0.94,)"
     ordering="NONE"
     side="BOTH"
 

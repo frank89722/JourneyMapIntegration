@@ -35,7 +35,7 @@ public class JMIForgeEventListener extends PlatformEventListener {
         ClaimingMode.INSTANCE.onGuiScreen(event.getScreen());
     }
 
-    private void onMouse(InputEvent.MouseInputEvent event) {
+    private void onMouse(InputEvent.MouseButton event) {
         if (event.getAction() == GLFW.GLFW_RELEASE) {
             ClaimingMode.INSTANCE.getHandler().onMouseReleased(event.getButton());
         }
