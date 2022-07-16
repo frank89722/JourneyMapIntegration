@@ -6,6 +6,7 @@ import frankv.jmi.waypointmessage.WaypointChatMessage;
 import journeymap.client.api.event.forge.FullscreenDisplayEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -30,7 +31,7 @@ public class JMIForgeEventListener extends PlatformEventListener {
         onAddonButtonDisplay(event.getThemeButtonDisplay());
     }
 
-    private void onGuiScreen(ScreenEvent event) {
+    private void onGuiScreen(ScreenOpenEvent event) {
         ClaimingMode.INSTANCE.onGuiScreen(event.getScreen());
     }
 
