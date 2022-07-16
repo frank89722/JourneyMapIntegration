@@ -124,7 +124,7 @@ if (ENV.MODRINTH_TOKEN) {
         uploadFile = remapJar
         gameVersions = ["${minecraft_version}"]
         loaders = ["fabric", "quilt"]
-        changelog = rootProject.file('changelog.md')
+        changelog = rootProject.file('changelog.md').text
         dependencies {
             required.project "P7dR8mSH" // fabric-api
             required.project "lfHFW1mp" // journeymap
