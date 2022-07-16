@@ -160,7 +160,7 @@ if (ENV.MODRINTH_TOKEN) {
         versionNumber = "${archivesBaseName}-${version}"
         uploadFile = jar
         gameVersions = ["${minecraft_version}"]
-        changelog = rootProject.file('changelog.md')
+        changelog = rootProject.file('changelog.md').text
         dependencies {
             required.project "lfHFW1mp" // journeymap
         }
