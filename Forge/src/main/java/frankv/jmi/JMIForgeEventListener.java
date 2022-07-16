@@ -4,7 +4,6 @@ import frankv.jmi.jmoverlay.ftbchunks.ClaimingMode;
 import frankv.jmi.jmoverlay.ftbchunks.GeneralDataOverlay;
 import frankv.jmi.waypointmessage.WaypointChatMessage;
 import journeymap.client.api.event.forge.FullscreenDisplayEvent;
-import net.blay09.mods.balm.api.event.client.screen.ScreenDrawEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,7 +40,7 @@ public class JMIForgeEventListener extends PlatformEventListener {
         }
     }
 
-    private void onScreenDraw(ScreenDrawEvent.Post event) {
+    private void onScreenDraw(ScreenEvent.DrawScreenEvent.Post event) {
         GeneralDataOverlay.onScreenDraw(event.getScreen(), event.getPoseStack());
     }
 
