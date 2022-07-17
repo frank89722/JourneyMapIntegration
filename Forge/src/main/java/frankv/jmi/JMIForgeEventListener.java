@@ -30,7 +30,7 @@ public class JMIForgeEventListener extends PlatformEventListener {
         onAddonButtonDisplay(event.getThemeButtonDisplay());
     }
 
-    private void onGuiScreen(ScreenEvent event) {
+    private void onGuiScreen(ScreenEvent.Closing event) {
         ClaimingMode.INSTANCE.onGuiScreen(event.getScreen());
     }
 

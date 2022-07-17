@@ -5,6 +5,7 @@ import dev.ftb.mods.ftblibrary.math.XZ;
 import frankv.jmi.JMI;
 import frankv.jmi.jmoverlay.JMOverlayManager;
 import frankv.jmi.jmoverlay.ToggleableOverlay;
+import frankv.jmi.platform.Services;
 import frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.IThemeButton;
@@ -114,7 +115,7 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     public void onGuiScreen(Screen screen) {
         if (!isEnabled() || !activated) return;
-        if (screen instanceof IFullscreen && screen != null) return;
+        if (!(screen instanceof IFullscreen)) return;
         activated = false;
         removeOverlays();
     }
