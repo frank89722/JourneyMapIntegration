@@ -16,8 +16,6 @@ public class JMIForge {
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
     public JMIForge() {
-        JMI.init(CLIENT_CONFIG, new JMIForgeEventListener());
-
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
 
@@ -25,6 +23,7 @@ public class JMIForge {
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
+        JMI.init(CLIENT_CONFIG, new JMIForgeEventListener());
         new JMDefaultConfig().tryWriteJMDefaultConfig();
     }
 }
