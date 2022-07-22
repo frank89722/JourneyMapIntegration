@@ -54,6 +54,8 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     @Override
     public void init(IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
+
+        if (!isEnabled()) return;
         TeamEvent.CLIENT_PROPERTIES_CHANGED.register(this::onTeamPropsChanged);
     }
 
