@@ -25,7 +25,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
 
         try {
             if (JMI.waystones) {
-                Balm.getEvents().onEvent(KnownWaystonesEvent.class, event -> WaystoneMarker.INSTANCE.onKnownWaystones(event));
+                Balm.getEvents().onEvent(KnownWaystonesEvent.class, WaystoneMarker.INSTANCE::onKnownWaystones);
             }
         } catch (NoClassDefFoundError e) {
             JMI.waystones = false;

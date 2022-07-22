@@ -1,6 +1,7 @@
 package frankv.jmi;
 
 import frankv.jmi.jmoverlay.JMOverlayManager;
+import frankv.jmi.jmoverlay.ToggleableOverlay;
 import frankv.jmi.jmoverlay.ftbchunks.ClaimedChunkPolygon;
 import frankv.jmi.jmoverlay.waystones.WaystoneMarker;
 import journeymap.client.api.display.ThemeButtonDisplay;
@@ -38,7 +39,7 @@ public abstract class PlatformEventListener implements IPlatformEventListener {
     protected void onAddonButtonDisplay(ThemeButtonDisplay buttonDisplay) {
 
         JMOverlayManager.INSTANCE.getToggleableOverlays().values().stream()
-                .sorted(Comparator.comparing(o -> o.getOrder()))
+                .sorted(Comparator.comparing(ToggleableOverlay::getOrder))
                 .forEach(t -> {
                     if (!t.isEnabled()) return;
                     buttonDisplay.addThemeToggleButton(t.getButtonLabel(), t.getButtonLabel(), t.getButtonIconName(), t.isActivated(), b -> t.onToggle(b));
