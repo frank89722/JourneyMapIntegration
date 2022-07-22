@@ -1,4 +1,5 @@
 ### 0.12
+- Fix crash when no FTBChunks installed
 - Won't crash your server anymore, maybe?
 - [Forge] Support forge 41.0.94+
 - Fix claiming mode does not toggle off when Journeymap fullscreen map closed
