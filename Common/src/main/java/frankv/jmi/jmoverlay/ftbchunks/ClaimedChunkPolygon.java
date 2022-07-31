@@ -43,7 +43,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     private Queue<FTBClaimedChunkData> queue = new LinkedList<>();
 
     @Getter
-    private final String buttonLabel = /*"FTBChunks Overlay"*/ "WIP";
+    private final String buttonLabel = "FTBChunks Overlay";
     @Getter
     private final int order = 1;
 
@@ -74,8 +74,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         chunkData.values().forEach(data -> {
             if (!data.chunkDimPos.dimension.equals(level.dimension())) return;
-            showOverlay(data.overlay);
-            chunkOverlays.put(data.chunkDimPos, data.overlay);
+            addChunk(data, level.dimension());
         });
     }
 
@@ -86,10 +85,6 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         chunkData.put(pos, data);
         if (!pos.dimension.equals(dim)) return;
-
-        if (!activated) {
-            data.overlay.setActiveMapTypes(EnumSet.of(Context.MapType.Topo));
-        }
 
         chunkOverlays.put(data.chunkDimPos, data.overlay);
         if (activated) showOverlay(data.overlay);
@@ -210,11 +205,11 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
     @Override
     public void onToggle(IThemeButton button) {
-//        if (activated) {
-//            OverlayHelper.removeOverlays(chunkOverlays.values());
-//        } else {
-//            OverlayHelper.showOverlays(chunkOverlays.values());
-//        }
+        if (activated) {
+            OverlayHelper.removeOverlays(chunkOverlays.values());
+        } else {
+            OverlayHelper.showOverlays(chunkOverlays.values());
+        }
 
         activated = !activated;
         button.setToggled(activated);
