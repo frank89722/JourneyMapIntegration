@@ -31,7 +31,7 @@ The mod that adds mod integration for JourneyMap.
 [[dependencies.jmi]]
     modId="journeymap"
     mandatory=true
-    versionRange="[5.8,)"
+    versionRange="(5.8,)"
     ordering="NONE"
     side="CLIENT"
 
