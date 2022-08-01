@@ -1,4 +1,5 @@
 ### 0.12
+- Fix automatic disable conflict features in FTBChunks not work
 - Fix crash when no FTBChunks installed
 - Won't crash your server anymore, maybe?
 - [Forge] Support forge 41.0.94+

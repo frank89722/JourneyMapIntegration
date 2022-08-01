@@ -57,6 +57,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         if (!isEnabled()) return;
         TeamEvent.CLIENT_PROPERTIES_CHANGED.register(this::onTeamPropsChanged);
+        disableFTBChunksStuff();
     }
 
     private String getPolygonTitleByPlayerPos() {
@@ -166,7 +167,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         return !data.equals(that);
     }
 
-    private void disableFTBChunksThings() {
+    private void disableFTBChunksStuff() {
         if (!JMI.clientConfig.getDisableFTBFunction()) return;
         FTBChunksClientConfig.DEATH_WAYPOINTS.set(false);
         FTBChunksClientConfig.MINIMAP_ENABLED.set(false);
@@ -226,9 +227,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         switch (event.type) {
             case MAPPING_STARTED -> {
-                if (JMI.platformEventListener.isFirstLogin()) {
-                    disableFTBChunksThings();
-                } else {
+                if (!JMI.platformEventListener.isFirstLogin()) {
                     createPolygonsOnMappingStarted();
                     JMI.LOGGER.debug("re-add ftbchunks overlays");
                 }
