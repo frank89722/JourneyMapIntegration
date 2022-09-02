@@ -21,6 +21,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.level.ChunkPos;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public enum ClaimingMode implements ToggleableOverlay {
@@ -128,6 +129,7 @@ public enum ClaimingMode implements ToggleableOverlay {
         } else {
             removeOverlays();
         }
+        ClaimedChunkPolygon.INSTANCE.onClaiming(activated);
         activated = !activated;
         button.setToggled(activated);
     }
