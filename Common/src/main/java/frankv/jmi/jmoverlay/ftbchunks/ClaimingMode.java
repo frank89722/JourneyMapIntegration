@@ -21,6 +21,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.level.ChunkPos;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public enum ClaimingMode implements ToggleableOverlay {
@@ -115,8 +116,9 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     public void onGuiScreen(Screen screen) {
         if (!isEnabled() || !activated) return;
-        if (Services.PLATFORM.getPlatformName() == "Forge" && screen instanceof IFullscreen && screen != null) return;
-        if (Services.PLATFORM.getPlatformName() == "Fabric" && !(screen instanceof IFullscreen)) return;
+        if (Objects.equals(Services.PLATFORM.getPlatformName(), "Forge") && screen instanceof IFullscreen) return;
+        if (Objects.equals(Services.PLATFORM.getPlatformName(), "Fabric") && !(screen instanceof IFullscreen)) return;
+        ClaimedChunkPolygon.INSTANCE.onClaiming(true);
         activated = false;
         removeOverlays();
     }
@@ -129,6 +131,7 @@ public enum ClaimingMode implements ToggleableOverlay {
         } else {
             removeOverlays();
         }
+        ClaimedChunkPolygon.INSTANCE.onClaiming(activated);
         activated = !activated;
         button.setToggled(activated);
     }

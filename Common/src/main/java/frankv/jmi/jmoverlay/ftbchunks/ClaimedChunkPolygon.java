@@ -203,8 +203,19 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         }
     }
 
-    @Override
-    public void onToggle(IThemeButton button) {
+    private Boolean shouldToggleAfterOff = false;
+    void onClaiming(boolean off) {
+        if (!off && activated) return;
+        if (!off) {
+            toggleOverlay();
+            shouldToggleAfterOff = true;
+        } else if (shouldToggleAfterOff) {
+            toggleOverlay();
+            shouldToggleAfterOff = false;
+        }
+    }
+
+    private void toggleOverlay() {
         if (activated) {
             OverlayHelper.removeOverlays(chunkOverlays.values());
         } else {
@@ -212,6 +223,11 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         }
 
         activated = !activated;
+    }
+    @Override
+    public void onToggle(IThemeButton button) {
+        if (ClaimingMode.INSTANCE.isActivated()) return;
+        toggleOverlay();
         button.setToggled(activated);
     }
 
