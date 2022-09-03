@@ -11,7 +11,6 @@ import frankv.jmi.jmoverlay.JMOverlayManager;
 import frankv.jmi.jmoverlay.ToggleableOverlay;
 import frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
-import journeymap.client.api.display.Context;
 import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.event.ClientEvent;
@@ -43,7 +42,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     private Queue<FTBClaimedChunkData> queue = new LinkedList<>();
 
     @Getter
-    private final String buttonLabel = /*"FTBChunks Overlay"*/ "WIP";
+    private final String buttonLabel = "FTBChunks Overlay";
     @Getter
     private final int order = 1;
 
@@ -87,10 +86,6 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         chunkData.put(pos, data);
         if (!pos.dimension.equals(dim)) return;
-
-        if (!activated) {
-            data.overlay.setActiveMapTypes(EnumSet.of(Context.MapType.Topo));
-        }
 
         chunkOverlays.put(data.chunkDimPos, data.overlay);
         if (activated) showOverlay(data.overlay);
@@ -209,15 +204,31 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         }
     }
 
-    @Override
-    public void onToggle(IThemeButton button) {
-//        if (activated) {
-//            OverlayHelper.removeOverlays(chunkOverlays.values());
-//        } else {
-//            OverlayHelper.showOverlays(chunkOverlays.values());
-//        }
+    private Boolean shouldToggleAfterOff = false;
+    void onClaiming(boolean off) {
+        if (!off && activated) return;
+        if (!off) {
+            toggleOverlay();
+            shouldToggleAfterOff = true;
+        } else if (shouldToggleAfterOff) {
+            toggleOverlay();
+            shouldToggleAfterOff = false;
+        }
+    }
+
+    private void toggleOverlay() {
+        if (activated) {
+            OverlayHelper.removeOverlays(chunkOverlays.values());
+        } else {
+            OverlayHelper.showOverlays(chunkOverlays.values());
+        }
 
         activated = !activated;
+    }
+    @Override
+    public void onToggle(IThemeButton button) {
+        if (ClaimingMode.INSTANCE.isActivated()) return;
+        toggleOverlay();
         button.setToggled(activated);
     }
 

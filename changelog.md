@@ -1,3 +1,7 @@
+### 0.13
+- Update to MC1.19.2
+- Make overlay toggleable ([#12](https://github.com/frank89722/JourneyMapIntegration/issues/12))
+- Fix automatic disable conflict features in FTBChunks not work
 ### 0.12
 - Fix automatic disable conflict features in FTBChunks not work
 - Fix crash when no FTBChunks installed
