@@ -43,7 +43,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     private Queue<FTBClaimedChunkData> queue = new LinkedList<>();
 
     @Getter
-    private final String buttonLabel = /*"FTBChunks Overlay"*/ "WIP";
+    private final String buttonLabel = "FTBChunks Overlay";
     @Getter
     private final int order = 1;
 
@@ -208,11 +208,11 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
     @Override
     public void onToggle(IThemeButton button) {
-//        if (activated) {
-//            OverlayHelper.removeOverlays(chunkOverlays.values());
-//        } else {
-//            OverlayHelper.showOverlays(chunkOverlays.values());
-//        }
+        if (activated) {
+            OverlayHelper.removeOverlays(chunkOverlays.values());
+        } else {
+            OverlayHelper.showOverlays(chunkOverlays.values());
+        }
 
         activated = !activated;
         button.setToggled(activated);

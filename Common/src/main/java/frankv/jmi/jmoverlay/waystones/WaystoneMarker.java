@@ -30,7 +30,7 @@ public enum WaystoneMarker implements ToggleableOverlay {
     private boolean activated = true;
 
     @Getter
-    private final String buttonLabel = /*"Waystones Overlay"*/ "WIP";
+    private final String buttonLabel = "Waystones Overlay";
     @Getter
     private final int order = 2;
 
@@ -94,11 +94,11 @@ public enum WaystoneMarker implements ToggleableOverlay {
 
     @Override
     public void onToggle(IThemeButton button) {
-//        if (activated) {
-//            OverlayHelper.removeOverlays(markers.values());
-//        } else {
-//            OverlayHelper.showOverlays(markers.values());
-//        }
+        if (activated) {
+            OverlayHelper.removeOverlays(markers.values());
+        } else {
+            OverlayHelper.showOverlays(markers.values());
+        }
         activated = !activated;
         button.setToggled(activated);
     }
