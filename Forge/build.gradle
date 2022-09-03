@@ -102,7 +102,7 @@ dependencies {
     implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${project.ftb_library_version}")
     implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:${project.ftb_teams_version}")
     implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:${project.ftb_chunks_version}")
-    implementation fg.deobf("curse.maven:balm-531761:3873429")
+    implementation fg.deobf("maven.modrinth:balm:${project.balm_forge_version}")
     implementation fg.deobf("maven.modrinth:waystones:${project.waystones_forge_version}")
 
     compileOnly fg.deobf(group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_forge_version, changing: true)

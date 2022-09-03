@@ -1,16 +1,11 @@
 package frankv.jmi.waypointmessage;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.ChatSender;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-
-import java.time.Instant;
-import java.util.Optional;
 
 import static frankv.jmi.JMI.clientConfig;
 
@@ -29,13 +24,16 @@ public class WaypointChatMessage {
         prevBlock = blockPos;
 
         final var name = block.getName().getString();
-        final var msg = String.format("[name:\"%s\", x:%d, y:%d, z:%d]", name, blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        mc.player.connection.handlePlayerChat(new ClientboundPlayerChatPacket(Component.literal(msg), Optional.of(Component.literal(msg)), 0, new ChatSender(Util.NIL_UUID, Component.literal("JMI")), Instant.now(), null));
+        final var msg = String.format("[name:\"%s\", x:%d, y:%d, z:%d, dim:%s]", name, blockPos.getX(), blockPos.getY(), blockPos.getZ(), mc.player.level.dimension().location());
+        final var chatPacker = new ClientboundPlayerChatPacket(
+                PlayerChatMessage.unsigned(MessageSigner.create(mc.player.getUUID()), new ChatMessageContent(msg, Component.literal(msg))),
+                new ChatType.BoundNetwork(1, Component.literal("JMI"), null)
+        );
+        mc.player.connection.handlePlayerChat(chatPacker);
     }
 
     private static boolean checkBlockTags(Block block) {
         final var blockStrLen = block.toString().length();
-        System.out.println(block.toString().substring(6, blockStrLen-1));
         return block.defaultBlockState().getTags()
                 .anyMatch(e -> clientConfig.getWaypointMessageBlocks().contains('#' + e.location().toString())) ||
                 clientConfig.getWaypointMessageBlocks().contains(block.toString().substring(6, blockStrLen-1));
