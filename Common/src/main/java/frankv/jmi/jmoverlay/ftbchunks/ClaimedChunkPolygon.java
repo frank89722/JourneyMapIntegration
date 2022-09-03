@@ -85,10 +85,6 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         chunkData.put(pos, data);
         if (!pos.dimension.equals(dim)) return;
 
-        if (!activated) {
-            data.overlay.setActiveMapTypes(EnumSet.of(Context.MapType.Topo));
-        }
-
         chunkOverlays.put(data.chunkDimPos, data.overlay);
         if (activated) showOverlay(data.overlay);
 
