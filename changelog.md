@@ -1,4 +1,5 @@
 ### 0.13
+- Fix JM default config crash ([#20](https://github.com/frank89722/JourneyMapIntegration/issues/20))
 - Update to MC1.19.2
 - Make overlay toggleable ([#12](https://github.com/frank89722/JourneyMapIntegration/issues/12))
 - Fix automatic disable conflict features in FTBChunks not work
