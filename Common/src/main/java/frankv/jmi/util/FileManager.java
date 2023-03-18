@@ -13,11 +13,13 @@ public class FileManager<T> {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private final Class<T> classOfT;
-    @Getter
-    private final File file;
+    @Getter private final File file;
+    private final File fileDir;
 
     public FileManager(String filePath, Class<T> classOfT) {
-        this.file = new File(System.getProperty("user.dir") + filePath);
+        String userDir = System.getProperty("user.dir");
+        this.file = new File(userDir + filePath);
+        this.fileDir = new File(userDir + filePath.substring(0, filePath.lastIndexOf("/")));
         this.classOfT = classOfT;
     }
 
@@ -30,6 +32,7 @@ public class FileManager<T> {
     }
 
     public void write(T object) {
+        if (!fileDir.exists()) fileDir.mkdirs();
         try (final var fileWriter = new FileWriter(file)) {
             gson.toJson(object, fileWriter);
         } catch (IOException e) {
