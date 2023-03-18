@@ -1,4 +1,5 @@
 ### 0.13
+- Fix JM default config crash ([#20](https://github.com/frank89722/JourneyMapIntegration/issues/20))
 - Improve claiming mode UX
 - Fix automatic disable conflict features in FTBChunks not work
 - Make overlay toggleable ([#12](https://github.com/frank89722/JourneyMapIntegration/issues/12))
