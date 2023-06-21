@@ -19,10 +19,10 @@
     "environment": "*",
     "entrypoints": {
       "client": [
-        "frankv.jmi.JMIFabric"
+        "me.frankv.jmi.JMIFabric"
       ],
       "journeymap": [
-        "frankv.jmi.JMIJourneyMapPlugin"
+        "me.frankv.jmi.JMIJourneyMapPlugin"
       ]
     },
     "mixins": [
@@ -30,16 +30,16 @@
     ],
   
     "depends": {
-      "fabricloader": ">=0.14",
-      "fabric": "*",
-      "minecraft": "1.19.x",
+      "fabricloader": ">=0.14.21",
+      "fabric-api": "*",
+      "minecraft": "~1.20",
       "java": ">=17",
       "journeymap": "*"
     },
 
     "recommends": {
-      "ftbchunks": ">=1900",
-      "waystones": ">=11"
+      "ftbchunks": ">=2001",
+      "waystones": ">=14"
     }
   }
   

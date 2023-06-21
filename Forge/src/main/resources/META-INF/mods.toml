@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[47,)"
 license="MIT"
 issueTrackerURL="https://github.com/frank89722/JourneyMapIntegration/issues"
 [[mods]]
@@ -17,14 +17,14 @@ The mod that adds mod integration for JourneyMap.
 [[dependencies.jmi]]
     modId="forge"
     mandatory=true
-    versionRange="[41.0.94,)"
+    versionRange="[47,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.jmi]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19,1.20)"
+    versionRange="[1.20,1.21)"
     ordering="NONE"
     side="BOTH"
 
@@ -38,13 +38,13 @@ The mod that adds mod integration for JourneyMap.
 [[dependencies.jmi]]
     modId="ftbchunks"
     mandatory=false
-    versionRange="[1900,)"
+    versionRange="[2001,)"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.jmi]]
     modId="waystones"
     mandatory=false
-    versionRange="[11.0.0,)"
+    versionRange="[14.0.0,)"
     ordering="NONE"
     side="CLIENT"

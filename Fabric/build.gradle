@@ -1,19 +1,12 @@
 plugins {
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
     id 'idea'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
 }
 
-def ENV = System.getenv()
-
-version = "${version}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
-archivesBaseName = "${mod_id}-fabric-${minecraft_version}"
-
-repositories {
-    maven { url "https://maven.shedaniel.me/" }
-}
+archivesBaseName = "${mod_id}-fabric"
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -21,7 +14,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation project(":Common")
+    implementation project(path: ':Common', configuration: 'namedElements')
 
     modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
     modRuntimeOnly "maven.modrinth:journeymap:${project.jm_fabric_version}"
@@ -88,21 +81,27 @@ publishing {
     }
 }
 
+def ENV = System.getenv()
+def release_title = "[Fabric] v${version}"
+
 if (ENV.CF_TOKEN) {
     curseforge {
         apiKey = ENV.CF_TOKEN
         project {
-            id = "${curse_id}"
-            releaseType = "${release_type}"
+            id = curse_id
+            releaseType = release_type
             addGameVersion "Fabric"
             addGameVersion "Quilt"
-            addGameVersion "${minecraft_version}"
-            mainArtifact(remapJar.archivePath)
+            addGameVersion "Java 17"
+            addGameVersion "Client"
+            addGameVersion minecraft_version
+            mainArtifact(remapJar.archivePath) {
+                it.displayName = release_title
+            }
             relations {
-                requiredDependency 'journeymap'
-                requiredLibrary 'fabric-api'
-                optionalDependency 'ftb-chunks-fabric'
-                optionalDependency 'waystones-fabric'
+                it.requiredDependency 'journeymap'
+                it.optionalDependency 'ftb-chunks-forge'
+                it.optionalDependency 'waystones'
             }
             changelog = rootProject.file('changelog.md')
             changelogType = 'markdown'
@@ -118,16 +117,17 @@ if (ENV.CF_TOKEN) {
 if (ENV.MODRINTH_TOKEN) {
     modrinth {
         token = ENV.MODRINTH_TOKEN
-        projectId = "${modrinth_id}"
-        versionType = "${release_type}"
-        versionNumber = "${archivesBaseName}-${version}"
+        projectId = modrinth_id
+        versionType = release_type
+        versionName = release_title
+        versionNumber = "${version}+fabric"
         uploadFile = remapJar
-        gameVersions = ["${minecraft_version}"]
+        gameVersions = [ minecraft_version ]
         loaders = ["fabric", "quilt"]
         changelog = rootProject.file('changelog.md').text
         dependencies {
-            required.project "P7dR8mSH" // fabric-api
             required.project "lfHFW1mp" // journeymap
+            optional.project "LOpKHB2A" // waystones
         }
     }
 }

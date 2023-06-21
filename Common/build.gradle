@@ -1,17 +1,11 @@
 plugins {
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
 }
 
-def ENV = System.getenv()
-
-version = "${version}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
 archivesBaseName = "${mod_id}-common-${minecraft_version}"
 
 loom {
-    remapArchives = false
-    setupRemappedVariants = false
-    enableTransitiveAccessWideners = false
     interfaceInjection {
         enableDependencyInterfaceInjection = false
     }
@@ -47,22 +41,3 @@ processResources {
         expand buildProps
     }
 }
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-            from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
-    }
-}
-
-remapJar.enabled = false
-remapSourcesJar.enabled = false
