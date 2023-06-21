@@ -1,14 +1,2 @@
-### 0.13
-- Fix JM default config crash ([#20](https://github.com/frank89722/JourneyMapIntegration/issues/20))
-- Update to MC1.19.2
-- Make overlay toggleable ([#12](https://github.com/frank89722/JourneyMapIntegration/issues/12))
-- Fix automatic disable conflict features in FTBChunks not work
-### 0.12
-- Fix automatic disable conflict features in FTBChunks not work
-- Fix crash when no FTBChunks installed
-- Won't crash your server anymore, maybe?
-- [Forge] Support forge 41.0.94+
-- Fix claiming mode does not toggle off when Journeymap fullscreen map closed
-- [Forge] Fix claimed chunks count overlay didn't show up in chunk claiming mode
-- Refactor some code for toggleable overlay support in the future
----
+- port to mc 1.20.1
+- remove FTBChunks map screen hack
