@@ -19,7 +19,6 @@ public class ClientConfig implements IClientConfig {
     private Boolean waypointMessageEmptyHandOnly = true;
     private Double claimedChunkOverlayOpacity = 0.222223;
     private Boolean disableFTBFunction = true;
-    private Boolean showClaimChunkScreen = true;
     private Integer waystoneColor = 0xffffff;
     private Integer defaultConfigVersion = -1;
 

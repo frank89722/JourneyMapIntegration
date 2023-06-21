@@ -4,7 +4,6 @@
     "package": "me.frankv.jmi.mixin",
     "compatibilityLevel": "JAVA_17",
     "client": [
-      "FTBChunksClientMixin",
       "UpdateFromServerTaskMixin",
       "MouseHandlerMixin"
     ],

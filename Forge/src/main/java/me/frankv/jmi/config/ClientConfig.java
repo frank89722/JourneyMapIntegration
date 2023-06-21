@@ -14,7 +14,6 @@ public class ClientConfig implements IClientConfig {
     private final ForgeConfigSpec.BooleanValue waypointMessageEmptyHandOnly;
     private final ForgeConfigSpec.DoubleValue claimedChunkOverlayOpacity;
     private final ForgeConfigSpec.BooleanValue disableFTBFunction;
-    private final ForgeConfigSpec.BooleanValue showClaimChunkScreen;
     private final ForgeConfigSpec.IntValue waystoneColor;
     private final ForgeConfigSpec.IntValue defaultConfigVersion;
 
@@ -25,7 +24,6 @@ public class ClientConfig implements IClientConfig {
         claimedChunkOverlayOpacity = builder.defineInRange("claimedChunkOverlayOpacity", 0.222223f, 0f, 1.0f);
         disableFTBFunction = builder.comment("Disable conflict functions for FTBChunks (MiniMap, Waypoint beam, Death waypoint)")
                 .define("disableFTBFunction", true);
-        showClaimChunkScreen = builder.comment("Show chunk claiming screen first instead of large map screen.").define("showClaimChunkScreen", true);
         builder.pop();
 
         builder.push("Waystones");
@@ -71,10 +69,6 @@ public class ClientConfig implements IClientConfig {
 
     public Boolean getDisableFTBFunction() {
         return disableFTBFunction.get();
-    }
-
-    public Boolean getShowClaimChunkScreen() {
-        return showClaimChunkScreen.get();
     }
 
     public Integer getWaystoneColor() {

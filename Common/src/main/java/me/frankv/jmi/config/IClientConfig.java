@@ -16,8 +16,6 @@ public interface IClientConfig {
 
     Boolean getDisableFTBFunction();
 
-    Boolean getShowClaimChunkScreen();
-
     Integer getWaystoneColor();
 
     Integer getDefaultConfigVersion();
