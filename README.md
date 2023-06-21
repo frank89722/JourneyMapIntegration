@@ -1,4 +1,4 @@
-# JourneyMapIntegration
+# JourneyMapIntegration [![](https://img.shields.io/modrinth/dt/M1ZKbfkJ?label=modrinth)](https://modrinth.com/mod/journeymap-integration) [![](https://cf.way2muchnoise.eu/short_525447_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/journeymap-integration)
 This mod was made to let JoururneyMap support some features from other mods to make your life easier.
 
 And it's also included some mod tweaks and non-mod integration features btw.
