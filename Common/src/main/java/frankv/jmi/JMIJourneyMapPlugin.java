@@ -23,6 +23,11 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     public void initialize(final IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
 
+        JMI.platformEventListener.register();
+        JMOverlayManager.INSTANCE.setJmAPI(jmAPI);
+        OverlayHelper.setJmAPI(jmAPI);
+        jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
+
         try {
             if (JMI.waystones) {
                 Balm.getEvents().onEvent(KnownWaystonesEvent.class, WaystoneMarker.INSTANCE::onKnownWaystones);
@@ -30,13 +35,6 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         } catch (NoClassDefFoundError e) {
             JMI.waystones = false;
         }
-
-        JMI.platformEventListener.register();
-
-        JMOverlayManager.INSTANCE.setJmAPI(jmAPI);
-        OverlayHelper.setJmAPI(jmAPI);
-
-        this.jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
         JMI.LOGGER.info("Initialized " + getClass().getName());
     }
 
