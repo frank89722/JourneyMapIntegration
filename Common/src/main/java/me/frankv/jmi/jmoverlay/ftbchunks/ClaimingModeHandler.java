@@ -66,8 +66,8 @@ public class ClaimingModeHandler {
     private void applyChanges(int mouseButton) {
         mouseTracking = false;
         if (chunks.isEmpty()) return;
-
-        new RequestChunkChangePacket(Screen.hasShiftDown() ? mouseButton+2 : mouseButton, chunks).sendToServer();
+        var chunkChangeOp = RequestChunkChangePacket.ChunkChangeOp.create(mouseButton == 0, Screen.hasShiftDown());
+        new RequestChunkChangePacket(chunkChangeOp, chunks).sendToServer();
         removeOverlays(dragPolygons.values());
         chunks.clear();
         dragPolygons.clear();

@@ -38,7 +38,7 @@
     },
 
     "recommends": {
-      "ftbchunks": ">=2001",
+      "ftbchunks": ">=2001.1.3",
       "waystones": ">=14"
     }
   }

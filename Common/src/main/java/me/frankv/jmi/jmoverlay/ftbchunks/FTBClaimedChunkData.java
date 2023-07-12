@@ -13,6 +13,7 @@ import journeymap.client.api.util.PolygonHelper;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -29,9 +30,11 @@ public class FTBClaimedChunkData {
     private PolygonOverlay overlay;
 
     public FTBClaimedChunkData(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
+        long now = new Date().getTime();
+
         this.chunk = chunk;
-        this.chunkDimPos = new ChunkDimPos(dim.dimension, chunk.x, chunk.z);
-        this.forceLoaded = chunk.forceLoaded;
+        this.chunkDimPos = new ChunkDimPos(dim.dimension, chunk.getX(), chunk.getZ());
+        this.forceLoaded = chunk.getDateInfo(true, now).forceLoaded() != null;
         this.teamId = teamId;
 
         ClientTeamManagerImpl.getInstance().getTeam(teamId)
