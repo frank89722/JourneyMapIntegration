@@ -1,2 +1,1 @@
-- port to mc 1.20.1
-- remove FTBChunks map screen hack
+- fix crash with FTBChunks 2001.1.3
