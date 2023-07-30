@@ -1,1 +1,1 @@
-- fix waystone marker not remove on waystone broke
+- fixes random crashes in Fabric
