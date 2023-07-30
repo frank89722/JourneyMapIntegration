@@ -20,7 +20,7 @@ public class MouseHandlerMixin {
         final var mc = Minecraft.getInstance();
         final var hitResult = mc.hitResult;
 
-        if (mc.player == null || hitResult.getType() != HitResult.Type.BLOCK) return;
+        if (mc.player == null || hitResult == null || hitResult.getType() != HitResult.Type.BLOCK) return;
 
         WaypointChatMessage.onRightClickOnBlock(((BlockHitResult)mc.hitResult).getBlockPos(), mc.player.getMainHandItem());
     }
