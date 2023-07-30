@@ -1,1 +1,1 @@
-- fix crash with FTBChunks 2001.1.3
+- fixes random crashes in Fabric
