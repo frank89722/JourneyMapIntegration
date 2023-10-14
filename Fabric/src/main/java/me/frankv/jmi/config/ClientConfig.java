@@ -3,7 +3,8 @@ package me.frankv.jmi.config;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.frankv.jmi.util.FileManager;
+import me.frankv.jmi.api.jmoverlay.IClientConfig;
+import me.frankv.jmi.util.FileHelper;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ClientConfig implements IClientConfig {
 
-    private static final FileManager<ClientConfig> FILE_MANAGER = new FileManager<>("/config/jmi-client.json", ClientConfig.class);
+    private static final FileHelper<ClientConfig> FILE_MANAGER = new FileHelper<>("/config/jmi-client.json", ClientConfig.class);
 
     private Boolean ftbChunks = true;
     private Boolean waystone = true;

@@ -1,6 +1,5 @@
 plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'maven-publish'
     id 'idea'
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
@@ -14,15 +13,17 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation project(path: ':Common', configuration: 'namedElements')
+    compileOnly project(':Common')
+    compileOnly project(':api')
+    compileOnly project(':compat-waystone')
 
     modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
     modRuntimeOnly "maven.modrinth:journeymap:${project.jm_fabric_version}"
 
-    modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
-    modImplementation "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
-    modImplementation "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
-    modImplementation "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
+//    modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
+//    modImplementation "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
+//    modImplementation "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
+//    modImplementation "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
     modImplementation "maven.modrinth:balm:${project.balm_fabric_version}"
     modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 }
@@ -47,37 +48,24 @@ loom {
 
 processResources {
     from project(":Common").sourceSets.main.resources
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
+    from project(":api").sourceSets.main.resources
+    from project(":compat-waystone").sourceSets.main.resources
+//    inputs.property "version", project.version
+//
+//    filesMatching("fabric.mod.json") {
+//        expand "version": project.version
+//    }
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     source(project(":Common").sourceSets.main.allSource)
+    source(project(":api").sourceSets.main.allSource)
+    source(project(":compat-waystone").sourceSets.main.allSource)
 }
 
 jar {
     from("LICENSE") {
         rename { "${it}_${mod_name}" }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-            from components.java
-        }
-    }
-
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
     }
 }
 
@@ -100,7 +88,7 @@ if (ENV.CF_TOKEN) {
             }
             relations {
                 it.requiredDependency 'journeymap'
-                it.optionalDependency 'ftb-chunks-forge'
+//                it.optionalDependency 'ftb-chunks-forge'
                 it.optionalDependency 'waystones'
             }
             changelog = rootProject.file('changelog.md')

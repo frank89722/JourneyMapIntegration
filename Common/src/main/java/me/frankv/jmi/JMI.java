@@ -1,31 +1,53 @@
 package me.frankv.jmi;
 
-import me.frankv.jmi.config.IClientConfig;
-import me.frankv.jmi.platform.Services;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import me.frankv.jmi.api.jmoverlay.IClientConfig;
+import me.frankv.jmi.api.event.Event;
+import me.frankv.jmi.api.event.JMIEventBus;
+import net.minecraft.client.Minecraft;
 
+@Slf4j
 public class JMI {
+    @Getter
+    private static JMIEventBus jmiEventBus;
+    @Getter
+    private static IClientConfig clientConfig;
 
-    public static final String MOD_ID = "jmi";
-    public static final String MOD_NAME = "JourneyMap Integration";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    private static final Minecraft mc = Minecraft.getInstance();
 
-    public static boolean waystones;
-    public static boolean ftbchunks;
+    @Getter @Setter
+    private static boolean haveDim = false;
+    @Getter @Setter
+    private static boolean firstLogin = false;
 
-    public static IPlatformEventListener platformEventListener;
-    public static IClientConfig clientConfig;
 
-    public static void init(IClientConfig clientConfig, IPlatformEventListener platformEventListener) {
+    public static void init(IClientConfig clientConfig) {
         JMI.clientConfig = clientConfig;
-        JMI.platformEventListener = platformEventListener;
+        jmiEventBus = new JMIEventBus();
 
-        waystones = Services.PLATFORM.isModLoaded("waystones");
-        ftbchunks = Services.PLATFORM.isModLoaded("ftbchunks");
+//        Configs.waystones = PlatformHelper.PLATFORM.isModLoaded("waystones");
+//        Configs.ftbchunks = PlatformHelper.PLATFORM.isModLoaded("ftbchunks");
+//
+//        if (Configs.ftbchunks) log.info("JMI FTBChunks compat loaded.");
+//        if (Configs.waystones) log.info("JMI Waystones compat loaded.");
 
-        if (ftbchunks) LOGGER.info("FTBChunks integration loaded.");
-        if (waystones) LOGGER.info("Waystones integration loaded.");
+        jmiEventBus.subscribe(Event.ClientTick.class, e -> onClientTick());
     }
+
+
+    private static void onClientTick() {
+        if (mc.level == null) {
+            if (haveDim) {
+                haveDim = false;
+                jmiEventBus.sendEvent(new Event.ResetDataEvent());
+                log.debug("all data cleared");
+            }
+        }
+
+        if (!haveDim) firstLogin = haveDim = true;
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package me.frankv.jmi.config;
 
+import me.frankv.jmi.api.jmoverlay.IClientConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.ArrayList;

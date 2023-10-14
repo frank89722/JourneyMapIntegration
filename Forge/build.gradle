@@ -1,22 +1,10 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.0.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
-}
-
 plugins {
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+    id 'idea'
 }
-
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 
 archivesBaseName = "${mod_id}-forge"
 
@@ -35,6 +23,8 @@ minecraft {
                 modClientRun {
                     source sourceSets.main
                     source project(":Common").sourceSets.main
+                    source project(":api").sourceSets.main
+                    source project(":compat-waystone").sourceSets.main
                 }
             }
         }
@@ -50,6 +40,8 @@ minecraft {
                 modServerRun {
                     source sourceSets.main
                     source project(":Common").sourceSets.main
+                    source project(":api").sourceSets.main
+                    source project(":compat-waystone").sourceSets.main
                 }
             }
         }
@@ -66,6 +58,8 @@ minecraft {
                 modDataRun {
                     source sourceSets.main
                     source project(":Common").sourceSets.main
+                    source project(":api").sourceSets.main
+                    source project(":compat-waystone").sourceSets.main
                 }
             }
         }
@@ -78,12 +72,13 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
+    implementation project(':api')
     implementation project(":Common")
 
-    implementation fg.deobf("dev.architectury:architectury-forge:${project.architectury_version}")
-    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${project.ftb_library_version}")
-    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:${project.ftb_teams_version}")
-    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:${project.ftb_chunks_version}")
+//    implementation fg.deobf("dev.architectury:architectury-forge:${project.architectury_version}")
+//    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${project.ftb_library_version}")
+//    implementation fg.deobf("dev.ftb.mods:ftb-teams-forge:${project.ftb_teams_version}")
+//    implementation fg.deobf("dev.ftb.mods:ftb-chunks-forge:${project.ftb_chunks_version}")
     implementation fg.deobf("maven.modrinth:balm:${project.balm_forge_version}")
     implementation fg.deobf("maven.modrinth:waystones:${project.waystones_forge_version}")
 
@@ -103,12 +98,16 @@ mixin {
     quiet
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     source(project(":Common").sourceSets.main.allSource)
+    source(project(":api").sourceSets.main.allSource)
+    source(project(":compat-waystone").sourceSets.main.allSource)
 }
 
 processResources {
     from project(":Common").sourceSets.main.resources
+    from project(":api").sourceSets.main.resources
+    from project(":compat-waystone").sourceSets.main.resources
 }
 
 jar {
@@ -121,7 +120,7 @@ jar {
                 'Implementation-Version'  : project.jar.archiveVersion,
                 'Implementation-Vendor'   : mod_author,
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'Timestampe'              : System.currentTimeMillis(),
+                'Timestamp'              : System.currentTimeMillis(),
                 'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
                 'Build-On-Minecraft'      : minecraft_version,
                 'MixinConfigs'            : "jmi.mixins.json"
@@ -149,7 +148,7 @@ if (ENV.CF_TOKEN) {
             }
             relations {
                 it.requiredDependency 'journeymap'
-                it.optionalDependency 'ftb-chunks-forge'
+//                it.optionalDependency 'ftb-chunks-forge'
                 it.optionalDependency 'waystones'
             }
             changelog = rootProject.file('changelog.md')
@@ -171,19 +170,6 @@ if (ENV.MODRINTH_TOKEN) {
         dependencies {
             required.project "lfHFW1mp" // journeymap
             optional.project "LOpKHB2A" // waystones
-        }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
         }
     }
 }

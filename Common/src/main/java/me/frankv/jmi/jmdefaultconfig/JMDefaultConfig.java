@@ -1,28 +1,30 @@
 package me.frankv.jmi.jmdefaultconfig;
 
+import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.JMI;
-import me.frankv.jmi.util.FileManager;
+import me.frankv.jmi.util.FileHelper;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 
+@Slf4j
 public class JMDefaultConfig {
-    private Version existVersion;
-    private final FileManager<Version> fileManager;
+    private final Version existVersion;
+    private final FileHelper<Version> fileHelper;
 
     public JMDefaultConfig() {
-        fileManager = new FileManager<>("/journeymap/defaultconfig.json", Version.class);
-        if (!fileManager.getFile().exists()) {
-            fileManager.write(new Version(-1));
+        fileHelper = new FileHelper<>("/journeymap/defaultconfig.json", Version.class);
+        if (!fileHelper.getFile().exists()) {
+            fileHelper.write(new Version(-1));
         }
-        existVersion = fileManager.read();
+        existVersion = fileHelper.read();
     }
 
     public void tryWriteJMDefaultConfig() {
-        final var version = JMI.clientConfig.getDefaultConfigVersion();
+        final var version = JMI.getClientConfig().getDefaultConfigVersion();
 
-        if (version >= 0 && existVersion.version < version) {
+        if (version >= 0 && existVersion.version() < version) {
             writeJMDefaultConfig(version);
         }
     }
@@ -32,17 +34,19 @@ public class JMDefaultConfig {
         final var dest = new File(System.getProperty("user.dir") + "/journeymap/");
 
         if (!source.exists() || !source.isDirectory()) {
-            JMI.LOGGER.warn("No default config found.");
+            log.warn("No default config found.");
             return;
         }
 
-        JMI.LOGGER.info("Writing default configs for Journeymap...");
+        log.info("Writing default configs for Journeymap...");
         try {
-            fileManager.write(new Version(newVersion));
+            fileHelper.write(new Version(newVersion));
             FileUtils.copyDirectory(source, dest);
-            JMI.LOGGER.info("Journeymap configs updated.");
+            log.info("Journeymap configs updated.");
         } catch (IOException e) {
-            JMI.LOGGER.error("Failed to write default configs " + e);
+            log.error("Failed to write default configs " + e);
         }
     }
+
+    private record Version(int version) {}
 }

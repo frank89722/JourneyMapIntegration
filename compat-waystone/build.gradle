@@ -1,0 +1,39 @@
+plugins {
+    id 'fabric-loom' version '1.2-SNAPSHOT'
+}
+
+archivesBaseName = "${mod_id}-compat-waystones-${minecraft_version}"
+
+loom {
+    interfaceInjection {
+        enableDependencyInterfaceInjection = false
+    }
+    runConfigs.configureEach {
+        ideConfigGenerated = false
+    }
+}
+
+dependencies {
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    compileOnly project(":api")
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    modCompileOnly("net.fabricmc:fabric-loader:${fabric_loader_version}")
+
+    modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_common_version, changing: true
+
+    modCompileOnly "maven.modrinth:balm:${project.balm_fabric_version}"
+    modCompileOnly "maven.modrinth:waystones:${project.waystones_fabric_version}"
+
+}
+
+processResources {
+
+    def buildProps = project.properties.clone()
+
+    filesMatching(['pack.mcmeta']) {
+
+        expand buildProps
+    }
+}
