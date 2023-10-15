@@ -5,7 +5,7 @@ name: Build and upload
 
 on:
   push:
-    branches: [ main ]
+    branches: [ 1.20.1 ]
 
 jobs:
   build:
