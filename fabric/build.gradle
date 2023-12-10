@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'idea'
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
@@ -13,9 +13,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    compileOnly project(':Common')
+    compileOnly project(':common')
     compileOnly project(':api')
-    compileOnly project(':compat-waystone')
+    compileOnly project(':compat-waystones')
 
     modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
     modRuntimeOnly "maven.modrinth:journeymap:${project.jm_fabric_version}"
@@ -47,20 +47,15 @@ loom {
 
 
 processResources {
-    from project(":Common").sourceSets.main.resources
+    from project(":common").sourceSets.main.resources
     from project(":api").sourceSets.main.resources
-    from project(":compat-waystone").sourceSets.main.resources
-//    inputs.property "version", project.version
-//
-//    filesMatching("fabric.mod.json") {
-//        expand "version": project.version
-//    }
+    from project(":compat-waystones").sourceSets.main.resources
 }
 
 tasks.withType(JavaCompile).configureEach {
-    source(project(":Common").sourceSets.main.allSource)
+    source(project(":common").sourceSets.main.allSource)
     source(project(":api").sourceSets.main.allSource)
-    source(project(":compat-waystone").sourceSets.main.allSource)
+    source(project(":compat-waystones").sourceSets.main.allSource)
 }
 
 jar {

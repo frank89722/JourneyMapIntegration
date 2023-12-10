@@ -7,8 +7,8 @@ import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
+import net.blay09.mods.waystones.api.KnownWaystonesEvent;
 
-import java.util.Optional;
 import java.util.Set;
 
 public class WaystonesCompat implements ModCompat {
@@ -41,6 +41,14 @@ public class WaystonesCompat implements ModCompat {
     public boolean isTargetModsLoaded() {
         boolean b = (PlatformHelper.PLATFORM.isModLoaded("balm") || PlatformHelper.PLATFORM.isModLoaded("balm-fabric")) &&
                 (PlatformHelper.PLATFORM.isModLoaded("waystones") || PlatformHelper.PLATFORM.isModLoaded("waystones-fabric"));
+
+        if (b) {
+            try {
+                KnownWaystonesEvent.class.getClass();
+            } catch (NoClassDefFoundError e) {
+                return false;
+            }
+        }
         return b;
     }
 }

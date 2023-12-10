@@ -2,7 +2,7 @@ plugins {
     id 'fabric-loom' version '1.4-SNAPSHOT'
 }
 
-archivesBaseName = "${mod_id}-compat-ftbchunks-${minecraft_version}"
+archivesBaseName = "${mod_id}-common-${minecraft_version}"
 
 loom {
     interfaceInjection {
@@ -16,6 +16,7 @@ loom {
 dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compileOnly project(":api")
+    compileOnly project(":compat-waystones")
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.officialMojangMappings()
 
@@ -23,10 +24,6 @@ dependencies {
 
     modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_common_version, changing: true
 
-    modCompileOnly "dev.architectury:architectury-fabric:${project.architectury_version}"
-    modCompileOnly "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
-    modCompileOnly "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
-    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
 
 }
 

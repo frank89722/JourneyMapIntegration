@@ -1,6 +1,7 @@
 package me.frankv.jmi.api;
 
 import journeymap.client.api.IClientAPI;
+import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
@@ -10,6 +11,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class ModCompatFactory {
     private final Map<Class<? extends ModCompat>, ModCompat> modCompatMap;
 
@@ -19,6 +21,7 @@ public class ModCompatFactory {
                     try {
                         return provider.get();
                     } catch (Error e) {
+                        log.warn("Failed to init JMI mod compat {}", e.getLocalizedMessage(), e);
                         return null;
                     }
                 })

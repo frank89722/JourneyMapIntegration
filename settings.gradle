@@ -23,10 +23,10 @@ plugins {
 }
 
 rootProject.name = 'JourneyMapIntegration'
-include("Common", "Fabric", "Forge")
+include 'common'
+include 'fabric'
+include 'forge'
 include 'api'
 include 'compat-ftbchunks'
-include 'compat-ftbchunks:compat-waystones'
-findProject(':compat-ftbchunks:compat-waystones')?.name = 'compat-waystones'
-include 'compat-waystone'
+include 'compat-waystones'
 
