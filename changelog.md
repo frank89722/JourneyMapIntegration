@@ -1,1 +1,2 @@
-- fixes random crashes in Fabric
+- Update to MC 1.20.2
+- Disable FTBChunks integration since there are no 1.20.2 support yet
