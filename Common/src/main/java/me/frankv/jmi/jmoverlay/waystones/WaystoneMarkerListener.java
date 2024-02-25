@@ -42,7 +42,7 @@ public class WaystoneMarkerListener implements IOverlayListener {
 
     @Override
     public boolean onMouseClick(UIState uiState, Point2D.Double aDouble, BlockPos blockPos, int i, boolean b) {
-        Waypoint waypoint = new Waypoint(JMI.MOD_ID, String.format("waystone_%s_%s_%s", overlay.getTitle(), overlay.getDimension(), overlay.getPoint()), overlay.getTitle(), overlay.getDimension(), overlay.getPoint());
+        Waypoint waypoint = new Waypoint(JMI.MOD_ID, String.format("waystone_%s_%s_%s", overlay.getTitle(), overlay.getDimension(), overlay.getPoint()), overlay.getLabel(), overlay.getDimension(), overlay.getPoint());
 
         try {
             jmAPI.show(waypoint);

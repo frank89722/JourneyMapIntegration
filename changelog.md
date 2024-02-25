@@ -1,1 +1,1 @@
-- fixes random crashes in Fabric
+- Fix user setting got ignored on switch dimension
