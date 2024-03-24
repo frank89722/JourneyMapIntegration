@@ -26,13 +26,6 @@ public class JMI {
     public static void init(IClientConfig clientConfig) {
         JMI.clientConfig = clientConfig;
         jmiEventBus = new JMIEventBus();
-
-//        Configs.waystones = PlatformHelper.PLATFORM.isModLoaded("waystones");
-//        Configs.ftbchunks = PlatformHelper.PLATFORM.isModLoaded("ftbchunks");
-//
-//        if (Configs.ftbchunks) log.info("JMI FTBChunks compat loaded.");
-//        if (Configs.waystones) log.info("JMI Waystones compat loaded.");
-
         jmiEventBus.subscribe(Event.ClientTick.class, e -> onClientTick());
     }
 
@@ -44,9 +37,13 @@ public class JMI {
                 jmiEventBus.sendEvent(new Event.ResetDataEvent());
                 log.debug("all data cleared");
             }
+            return;
         }
 
-        if (!haveDim) firstLogin = haveDim = true;
+        if (!haveDim) {
+            firstLogin = true;
+            haveDim = true;
+        }
     }
 
 

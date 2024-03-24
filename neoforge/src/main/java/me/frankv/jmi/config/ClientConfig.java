@@ -1,22 +1,22 @@
 package me.frankv.jmi.config;
 
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClientConfig implements IClientConfig {
-    private final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+    private final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
-    private final ForgeConfigSpec.BooleanValue ftbChunks;
-    private final ForgeConfigSpec.BooleanValue waystone;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> waypointMessageBlocks;
-    private final ForgeConfigSpec.BooleanValue waypointMessageEmptyHandOnly;
-    private final ForgeConfigSpec.DoubleValue claimedChunkOverlayOpacity;
-    private final ForgeConfigSpec.BooleanValue disableFTBFunction;
-    private final ForgeConfigSpec.IntValue waystoneColor;
-    private final ForgeConfigSpec.IntValue defaultConfigVersion;
+    private final ModConfigSpec.BooleanValue ftbChunks;
+    private final ModConfigSpec.BooleanValue waystone;
+    private final ModConfigSpec.ConfigValue<List<? extends String>> waypointMessageBlocks;
+    private final ModConfigSpec.BooleanValue waypointMessageEmptyHandOnly;
+    private final ModConfigSpec.DoubleValue claimedChunkOverlayOpacity;
+    private final ModConfigSpec.BooleanValue disableFTBFunction;
+    private final ModConfigSpec.IntValue waystoneColor;
+    private final ModConfigSpec.IntValue defaultConfigVersion;
 
     public ClientConfig() {
         builder.comment("Client-Side Integration");
@@ -44,7 +44,7 @@ public class ClientConfig implements IClientConfig {
         builder.pop();
     }
 
-    public ForgeConfigSpec getSpec() {
+    public ModConfigSpec getSpec() {
         return builder.build();
     }
 

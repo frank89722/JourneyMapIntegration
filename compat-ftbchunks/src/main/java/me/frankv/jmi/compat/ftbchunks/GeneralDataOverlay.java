@@ -20,7 +20,9 @@ public class GeneralDataOverlay {
 
         for(var comp : list) {
             final var l = font.width(comp) + 9f;
-            if (l > width) width = l;
+            if (l > width) {
+                width = l;
+            }
         }
 
         var backgroundH = font.lineHeight * list.size() + 6;
@@ -28,7 +30,7 @@ public class GeneralDataOverlay {
         Draw.drawRectangle(guiGraphics, 3, screenHeight - backgroundH - 4, width, backgroundH, 0x000000, 0.5f);
 
         for(var comp : list) {
-            guiGraphics.drawString(font, comp, 8, screenHeight - 15, 1, true);
+            guiGraphics.drawString(font, comp, 8, screenHeight - 15, 0xffffff, true);
             screenHeight -= font.lineHeight;
         }
     }

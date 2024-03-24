@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static me.frankv.jmi.util.OverlayHelper.showOverlay;
 import static me.frankv.jmi.util.OverlayHelper.removeOverlays;
+import static me.frankv.jmi.util.OverlayHelper.showOverlay;
 
 @RequiredArgsConstructor
 public class ClaimingModeHandler {

@@ -2,7 +2,6 @@ package me.frankv.jmi.mixin;
 
 import me.frankv.jmi.JMI;
 import me.frankv.jmi.api.event.Event;
-import me.frankv.jmi.waypointmessage.WaypointChatMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.world.phys.BlockHitResult;

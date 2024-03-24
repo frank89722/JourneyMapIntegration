@@ -4,7 +4,8 @@
     "package": "me.frankv.jmi.mixin",
     "compatibilityLevel": "JAVA_17",
     "client": [
-      "MouseHandlerMixin"
+      "MouseHandlerMixin",
+      "UpdateFromServerTaskMixin"
     ],
     "injectors": {
       "defaultRequire": 1

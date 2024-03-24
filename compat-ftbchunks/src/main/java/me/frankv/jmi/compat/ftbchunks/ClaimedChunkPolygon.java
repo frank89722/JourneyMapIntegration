@@ -6,24 +6,25 @@ import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.api.event.ClientTeamPropertiesChangedEvent;
 import dev.ftb.mods.ftbteams.api.event.TeamEvent;
-import lombok.extern.slf4j.Slf4j;
-import me.frankv.jmi.Constants;
-import me.frankv.jmi.api.jmoverlay.IClientConfig;
-import me.frankv.jmi.api.event.Event;
-import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
-import me.frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.IThemeButton;
 import journeymap.client.api.display.PolygonOverlay;
 import journeymap.client.api.event.RegistryEvent;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import me.frankv.jmi.Constants;
+import me.frankv.jmi.api.event.Event;
+import me.frankv.jmi.api.jmoverlay.IClientConfig;
+import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
+import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-import static me.frankv.jmi.util.OverlayHelper.*;
+import static me.frankv.jmi.util.OverlayHelper.removeOverlays;
+import static me.frankv.jmi.util.OverlayHelper.showOverlay;
 
 @Slf4j
 public enum ClaimedChunkPolygon implements ToggleableOverlay {

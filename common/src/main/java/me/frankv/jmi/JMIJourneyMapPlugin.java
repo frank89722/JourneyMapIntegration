@@ -1,14 +1,14 @@
 package me.frankv.jmi;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import me.frankv.jmi.api.event.Event;
-import me.frankv.jmi.api.jmoverlay.OverlayInitErrorHandler;
-import me.frankv.jmi.api.ModCompatFactory;
-import me.frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.event.ClientEvent;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import me.frankv.jmi.api.ModCompatFactory;
+import me.frankv.jmi.api.event.Event;
+import me.frankv.jmi.api.jmoverlay.OverlayInitErrorHandler;
+import me.frankv.jmi.util.OverlayHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumSet;

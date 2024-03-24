@@ -7,7 +7,7 @@ import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
-import net.blay09.mods.waystones.api.KnownWaystonesEvent;
+import net.blay09.mods.waystones.api.event.WaystonesListReceivedEvent;
 
 import java.util.Set;
 
@@ -44,7 +44,7 @@ public class WaystonesCompat implements ModCompat {
 
         if (b) {
             try {
-                KnownWaystonesEvent.class.getClass();
+                WaystonesListReceivedEvent.class.getClass();
             } catch (NoClassDefFoundError e) {
                 return false;
             }

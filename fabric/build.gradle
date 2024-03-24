@@ -1,8 +1,9 @@
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.5-SNAPSHOT'
     id 'idea'
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
+    id 'com.github.johnrengelman.shadow' version '8.+'
 }
 
 archivesBaseName = "${mod_id}-fabric"
@@ -13,19 +14,23 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+
     compileOnly project(':common')
     compileOnly project(':api')
+
+    modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
+
+    compileOnly project(':compat-ftbchunks')
+    modImplementation "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
+    modImplementation "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
+    modImplementation "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
+
     compileOnly project(':compat-waystones')
+    modImplementation "maven.modrinth:balm:${project.balm_fabric_version}"
+    modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 
     modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
     modRuntimeOnly "maven.modrinth:journeymap:${project.jm_fabric_version}"
-
-//    modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
-//    modImplementation "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
-//    modImplementation "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
-//    modImplementation "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
-    modImplementation "maven.modrinth:balm:${project.balm_fabric_version}"
-    modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 }
 
 loom {
@@ -47,15 +52,18 @@ loom {
 
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from project(":common").sourceSets.main.resources
     from project(":api").sourceSets.main.resources
     from project(":compat-waystones").sourceSets.main.resources
+    from project(":compat-ftbchunks").sourceSets.main.resources
 }
 
 tasks.withType(JavaCompile).configureEach {
     source(project(":common").sourceSets.main.allSource)
     source(project(":api").sourceSets.main.allSource)
     source(project(":compat-waystones").sourceSets.main.allSource)
+    source(project(":compat-ftbchunks").sourceSets.main.allSource)
 }
 
 jar {
@@ -63,6 +71,12 @@ jar {
         rename { "${it}_${mod_name}" }
     }
 }
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+build.dependsOn shadowJar
 
 def ENV = System.getenv()
 def release_title = "[Fabric] v${version}"
