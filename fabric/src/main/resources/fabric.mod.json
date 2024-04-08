@@ -30,15 +30,15 @@
     ],
   
     "depends": {
-      "fabricloader": ">=0.14.21",
+      "fabricloader": ">=0.15.9",
       "fabric-api": "*",
-      "minecraft": "~1.20",
+      "minecraft": "~1.20.4",
       "java": ">=17",
       "journeymap": "*"
     },
 
     "recommends": {
-      "ftbchunks": ">=2001.1.3",
+      "ftbchunks": ">=2004.1.3",
       "waystones": ">=14"
     }
   }

@@ -1,13 +1,13 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
 }
 
 archivesBaseName = "${mod_id}-compat-ftbchunks-${minecraft_version}"
 
 loom {
-    interfaceInjection {
-        enableDependencyInterfaceInjection = false
-    }
+//    interfaceInjection {
+//        enableDependencyInterfaceInjection = false
+//    }
     runConfigs.configureEach {
         ideConfigGenerated = false
     }

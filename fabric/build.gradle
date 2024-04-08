@@ -1,9 +1,8 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'idea'
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
-    id 'com.github.johnrengelman.shadow' version '8.+'
 }
 
 archivesBaseName = "${mod_id}-fabric"
@@ -34,6 +33,9 @@ dependencies {
 }
 
 loom {
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
     runs {
         client {
             client()
@@ -71,12 +73,6 @@ jar {
         rename { "${it}_${mod_name}" }
     }
 }
-
-shadowJar {
-    mergeServiceFiles()
-}
-
-build.dependsOn shadowJar
 
 def ENV = System.getenv()
 def release_title = "[Fabric] v${version}"
