@@ -54,7 +54,11 @@ loom {
 
 
 processResources {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
     from project(":common").sourceSets.main.resources
     from project(":api").sourceSets.main.resources
     from project(":compat-waystones").sourceSets.main.resources
