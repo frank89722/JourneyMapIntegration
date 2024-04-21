@@ -75,9 +75,9 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         chunkData.values().forEach(data -> {
             if (!data.getChunkDimPos().dimension().equals(level.dimension())) return;
-            showOverlay(data.getOverlay());
-            if (!activated) return;
             chunkOverlays.put(data.getChunkDimPos(), data.getOverlay());
+            if (!activated) return;
+            showOverlay(data.getOverlay());
         });
     }
 
