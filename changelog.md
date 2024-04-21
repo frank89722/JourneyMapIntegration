@@ -1,7 +1,8 @@
 ### Current support:
 - FTBChunks
+- Waystones
 
 
 ### Changes: 
-- Fix crash on startup (Fabric)
-- Fix overlay setting got ignored after switch dim
+- Fix overlay setting got ignored after switch dim (again)
+- Add back Waystones integration
