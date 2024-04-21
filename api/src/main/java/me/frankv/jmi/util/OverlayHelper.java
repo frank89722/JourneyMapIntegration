@@ -1,22 +1,32 @@
 package me.frankv.jmi.util;
 
-import lombok.extern.slf4j.Slf4j;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.display.Displayable;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import me.frankv.jmi.api.event.Event;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 public class OverlayHelper {
+    @Setter
     private static IClientAPI jmAPI;
 
-    public static void setJmAPI(IClientAPI api) {
-        jmAPI = api;
-    }
+    private static List<Displayable> waitingQueue = new LinkedList<>();
+
+    private static boolean jmMappingStarted = false;
+
 
     public static void showOverlay(Displayable overlay) {
         try {
-            jmAPI.show(overlay);
+            if (jmMappingStarted) {
+                jmAPI.show(overlay);
+            } else {
+                waitingQueue.add(overlay);
+            }
         } catch (Throwable t) {
             log.error(String.valueOf(t));
         }
@@ -27,6 +37,20 @@ public class OverlayHelper {
     }
 
     public static void removeOverlays(Collection<? extends Displayable> overlays) {
-        overlays.forEach(o -> jmAPI.remove(o));
+        overlays.forEach(jmAPI::remove);
     }
+
+    public static void onJMEvent(Event.JMClientEvent event) {
+        switch (event.clientEvent().type) {
+            case MAPPING_STARTED -> {
+                jmMappingStarted = true;
+                waitingQueue.forEach(OverlayHelper::showOverlay);
+            }
+            case MAPPING_STOPPED -> {
+                jmMappingStarted = false;
+                waitingQueue.clear();
+            }
+        }
+    }
+
 }
