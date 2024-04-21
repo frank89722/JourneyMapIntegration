@@ -20,10 +20,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 public enum WaystonesMarker implements ToggleableOverlay {
@@ -42,18 +39,18 @@ public enum WaystonesMarker implements ToggleableOverlay {
     @Getter
     private final int order = 2;
 
-    private final HashMap<ComparableWaystone, MarkerOverlay> markers = new HashMap<>();
     @Getter
-    private Set<ComparableWaystone> waystones = new HashSet<>();
+    private final Map<ResourceLocation, Set<WaystoneMeta>> waystones = new HashMap<>();
+    private final HashMap<WaystoneMeta, MarkerOverlay> markers = new HashMap<>();
 
 
     public void init(IClientAPI jmAPI, IClientConfig clientConfig) {
         this.jmAPI = jmAPI;
         this.clientConfig = clientConfig;
-        Balm.getEvents().onEvent(WaystonesListReceivedEvent.class, this::onKnownWaystones);
+        Balm.getEvents().onEvent(WaystonesListReceivedEvent.class, this::onWaystonesListReceived);
     }
 
-    private void createMarker(ComparableWaystone waystone) {
+    private void createMarker(WaystoneMeta waystone) {
         final var marker = new ResourceLocation("jmi:images/waystone.png");
         final var icon = new MapImage(marker, 32, 32)
                 .setAnchorX(12.0d)
@@ -78,7 +75,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
         if (activated) OverlayHelper.showOverlay(markerOverlay);
     }
 
-    private void removeMarker(ComparableWaystone waystone) {
+    private void removeMarker(WaystoneMeta waystone) {
         if (!markers.containsKey(waystone)) return;
 
         try {
@@ -93,9 +90,10 @@ public enum WaystonesMarker implements ToggleableOverlay {
         final var level = mc.level;
         if (level == null) return;
 
-        for (var data : waystones) {
-            if (data.dim.equals(level.dimension())) createMarker(data);
-        }
+        waystones.values().stream()
+                .flatMap(Collection::stream)
+                .filter(waystoneMeta -> waystoneMeta.dim.equals(level.dimension()))
+                .forEach(this::createMarker);
     }
 
     @Override
@@ -120,15 +118,11 @@ public enum WaystonesMarker implements ToggleableOverlay {
         }
     }
 
-    public void onKnownWaystones(WaystonesListReceivedEvent event) {
+    public void onWaystonesListReceived(WaystonesListReceivedEvent event) {
         if (!clientConfig.getWaystone()) return;
-        final var newWaystones = new HashSet<>(ComparableWaystone.fromEvent(event));
-        final var oldWaystones = new HashSet<>(markers.keySet());
 
-        //---------
-        // WaystonesListReceivedEvent give a list with only a waystone in when there is a new waystone got placed. That why this exist
-        if (newWaystones.size() == 1 && oldWaystones.size() > 2) return;
-        //---------
+        var oldWaystones = Optional.ofNullable(waystones.get(event.getWaystoneType())).orElseGet(HashSet::new);
+        var newWaystones = new HashSet<>(WaystoneMeta.fromEvent(event));
 
         final var addWaystones = new HashSet<>(newWaystones);
         final var rmvWaystones = new HashSet<>(oldWaystones);
@@ -138,8 +132,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
         rmvWaystones.forEach(this::removeMarker);
         addWaystones.forEach(this::createMarker);
 
-        waystones = newWaystones;
-
+        waystones.put(event.getWaystoneType(), newWaystones);
     }
 
     @Override
@@ -147,13 +140,14 @@ public enum WaystonesMarker implements ToggleableOverlay {
         return "waypoints";
     }
 
-    record ComparableWaystone(UUID uuid, String name, BlockPos pos, ResourceKey<Level> dim) {
-        public static Set<ComparableWaystone> fromEvent(WaystonesListReceivedEvent event) {
-            final var waystones = new HashSet<ComparableWaystone>();
+
+    record WaystoneMeta(UUID uuid, String name, BlockPos pos, ResourceKey<Level> dim) {
+        public static Set<WaystoneMeta> fromEvent(WaystonesListReceivedEvent event) {
+            final var waystones = new HashSet<WaystoneMeta>();
 
             event.getWaystones().forEach(w -> {
                 if (!w.hasName()) return;
-                waystones.add(new ComparableWaystone(w.getWaystoneUid(), w.getName().tryCollapseToString(), w.getPos(), w.getDimension()));
+                waystones.add(new WaystoneMeta(w.getWaystoneUid(), w.getName().tryCollapseToString(), w.getPos(), w.getDimension()));
             });
 
             return waystones;
