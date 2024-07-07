@@ -1,1 +1,1 @@
-- Fix user setting got ignored on switch dimension
+- Fix FTBChunks info slot setting got reset after game restart
