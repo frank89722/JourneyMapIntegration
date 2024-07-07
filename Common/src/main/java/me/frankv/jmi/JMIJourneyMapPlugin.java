@@ -1,6 +1,7 @@
 package me.frankv.jmi;
 
 import me.frankv.jmi.jmoverlay.JMOverlayManager;
+import me.frankv.jmi.jmoverlay.ftbchunks.ClaimedChunkPolygon;
 import me.frankv.jmi.jmoverlay.waystones.WaystoneMarker;
 import me.frankv.jmi.util.OverlayHelper;
 import journeymap.client.api.IClientAPI;
@@ -28,6 +29,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         OverlayHelper.setJmAPI(jmAPI);
         jmAPI.subscribe(getModId(), EnumSet.of(MAPPING_STARTED, MAPPING_STOPPED, MAP_CLICKED, MAP_DRAGGED, MAP_MOUSE_MOVED, REGISTRY));
 
+        ClaimedChunkPolygon.values();
         try {
             if (JMI.waystones) {
                 Balm.getEvents().onEvent(KnownWaystonesEvent.class, WaystoneMarker.INSTANCE::onKnownWaystones);
