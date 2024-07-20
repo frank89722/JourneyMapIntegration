@@ -2,6 +2,7 @@ package me.frankv.jmi.mixin;
 
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
 import dev.ftb.mods.ftbchunks.client.map.UpdateChunkFromServerTask;
+import dev.ftb.mods.ftbchunks.data.ChunkSyncInfo;
 import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import me.frankv.jmi.compat.ftbchunks.ClaimedChunkPolygon;
 import org.spongepowered.asm.mixin.Final;
@@ -16,14 +17,20 @@ import java.util.UUID;
 @Mixin(UpdateChunkFromServerTask.class)
 public class UpdateFromServerTaskMixin {
 
-    @Shadow(remap = false) @Final private MapDimension dimension;
+    @Shadow(remap = false)
+    @Final
+    private MapDimension dimension;
 
-    @Shadow(remap = false) @Final private SendChunkPacket.SingleChunk chunk;
+    @Shadow(remap = false)
+    @Final
+    private UUID teamId;
 
-    @Shadow(remap = false) @Final private UUID teamId;
+    @Shadow(remap = false)
+    @Final
+    private ChunkSyncInfo info;
 
     @Inject(method = "runMapTask", at = @At("RETURN"), remap = false)
     private void onRunMapTask(CallbackInfo ci) {
-        ClaimedChunkPolygon.INSTANCE.addToQueue(dimension, chunk, teamId);
+        ClaimedChunkPolygon.INSTANCE.addToQueue(dimension, info, teamId);
     }
 }

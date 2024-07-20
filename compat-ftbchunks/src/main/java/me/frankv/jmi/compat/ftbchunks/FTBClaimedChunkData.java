@@ -1,14 +1,14 @@
 package me.frankv.jmi.compat.ftbchunks;
 
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
-import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
+import dev.ftb.mods.ftbchunks.data.ChunkSyncInfo;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.data.ClientTeam;
 import dev.ftb.mods.ftbteams.data.ClientTeamManagerImpl;
-import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.model.ShapeProperties;
-import journeymap.client.api.model.TextProperties;
-import journeymap.client.api.util.PolygonHelper;
+import journeymap.api.v2.client.display.PolygonOverlay;
+import journeymap.api.v2.client.model.ShapeProperties;
+import journeymap.api.v2.client.model.TextProperties;
+import journeymap.api.v2.client.util.PolygonHelper;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import me.frankv.jmi.Constants;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class FTBClaimedChunkData {
 
-    private final SendChunkPacket.SingleChunk chunk;
+    private final ChunkSyncInfo chunk;
     private final ChunkDimPos chunkDimPos;
     private final boolean forceLoaded;
     private final UUID teamId;
@@ -29,11 +29,11 @@ public class FTBClaimedChunkData {
     @EqualsAndHashCode.Exclude
     private PolygonOverlay overlay;
 
-    public FTBClaimedChunkData(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
+    public FTBClaimedChunkData(MapDimension dim, ChunkSyncInfo chunk, UUID teamId) {
         long now = new Date().getTime();
 
         this.chunk = chunk;
-        this.chunkDimPos = new ChunkDimPos(dim.dimension, chunk.getX(), chunk.getZ());
+        this.chunkDimPos = new ChunkDimPos(dim.dimension, chunk.x(), chunk.z());
         this.forceLoaded = chunk.getDateInfo(true, now).forceLoaded() != null;
         this.teamId = teamId;
 
@@ -46,7 +46,7 @@ public class FTBClaimedChunkData {
 
     private PolygonOverlay makeOverlay() {
         var color = team.getColor();
-        var displayId = "claimed_" + chunkDimPos.x() + ',' + chunkDimPos.z();
+//        var displayId = "claimed_" + chunkDimPos.x() + ',' + chunkDimPos.z();
         var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
                 .setFillColor(color)
@@ -60,7 +60,7 @@ public class FTBClaimedChunkData {
 
         var polygon = PolygonHelper.createChunkPolygon(chunkDimPos.x(), 1, chunkDimPos.z());
 
-        var overlay = new PolygonOverlay(Constants.MOD_ID, displayId, chunkDimPos.dimension(), shapeProps, polygon);
+        var overlay = new PolygonOverlay(Constants.MOD_ID, chunkDimPos.dimension(), shapeProps, polygon);
 
         overlay.setOverlayGroupName("Claimed Chunks")
                 .setTitle(team.getDisplayName())

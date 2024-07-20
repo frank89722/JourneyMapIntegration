@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'idea'
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
@@ -28,7 +28,7 @@ dependencies {
     modImplementation "maven.modrinth:balm:${project.balm_fabric_version}"
     modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 
-    modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
+    modApi group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
     modRuntimeOnly "maven.modrinth:journeymap:${project.jm_fabric_version}"
 }
 

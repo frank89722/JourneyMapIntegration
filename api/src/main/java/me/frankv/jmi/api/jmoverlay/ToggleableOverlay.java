@@ -1,18 +1,17 @@
 package me.frankv.jmi.api.jmoverlay;
 
-import journeymap.client.api.IClientAPI;
-import journeymap.client.api.display.IThemeButton;
-import journeymap.client.api.event.ClientEvent;
-import me.frankv.jmi.api.event.JMIEventBus;
-
-import java.util.Map;
+import journeymap.api.v2.client.fullscreen.IThemeButton;
+import net.minecraft.resources.ResourceLocation;
 
 public interface ToggleableOverlay {
 
     void onToggle(IThemeButton button);
 
     String getButtonLabel();
-    String getButtonIconName();
+
+    ResourceLocation getButtonIconName();
+
     int getOrder();
+
     boolean isActivated();
 }

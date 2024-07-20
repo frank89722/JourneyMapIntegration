@@ -1,12 +1,14 @@
 package me.frankv.jmi.compat.ftbchunks;
 
+import dev.architectury.networking.NetworkManager;
 import dev.ftb.mods.ftbchunks.net.RequestChunkChangePacket;
 import dev.ftb.mods.ftblibrary.math.XZ;
 import dev.ftb.mods.ftblibrary.ui.GuiHelper;
-import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.event.FullscreenMapEvent;
+import journeymap.api.v2.client.display.PolygonOverlay;
+import journeymap.api.v2.client.event.FullscreenMapEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.ChunkPos;
@@ -27,7 +29,8 @@ public class ClaimingModeHandler {
     private final Map<XZ, PolygonOverlay> dragPolygons = new HashMap<>();
     private final HashSet<XZ> chunks = new HashSet<>();
 
-    public void onPreClick(FullscreenMapEvent.ClickEvent event) {
+    public void onClick(FullscreenMapEvent.ClickEvent event) {
+        if (event.getStage() != FullscreenMapEvent.Stage.PRE) return;
         if (!claimingMode.isActivated()) return;
 
         final var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
@@ -38,7 +41,8 @@ public class ClaimingModeHandler {
         event.cancel();
     }
 
-    public void onPreDrag(FullscreenMapEvent.MouseDraggedEvent event) {
+    public void onDrag(FullscreenMapEvent.MouseDraggedEvent event) {
+        if (event.getStage() != FullscreenMapEvent.Stage.PRE) return;
         if (!claimingMode.isActivated()) return;
 
         final var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
@@ -49,7 +53,7 @@ public class ClaimingModeHandler {
         if (!mouseTracking) return;
 
         final var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
-        if (claimingMode.getArea().contains(new ChunkPos(xz.x(), xz.z())) || chunks.contains(xz)) addToWaitingList(xz);
+        if (claimingMode.getArea().contains(new ChunkPos(xz.x(), xz.z())) && !chunks.contains(xz)) addToWaitingList(xz);
     }
 
     public void onMouseReleased(int mouseButton) {
@@ -69,7 +73,8 @@ public class ClaimingModeHandler {
         mouseTracking = false;
         if (chunks.isEmpty()) return;
         var chunkChangeOp = RequestChunkChangePacket.ChunkChangeOp.create(mouseButton == 0, Screen.hasShiftDown());
-        new RequestChunkChangePacket(chunkChangeOp, chunks).sendToServer();
+        var packet = new RequestChunkChangePacket(chunkChangeOp, chunks);
+        NetworkManager.sendToServer(packet);
         removeOverlays(dragPolygons.values());
         chunks.clear();
         dragPolygons.clear();

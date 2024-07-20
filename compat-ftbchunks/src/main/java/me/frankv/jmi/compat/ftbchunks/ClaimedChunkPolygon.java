@@ -2,14 +2,14 @@ package me.frankv.jmi.compat.ftbchunks;
 
 import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
+import dev.ftb.mods.ftbchunks.data.ChunkSyncInfo;
 import dev.ftb.mods.ftbchunks.net.SendChunkPacket;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.api.event.ClientTeamPropertiesChangedEvent;
 import dev.ftb.mods.ftbteams.api.event.TeamEvent;
-import journeymap.client.api.IClientAPI;
-import journeymap.client.api.display.IThemeButton;
-import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.event.RegistryEvent;
+import journeymap.api.v2.client.IClientAPI;
+import journeymap.api.v2.client.display.PolygonOverlay;
+import journeymap.api.v2.client.fullscreen.IThemeButton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.Constants;
@@ -19,6 +19,7 @@ import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -201,6 +202,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
     }
 
     private Boolean shouldToggleAfterOff = false;
+
     void onClaiming(boolean off) {
         if (!off && activated) return;
         if (!off) {
@@ -221,6 +223,7 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
 
         activated = !activated;
     }
+
     @Override
     public void onToggle(IThemeButton button) {
         if (ClaimingMode.INSTANCE.isActivated()) return;
@@ -228,10 +231,8 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
         button.setToggled(activated);
     }
 
-    public void onJMEvent(Event.JMClientEvent e) {
-        var clientEvent = e.clientEvent();
-
-        switch (clientEvent.type) {
+    public void onJMEvent(Event.JMMappingEvent e) {
+        switch (e.mappingEvent().getStage()) {
             case MAPPING_STARTED -> {
                 if (!e.firstLogin()) {
                     createPolygonsOnMappingStarted();
@@ -240,30 +241,25 @@ public enum ClaimedChunkPolygon implements ToggleableOverlay {
             }
 
             case MAPPING_STOPPED -> clearOverlays();
-
-            case REGISTRY -> {
-                final var registryEvent = (RegistryEvent) clientEvent;
-
-                if (Objects.requireNonNull(registryEvent.getRegistryType()) == RegistryEvent.RegistryType.INFO_SLOT) {
-                    ((RegistryEvent.InfoSlotRegistryEvent) registryEvent)
-                            .register(Constants.MOD_ID,
-                                    "jmi.infoslot.ftbchunks",
-                                    1000L,
-                                    this::getPolygonTitleByPlayerPos);
-                }
-            }
         }
 
     }
 
-    public void addToQueue(MapDimension dim, SendChunkPacket.SingleChunk chunk, UUID teamId) {
+    public void onJMInfoSlotRegistryEvent(Event.JMInfoSlotRegistryEvent e) {
+        e.infoSlotRegistryEvent().register(Constants.MOD_ID,
+                "jmi.infoslot.ftbchunks",
+                1000L,
+                this::getPolygonTitleByPlayerPos);
+    }
+
+    public void addToQueue(MapDimension dim, ChunkSyncInfo info, UUID teamId) {
         if (!clientConfig.getFtbChunks()) return;
-        queue.offer(new FTBClaimedChunkData(dim, chunk, teamId));
+        queue.offer(new FTBClaimedChunkData(dim, info, teamId));
     }
 
     @Override
-    public String getButtonIconName() {
-        return "ftb";
+    public ResourceLocation getButtonIconName() {
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "ftb");
     }
 
 

@@ -1,8 +1,8 @@
 package me.frankv.jmi.compat.ftbchunks;
 
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
+import journeymap.api.v2.client.fullscreen.IFullscreen;
 import me.frankv.jmi.util.Draw;
-import journeymap.client.api.model.IFullscreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;

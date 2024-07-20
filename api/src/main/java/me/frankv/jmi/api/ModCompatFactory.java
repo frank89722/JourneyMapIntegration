@@ -1,6 +1,6 @@
 package me.frankv.jmi.api;
 
-import journeymap.client.api.IClientAPI;
+import journeymap.api.v2.client.IClientAPI;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;

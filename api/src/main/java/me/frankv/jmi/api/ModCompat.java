@@ -1,6 +1,6 @@
 package me.frankv.jmi.api;
 
-import journeymap.client.api.IClientAPI;
+import journeymap.api.v2.client.IClientAPI;
 import me.frankv.jmi.api.event.JMIEventBus;
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;

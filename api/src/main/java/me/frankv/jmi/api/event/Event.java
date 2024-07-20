@@ -1,7 +1,10 @@
 package me.frankv.jmi.api.event;
 
-import journeymap.client.api.display.ThemeButtonDisplay;
-import journeymap.client.api.event.ClientEvent;
+import journeymap.api.v2.client.event.FullscreenMapEvent;
+import journeymap.api.v2.client.event.MappingEvent;
+import journeymap.api.v2.client.event.RegistryEvent;
+import journeymap.api.v2.client.fullscreen.ThemeButtonDisplay;
+import journeymap.api.v2.common.event.impl.ClientEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -15,5 +18,13 @@ public interface Event {
     record ScreenDraw(Screen screen, GuiGraphics guiGraphics) implements Event {}
     record PlayerInteract(BlockPos pos, ItemStack itemStack) implements Event {}
     record ResetDataEvent() implements Event {}
-    record JMClientEvent(ClientEvent clientEvent, boolean firstLogin) implements Event {}
+//    @Deprecated
+//    record JMClientEvent(ClientEvent clientEvent, boolean firstLogin) implements Event {}
+    record JMMappingEvent(MappingEvent mappingEvent, boolean firstLogin) implements Event {}
+    record JMInfoSlotRegistryEvent(RegistryEvent.InfoSlotRegistryEvent infoSlotRegistryEvent) implements Event {}
+    record JMMouseDraggedEvent(FullscreenMapEvent.MouseDraggedEvent mouseDraggedEvent) implements Event {}
+    record JMMouseMoveEvent(FullscreenMapEvent.MouseMoveEvent mouseMoveEvent) implements Event {}
+    record JMClickEvent(FullscreenMapEvent.ClickEvent clickEvent) implements Event {}
+
+
 }

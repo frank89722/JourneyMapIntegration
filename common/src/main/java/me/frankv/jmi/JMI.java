@@ -28,7 +28,7 @@ public class JMI {
         JMI.clientConfig = clientConfig;
         jmiEventBus = new JMIEventBus();
         jmiEventBus.subscribe(Event.ClientTick.class, e -> onClientTick());
-        jmiEventBus.subscribe(Event.JMClientEvent.class, OverlayHelper::onJMEvent);
+        jmiEventBus.subscribe(Event.JMMappingEvent.class, OverlayHelper::onJMEvent);
     }
 
 

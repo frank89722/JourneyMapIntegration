@@ -1,20 +1,21 @@
 package me.frankv.jmi;
 
-import journeymap.client.api.event.neoforge.FullscreenDisplayEvent;
+import journeymap.api.v2.client.event.FullscreenDisplayEvent;
+import journeymap.api.v2.client.event.MappingEvent;
+import journeymap.api.v2.common.event.ClientEventRegistry;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.config.ClientConfig;
 import me.frankv.jmi.jmdefaultconfig.JMDefaultConfig;
 import me.frankv.jmi.waypointmessage.WaypointChatMessage;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.IExtensionPoint;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -22,11 +23,9 @@ import org.lwjgl.glfw.GLFW;
 public class JMINeoForge {
     public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
-    public JMINeoForge(IEventBus modEventBus) {
+    public JMINeoForge(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::setupClient);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () ->
-                new IExtensionPoint.DisplayTest(() -> IExtensionPoint.DisplayTest.IGNORESERVERONLY, (a, b) -> true));
+        modContainer.registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
@@ -37,10 +36,18 @@ public class JMINeoForge {
 
     private void registerEvent() {
         var eventBus = JMI.getJmiEventBus();
-        NeoForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) ->
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Pre e) ->
                 eventBus.sendEvent(new Event.ClientTick()));
-        NeoForge.EVENT_BUS.addListener((FullscreenDisplayEvent.AddonButtonDisplayEvent e) ->
+        ClientEventRegistry.ADDON_BUTTON_DISPLAY_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.AddButtonDisplay(e.getThemeButtonDisplay())));
+        ClientEventRegistry.MAPPING_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMappingEvent(e, JMI.isFirstLogin())));
+        ClientEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseMoveEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseDraggedEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMClickEvent(e)));
         NeoForge.EVENT_BUS.addListener((ScreenEvent.Closing e) ->
                 eventBus.sendEvent(new Event.ScreenClose(e.getScreen())));
         NeoForge.EVENT_BUS.addListener((InputEvent.MouseButton.Post e) -> {

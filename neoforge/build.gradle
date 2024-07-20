@@ -2,7 +2,7 @@ plugins {
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
     id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.97'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
 }
 
 archivesBaseName = "${mod_id}-neoforge"
@@ -46,7 +46,7 @@ dependencies {
     implementation "maven.modrinth:balm:${project.balm_neoforge_version}"
     implementation "maven.modrinth:waystones:${project.waystones_neoforge_version}"
 
-    compileOnly group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_neoforge_version, changing: true
+    compileOnly group: 'info.journeymap', name: 'journeymap-api-neoforge', version: project.journeymap_api_version, changing: true
     implementation "maven.modrinth:journeymap:${project.jm_neoforge_version}"
 
 }

@@ -1,7 +1,7 @@
 package me.frankv.jmi;
 
-import journeymap.client.api.event.fabric.FabricEvents;
-import journeymap.client.api.model.IFullscreen;
+import journeymap.api.v2.client.fullscreen.IFullscreen;
+import journeymap.api.v2.common.event.ClientEventRegistry;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
@@ -28,11 +28,18 @@ public class JMIFabric implements ClientModInitializer {
     public static void registerEvent() {
         var eventBus = JMI.getJmiEventBus();
         ClientTickEvents.START_CLIENT_TICK.register(__ -> eventBus.sendEvent(new Event.ClientTick()));
-        FabricEvents.ADDON_BUTTON_DISPLAY_EVENT.register(e -> eventBus.sendEvent(new Event.AddButtonDisplay(e.getThemeButtonDisplay())));
-        ScreenEvents.AFTER_INIT.register((minecraft, screen, i, i1) -> onGuiScreen(minecraft, screen, eventBus));
+        ClientEventRegistry.MAPPING_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMappingEvent(e, JMI.isFirstLogin())));
+        ClientEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseMoveEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseDraggedEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMClickEvent(e)));
+        ScreenEvents.AFTER_INIT.register((minecraft, screen, i, i1) -> onGuiScreen(screen, eventBus));
     }
 
-    private static void onGuiScreen(Minecraft minecraft, Screen screen, JMIEventBus eventBus) {
+    private static void onGuiScreen(Screen screen, JMIEventBus eventBus) {
 //        ScreenEvents.remove(screen).register(event -> ClaimingMode.INSTANCE.onGuiScreen(screen));
         ScreenEvents.remove(screen).register(event -> eventBus.sendEvent(new Event.ScreenClose(screen)));
         if (!(screen instanceof IFullscreen)) return;

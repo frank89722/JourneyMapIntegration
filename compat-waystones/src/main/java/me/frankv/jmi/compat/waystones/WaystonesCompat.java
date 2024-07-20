@@ -1,6 +1,6 @@
 package me.frankv.jmi.compat.waystones;
 
-import journeymap.client.api.IClientAPI;
+import journeymap.api.v2.client.IClientAPI;
 import me.frankv.jmi.api.ModCompat;
 import me.frankv.jmi.api.PlatformHelper;
 import me.frankv.jmi.api.event.Event;
@@ -23,7 +23,7 @@ public class WaystonesCompat implements ModCompat {
 
     @Override
     public void registerEvent(JMIEventBus eventBus) {
-        eventBus.subscribe(Event.JMClientEvent.class, e -> WaystonesMarker.INSTANCE.onJMEvent(e.clientEvent()));
+        eventBus.subscribe(Event.JMMappingEvent.class, WaystonesMarker.INSTANCE::onJMEvent);
         eventBus.subscribe(Event.ResetDataEvent.class, e -> WaystonesMarker.INSTANCE.getWaystones().clear());
     }
 

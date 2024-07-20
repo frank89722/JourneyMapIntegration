@@ -1,14 +1,14 @@
 package me.frankv.jmi.compat.waystones;
 
-import journeymap.client.api.IClientAPI;
-import journeymap.client.api.display.IThemeButton;
-import journeymap.client.api.display.MarkerOverlay;
-import journeymap.client.api.event.ClientEvent;
-import journeymap.client.api.model.MapImage;
-import journeymap.client.api.model.TextProperties;
+import journeymap.api.v2.client.IClientAPI;
+import journeymap.api.v2.client.display.MarkerOverlay;
+import journeymap.api.v2.client.fullscreen.IThemeButton;
+import journeymap.api.v2.client.model.MapImage;
+import journeymap.api.v2.client.model.TextProperties;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.Constants;
+import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
 import me.frankv.jmi.util.OverlayHelper;
@@ -51,7 +51,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
     }
 
     private void createMarker(WaystoneMeta waystone) {
-        final var marker = new ResourceLocation("jmi:images/waystone.png");
+        final var marker = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "images/waystone.png");
         final var icon = new MapImage(marker, 32, 32)
                 .setAnchorX(12.0d)
                 .setAnchorY(24.0d)
@@ -63,7 +63,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
                 .setBackgroundOpacity(0.4f)
                 .setOpacity(1.0f);
 
-        final var markerOverlay = new MarkerOverlay(Constants.MOD_ID, "waystone_" + waystone.pos, waystone.pos, icon);
+        final var markerOverlay = new MarkerOverlay(Constants.MOD_ID, waystone.pos, icon);
         markerOverlay.setDimension(waystone.dim)
                 .setLabel(waystone.name)
                 .setTextProperties(textProperties);
@@ -107,8 +107,8 @@ public enum WaystonesMarker implements ToggleableOverlay {
         button.setToggled(activated);
     }
 
-    public void onJMEvent(ClientEvent event) {
-        switch (event.type) {
+    public void onJMEvent(Event.JMMappingEvent event) {
+        switch (event.mappingEvent().getStage()) {
             case MAPPING_STARTED -> {
                 createMarkersOnMappingStarted();
                 log.debug("re-added waystones overlays");
@@ -136,8 +136,8 @@ public enum WaystonesMarker implements ToggleableOverlay {
     }
 
     @Override
-    public String getButtonIconName() {
-        return "waypoints";
+    public ResourceLocation getButtonIconName() {
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "waypoints");
     }
 
 

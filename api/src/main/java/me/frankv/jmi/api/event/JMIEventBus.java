@@ -21,18 +21,13 @@ public class JMIEventBus {
 
     @SuppressWarnings("unchecked")
     public <T extends Event> void sendEvent(T event) {
-        Stream.ofNullable(eventHandlers.get(event.getClass()))
-                .flatMap(Collection::stream)
-                .forEach(consumer -> {
-                    try {
-                        ((Consumer<T>) consumer).accept(event);
-                    } catch (ClassCastException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                });
+        Optional.ofNullable(eventHandlers.get(event.getClass()))
+                .orElseGet(ArrayList::new)
+                .forEach(consumer -> ((Consumer<T>) consumer).accept(event));
     }
 
     public <T extends Event> void subscribe(Class<T> clazz, Consumer<T> consumer) {
         eventHandlers.computeIfAbsent(clazz, k -> new ArrayList<>()).add(consumer);
     }
+
 }

@@ -2,14 +2,12 @@ package me.frankv.jmi.compat.ftbchunks;
 
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftblibrary.math.XZ;
-import journeymap.client.api.IClientAPI;
-import journeymap.client.api.display.IThemeButton;
-import journeymap.client.api.display.PolygonOverlay;
-import journeymap.client.api.event.ClientEvent;
-import journeymap.client.api.event.FullscreenMapEvent;
-import journeymap.client.api.model.IFullscreen;
-import journeymap.client.api.model.ShapeProperties;
-import journeymap.client.api.util.PolygonHelper;
+import journeymap.api.v2.client.IClientAPI;
+import journeymap.api.v2.client.display.PolygonOverlay;
+import journeymap.api.v2.client.fullscreen.IFullscreen;
+import journeymap.api.v2.client.fullscreen.IThemeButton;
+import journeymap.api.v2.client.model.ShapeProperties;
+import journeymap.api.v2.client.util.PolygonHelper;
 import lombok.Getter;
 import me.frankv.jmi.Constants;
 import me.frankv.jmi.api.jmoverlay.IClientConfig;
@@ -17,6 +15,7 @@ import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 
 import java.util.HashSet;
@@ -60,7 +59,7 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     PolygonOverlay dragPolygon(XZ xz) {
         final var player = Minecraft.getInstance().player;
-        final var displayId = "drag_polygon_" + xz.x() + "_" + xz.z();
+//        final var displayId = "drag_polygon_" + xz.x() + "_" + xz.z();
 
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
@@ -68,12 +67,12 @@ public enum ClaimingMode implements ToggleableOverlay {
 
         final var polygon = PolygonHelper.createChunkPolygon(xz.x(), 10, xz.z());
 
-        return new PolygonOverlay(Constants.MOD_ID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
+        return new PolygonOverlay(Constants.MOD_ID, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
     PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
         final var player = Minecraft.getInstance().player;
-        final var displayId = "ftb_force_loaded_" + pos.x() + "_" + pos.z();
+//        final var displayId = "ftb_force_loaded_" + pos.x() + "_" + pos.z();
 
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(2).setStrokeColor(0xff0000)
@@ -81,14 +80,14 @@ public enum ClaimingMode implements ToggleableOverlay {
 
         final var polygon = PolygonHelper.createChunkPolygon(pos.x(), 10, pos.z());
 
-        return new PolygonOverlay(Constants.MOD_ID, displayId, player.clientLevel.dimension(), shapeProps, polygon);
+        return new PolygonOverlay(Constants.MOD_ID, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
     private void createClaimingAreaOverlays() {
         final var player = Minecraft.getInstance().player;
         final var startPoint = new ChunkPos(player.chunkPosition().x - 7, player.chunkPosition().z - 7);
 
-        final var displayId = "claim_mode";
+//        final var displayId = "claim_mode";
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(3)
                 .setStrokeColor(0xffffff).setStrokeOpacity(1.0f)
@@ -104,7 +103,7 @@ public enum ClaimingMode implements ToggleableOverlay {
 
         final var polygons = PolygonHelper.createChunksPolygon(area, 100);
 
-        final var overlay = new PolygonOverlay(Constants.MOD_ID, displayId, player.level().dimension(), shapeProps, polygons.get(0));
+        final var overlay = new PolygonOverlay(Constants.MOD_ID, player.level().dimension(), shapeProps, polygons.get(0));
         OverlayHelper.showOverlay(overlay);
         claimAreaPolygon = overlay;
     }
@@ -129,27 +128,9 @@ public enum ClaimingMode implements ToggleableOverlay {
         button.setToggled(activated);
     }
 
-    public void onJMEvent(ClientEvent event) {
-        switch (event.type) {
-            case MAP_CLICKED -> {
-                if (event instanceof FullscreenMapEvent.ClickEvent.Pre) {
-                    getHandler().onPreClick((FullscreenMapEvent.ClickEvent) event);
-                }
-            }
-
-            case MAP_DRAGGED -> {
-                if (event instanceof FullscreenMapEvent.MouseDraggedEvent.Pre) {
-                    getHandler().onPreDrag((FullscreenMapEvent.MouseDraggedEvent) event);
-                }
-            }
-
-            case MAP_MOUSE_MOVED -> getHandler().onMouseMove((FullscreenMapEvent.MouseMoveEvent) event);
-        }
-
-    }
 
     @Override
-    public String getButtonIconName() {
-        return "grid";
+    public ResourceLocation getButtonIconName() {
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "grid");
     }
 }

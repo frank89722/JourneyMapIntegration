@@ -1,6 +1,7 @@
 package me.frankv.jmi;
 
-import journeymap.client.api.event.forge.FullscreenDisplayEvent;
+import journeymap.api.v2.client.event.FullscreenDisplayEvent;
+import journeymap.api.v2.client.event.MappingEvent;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.config.ClientConfig;
 import me.frankv.jmi.jmdefaultconfig.JMDefaultConfig;
@@ -39,8 +40,14 @@ public class JMIForge {
         var eventBus = JMI.getJmiEventBus();
         MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) ->
                 eventBus.sendEvent(new Event.ClientTick()));
-        MinecraftForge.EVENT_BUS.addListener((FullscreenDisplayEvent.AddonButtonDisplayEvent e) ->
-                eventBus.sendEvent(new Event.AddButtonDisplay(e.getThemeButtonDisplay())));
+        ClientEventRegistry.MAPPING_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMappingEvent(e, JMI.isFirstLogin())));
+        ClientEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseMoveEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseDraggedEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMClickEvent(e)));
         MinecraftForge.EVENT_BUS.addListener((ScreenEvent.Closing e) ->
                 eventBus.sendEvent(new Event.ScreenClose(e.getScreen())));
         MinecraftForge.EVENT_BUS.addListener((InputEvent.MouseButton e) -> {

@@ -1,7 +1,7 @@
 package me.frankv.jmi.util;
 
-import journeymap.client.api.IClientAPI;
-import journeymap.client.api.display.Displayable;
+import journeymap.api.v2.client.IClientAPI;
+import journeymap.api.v2.client.display.Displayable;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
@@ -40,8 +40,8 @@ public class OverlayHelper {
         overlays.forEach(jmAPI::remove);
     }
 
-    public static void onJMEvent(Event.JMClientEvent event) {
-        switch (event.clientEvent().type) {
+    public static void onJMEvent(Event.JMMappingEvent event) {
+        switch (event.mappingEvent().getStage()) {
             case MAPPING_STARTED -> {
                 jmMappingStarted = true;
                 waitingQueue.forEach(OverlayHelper::showOverlay);

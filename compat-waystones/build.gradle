@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
 }
 
 archivesBaseName = "${mod_id}-compat-waystones-${minecraft_version}"
@@ -21,7 +21,7 @@ dependencies {
 
     modCompileOnly("net.fabricmc:fabric-loader:${fabric_loader_version}")
 
-    modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_common_version, changing: true
+    modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version, changing: true
 
     modCompileOnly "maven.modrinth:balm:${project.balm_fabric_version}"
     modCompileOnly "maven.modrinth:waystones:${project.waystones_fabric_version}"
