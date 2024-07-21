@@ -1,12 +1,12 @@
 package me.frankv.jmi.config;
 
-import me.frankv.jmi.api.jmoverlay.IClientConfig;
+import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientConfig implements IClientConfig {
+public class NeoForgeClientConfig implements ClientConfig {
     private final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
     private final ModConfigSpec.BooleanValue ftbChunks;
@@ -18,7 +18,7 @@ public class ClientConfig implements IClientConfig {
     private final ModConfigSpec.IntValue waystoneColor;
     private final ModConfigSpec.IntValue defaultConfigVersion;
 
-    public ClientConfig() {
+    public NeoForgeClientConfig() {
         builder.comment("Client-Side Integration");
         builder.push("FTBChunks");
         ftbChunks = builder.comment("Enable FTBChunks Integration").define("ftbChunks", true);

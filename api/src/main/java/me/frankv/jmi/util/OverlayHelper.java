@@ -5,6 +5,7 @@ import journeymap.api.v2.client.display.Displayable;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -15,7 +16,7 @@ public class OverlayHelper {
     @Setter
     private static IClientAPI jmAPI;
 
-    private static List<Displayable> waitingQueue = new LinkedList<>();
+    private static final List<Displayable> waitingQueue = new LinkedList<>();
 
     private static boolean jmMappingStarted = false;
 
@@ -40,7 +41,7 @@ public class OverlayHelper {
         overlays.forEach(jmAPI::remove);
     }
 
-    public static void onJMEvent(Event.JMMappingEvent event) {
+    public static void onJMMapping(Event.JMMappingEvent event) {
         switch (event.mappingEvent().getStage()) {
             case MAPPING_STARTED -> {
                 jmMappingStarted = true;
@@ -51,6 +52,10 @@ public class OverlayHelper {
                 waitingQueue.clear();
             }
         }
+    }
+
+    public static ResourceLocation getIcon(String string) {
+        return ResourceLocation.fromNamespaceAndPath("journeymap", "theme/flat/icon/" + string + ".png");
     }
 
 }

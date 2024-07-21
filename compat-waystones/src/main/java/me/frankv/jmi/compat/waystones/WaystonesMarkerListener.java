@@ -15,52 +15,59 @@ import java.awt.geom.Point2D;
 
 @Slf4j
 public class WaystonesMarkerListener implements IOverlayListener {
-    final MarkerOverlay overlay;
-    final IClientAPI jmAPI;
+    private final MarkerOverlay overlay;
+    private final IClientAPI jmAPI;
 
     public WaystonesMarkerListener(MarkerOverlay overlay, IClientAPI jmAPI) {
         this.overlay = overlay;
         this.jmAPI = jmAPI;
     }
 
+
     @Override
-    public void onActivate(UIState uiState) {
+    public void onActivate(UIState mapState) {
 
     }
 
     @Override
-    public void onDeactivate(UIState uiState) {
+    public void onDeactivate(UIState mapState) {
 
     }
 
     @Override
-    public void onMouseMove(UIState uiState, Point2D.Double aDouble, BlockPos blockPos) {
+    public void onMouseMove(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
 
     }
 
     @Override
-    public void onMouseOut(UIState uiState, Point2D.Double aDouble, BlockPos blockPos) {
+    public void onMouseOut(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
 
     }
 
     @Override
-    public boolean onMouseClick(UIState uiState, Point2D.Double aDouble, BlockPos blockPos, int i, boolean b) {
+    public boolean onMouseClick(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition, int button, boolean doubleClick) {
+        if (button == 1) {
+            return false;
+        }
+
+        var alreadyCreated = jmAPI.getWaypoints(Constants.MOD_ID).stream()
+                .filter(w -> w.getBlockPos().equals(overlay.getPoint()))
+                .anyMatch(w -> w.getName().equals(overlay.getLabel()));
+
+        if (alreadyCreated) {
+            return false;
+        }
+
         Waypoint waypoint = WaypointFactory.createClientWaypoint(
                 Constants.MOD_ID,
-                blockPos,
-                String.format("waystone_%s_%s_%s", overlay.getTitle(), overlay.getDimension(), overlay.getPoint()),
+                overlay.getPoint(),
+                overlay.getLabel(),
                 overlay.getDimension(),
                 true
         );
-//        Waypoint waypoint = new Waypoint(
-//                Constants.MOD_ID,
-//                String.format("waystone_%s_%s_%s", overlay.getTitle(), overlay.getDimension(), overlay.getPoint()),
-//                overlay.getLabel(), overlay.getDimension(), overlay.getPoint()
-//        );
 
         try {
             jmAPI.addWaypoint(Constants.MOD_ID, waypoint);
-            return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -68,7 +75,8 @@ public class WaystonesMarkerListener implements IOverlayListener {
     }
 
     @Override
-    public void onOverlayMenuPopup(UIState uiState, Point2D.Double aDouble, BlockPos blockPos, ModPopupMenu modPopupMenu) {
+    public void onOverlayMenuPopup(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition, ModPopupMenu modPopupMenu) {
 
     }
+
 }

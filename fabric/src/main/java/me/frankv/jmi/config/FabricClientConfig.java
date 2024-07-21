@@ -3,16 +3,16 @@ package me.frankv.jmi.config;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.frankv.jmi.api.jmoverlay.IClientConfig;
+import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.util.FileHelper;
 
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ClientConfig implements IClientConfig {
+public class FabricClientConfig implements ClientConfig {
 
-    private static final FileHelper<ClientConfig> FILE_MANAGER = new FileHelper<>("/config/jmi-client.json", ClientConfig.class);
+    private static final FileHelper<FabricClientConfig> FILE_MANAGER = new FileHelper<>("/config/jmi-client.json", FabricClientConfig.class);
 
     private Boolean ftbChunks = true;
     private Boolean waystone = true;
@@ -23,13 +23,13 @@ public class ClientConfig implements IClientConfig {
     private Integer waystoneColor = 0xffffff;
     private Integer defaultConfigVersion = -1;
 
-    public static ClientConfig loadConfig() {
+    public static FabricClientConfig loadConfig() {
 
         if (FILE_MANAGER.getFile().exists()) {
             return FILE_MANAGER.read();
         }
 
-        final var config = new ClientConfig();
+        final var config = new FabricClientConfig();
         FILE_MANAGER.write(config);
         return config;
     }

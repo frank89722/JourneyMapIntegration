@@ -4,7 +4,7 @@ import journeymap.api.v2.client.IClientAPI;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
-import me.frankv.jmi.api.jmoverlay.IClientConfig;
+import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
 
 import java.util.*;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class ModCompatFactory {
     private final Map<Class<? extends ModCompat>, ModCompat> modCompatMap;
 
-    public ModCompatFactory(IClientAPI jmAPI, IClientConfig clientConfig, JMIEventBus eventBus) {
+    public ModCompatFactory(IClientAPI jmAPI, ClientConfig clientConfig, JMIEventBus eventBus) {
         modCompatMap = ServiceLoader.load(ModCompat.class).stream()
                 .map(provider -> {
                     try {
@@ -39,9 +39,14 @@ public class ModCompatFactory {
                         .sorted(Comparator.comparing(ToggleableOverlay::getOrder))
                         .forEach(t -> {
                             var themeButtonDisplay = e.themeButtonDisplay();
-                            themeButtonDisplay.addThemeToggleButton(t.getButtonLabel(), t.getButtonLabel(),
-                                    t.getButtonIconName(), t.isActivated(), t::onToggle);
-                 }));
+                            themeButtonDisplay.addThemeToggleButton(
+                                    t.getButtonLabel(),
+                                    t.getButtonLabel(),
+                                    t.getButtonIconName(),
+                                    t.isActivated(),
+                                    t::onToggle
+                            );
+                        }));
     }
 
     public <T extends ModCompat> T get(Class<T> clazz) {

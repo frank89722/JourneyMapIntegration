@@ -10,7 +10,7 @@ import journeymap.api.v2.client.model.ShapeProperties;
 import journeymap.api.v2.client.util.PolygonHelper;
 import lombok.Getter;
 import me.frankv.jmi.Constants;
-import me.frankv.jmi.api.jmoverlay.IClientConfig;
+import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
@@ -43,7 +43,7 @@ public enum ClaimingMode implements ToggleableOverlay {
     private final int order = 0;
 
 
-    public void init(IClientAPI jmAPI, IClientConfig config) {
+    public void init(IClientAPI jmAPI, ClientConfig config) {
         this.jmAPI = jmAPI;
         handler = new ClaimingModeHandler(this);
     }
@@ -59,7 +59,6 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     PolygonOverlay dragPolygon(XZ xz) {
         final var player = Minecraft.getInstance().player;
-//        final var displayId = "drag_polygon_" + xz.x() + "_" + xz.z();
 
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
@@ -72,7 +71,6 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
         final var player = Minecraft.getInstance().player;
-//        final var displayId = "ftb_force_loaded_" + pos.x() + "_" + pos.z();
 
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(2).setStrokeColor(0xff0000)
@@ -87,7 +85,6 @@ public enum ClaimingMode implements ToggleableOverlay {
         final var player = Minecraft.getInstance().player;
         final var startPoint = new ChunkPos(player.chunkPosition().x - 7, player.chunkPosition().z - 7);
 
-//        final var displayId = "claim_mode";
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(3)
                 .setStrokeColor(0xffffff).setStrokeOpacity(1.0f)
@@ -131,6 +128,6 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     @Override
     public ResourceLocation getButtonIconName() {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "grid");
+        return OverlayHelper.getIcon("grid");
     }
 }

@@ -2,7 +2,7 @@ package me.frankv.jmi.api.jmoverlay;
 
 import java.util.List;
 
-public interface IClientConfig {
+public interface ClientConfig {
 
     Boolean getFtbChunks();
 

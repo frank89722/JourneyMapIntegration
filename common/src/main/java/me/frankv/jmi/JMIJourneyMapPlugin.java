@@ -3,12 +3,11 @@ package me.frankv.jmi;
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.IClientPlugin;
 import journeymap.api.v2.client.JourneyMapPlugin;
+import journeymap.api.v2.common.event.ClientEventRegistry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.ModCompatFactory;
 import me.frankv.jmi.api.event.Event;
-import me.frankv.jmi.api.event.JMIEventBus;
-import me.frankv.jmi.api.jmoverlay.OverlayInitErrorHandler;
 import me.frankv.jmi.util.OverlayHelper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -28,14 +27,13 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
     public void initialize(final IClientAPI jmAPI) {
         this.jmAPI = jmAPI;
 
-        OverlayInitErrorHandler.handlers.put("ClammingMode", null);
-        OverlayInitErrorHandler.handlers.put("ClaimedChunkPolygon", null);
+        registerJMEvents();
 
         overlayFactory = new ModCompatFactory(jmAPI, JMI.getClientConfig(), JMI.getJmiEventBus());
         OverlayHelper.setJmAPI(jmAPI);
-        JMI.getJmiEventBus().subscribe(Event.JMMappingEvent.class, this::onEvent);
+        JMI.getJmiEventBus().subscribe(Event.JMMappingEvent.class, this::onJMMapping);
 
-        log.info("Initialized " + getClass().getName());
+        log.info("Initialized {}", getClass().getName());
     }
 
     @Override
@@ -43,21 +41,29 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         return Constants.MOD_ID;
     }
 
-//    @Override
-    public void onEvent(Event.JMMappingEvent event) {
-        try {
-            switch (event.mappingEvent().getStage()) {
-                case MAPPING_STARTED -> JMI.setFirstLogin(false);
+    private void registerJMEvents() {
+        var eventBus = JMI.getJmiEventBus();
+        ClientEventRegistry.ADDON_BUTTON_DISPLAY_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.AddButtonDisplay(e.getThemeButtonDisplay())));
+        ClientEventRegistry.MAPPING_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMappingEvent(e, JMI.isFirstLogin())));
+        ClientEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseMoveEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMMouseDraggedEvent(e)));
+        ClientEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMClickEvent(e)));
 
-                case MAPPING_STOPPED -> {
-                    jmAPI.removeAll(Constants.MOD_ID);
-                    log.debug("all overlays removed");
-                }
+    }
+
+    private void onJMMapping(Event.JMMappingEvent event) {
+
+        switch (event.mappingEvent().getStage()) {
+            case MAPPING_STARTED -> JMI.setFirstLogin(false);
+            case MAPPING_STOPPED -> {
+                jmAPI.removeAll(Constants.MOD_ID);
+                log.debug("all overlays removed");
             }
-
-//            JMI.getJmiEventBus().sendEvent(new Event.JMClientEvent(event, JMI.isFirstLogin()));
-        } catch (Throwable t) {
-            log.error(t.getMessage(), t);
         }
 
     }

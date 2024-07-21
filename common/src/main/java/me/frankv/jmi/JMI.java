@@ -3,9 +3,9 @@ package me.frankv.jmi;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import me.frankv.jmi.api.jmoverlay.IClientConfig;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
+import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 
@@ -14,21 +14,23 @@ public class JMI {
     @Getter
     private static JMIEventBus jmiEventBus;
     @Getter
-    private static IClientConfig clientConfig;
+    private static ClientConfig clientConfig;
 
     private static final Minecraft mc = Minecraft.getInstance();
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private static boolean haveDim = false;
-    @Getter @Setter
+    @Getter
+    @Setter
     private static boolean firstLogin = false;
 
 
-    public static void init(IClientConfig clientConfig) {
+    public static void init(ClientConfig clientConfig) {
         JMI.clientConfig = clientConfig;
         jmiEventBus = new JMIEventBus();
         jmiEventBus.subscribe(Event.ClientTick.class, e -> onClientTick());
-        jmiEventBus.subscribe(Event.JMMappingEvent.class, OverlayHelper::onJMEvent);
+        jmiEventBus.subscribe(Event.JMMappingEvent.class, OverlayHelper::onJMMapping);
     }
 
 
