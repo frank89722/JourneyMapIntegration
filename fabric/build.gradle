@@ -89,7 +89,7 @@ if (ENV.CF_TOKEN) {
             releaseType = release_type
             addGameVersion "Fabric"
             addGameVersion "Quilt"
-            addGameVersion "Java 17"
+            addGameVersion "Java 21"
             addGameVersion "Client"
             addGameVersion minecraft_version
             mainArtifact(remapJar.archivePath) {
@@ -97,7 +97,7 @@ if (ENV.CF_TOKEN) {
             }
             relations {
                 it.requiredDependency 'journeymap'
-//                it.optionalDependency 'ftb-chunks-forge'
+                it.optionalDependency 'ftb-chunks-fabric'
                 it.optionalDependency 'waystones'
             }
             changelog = rootProject.file('changelog.md')
@@ -119,7 +119,7 @@ if (ENV.MODRINTH_TOKEN) {
         versionName = release_title
         versionNumber = "${version}+fabric"
         uploadFile = remapJar
-        gameVersions = [ minecraft_version ]
+        gameVersions = [minecraft_version]
         loaders = ["fabric", "quilt"]
         changelog = rootProject.file('changelog.md').text
         dependencies {

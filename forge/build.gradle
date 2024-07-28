@@ -114,7 +114,7 @@ jar {
                 'Implementation-Version'  : project.jar.archiveVersion,
                 'Implementation-Vendor'   : mod_author,
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'Timestamp'              : System.currentTimeMillis(),
+                'Timestamp'               : System.currentTimeMillis(),
                 'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
                 'Build-On-Minecraft'      : minecraft_version,
                 'MixinConfigs'            : "jmi.mixins.json"
@@ -140,7 +140,7 @@ if (ENV.CF_TOKEN) {
             id = curse_id
             releaseType = release_type
             addGameVersion "Forge"
-            addGameVersion "Java 17"
+            addGameVersion "Java 21"
             addGameVersion "Client"
             addGameVersion minecraft_version
             mainArtifact(jar) {
@@ -165,7 +165,7 @@ if (ENV.MODRINTH_TOKEN) {
         versionName = release_title
         versionNumber = "${version}+forge"
         uploadFile = jar
-        gameVersions = [ minecraft_version ]
+        gameVersions = [minecraft_version]
         changelog = rootProject.file('changelog.md').text
         dependencies {
             required.project "lfHFW1mp" // journeymap
