@@ -5,4 +5,5 @@
 
 ### Changes:
 
-- Update to MC 1.21 (This is just a working release, not yet optimized for Journeymap v6)
+- Build with newer NeoForge
+- Fix Fabric build
