@@ -45,6 +45,8 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         var eventBus = JMI.getJmiEventBus();
         ClientEventRegistry.ADDON_BUTTON_DISPLAY_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.AddButtonDisplay(e.getThemeButtonDisplay())));
+        ClientEventRegistry.INFO_SLOT_REGISTRY_EVENT_EVENT.subscribe(Constants.MOD_ID, e ->
+                eventBus.sendEvent(new Event.JMInfoSlotRegistryEvent(e)));
         ClientEventRegistry.MAPPING_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.JMMappingEvent(e, JMI.isFirstLogin())));
         ClientEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(Constants.MOD_ID, e ->
