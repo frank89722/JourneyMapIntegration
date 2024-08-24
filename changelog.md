@@ -5,5 +5,6 @@
 
 ### Changes:
 
-- Build with newer NeoForge
-- Fix Fabric build
+- Update dependencies
+- Fix FTBChunks integration overlay overlap with JM stuff
+- Add back missing FTBChunks info slot
