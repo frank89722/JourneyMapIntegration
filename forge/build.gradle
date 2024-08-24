@@ -97,7 +97,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from project(":common").sourceSets.main.resources
     from project(":api").sourceSets.main.resources
     from project(":compat-waystones").sourceSets.main.resources

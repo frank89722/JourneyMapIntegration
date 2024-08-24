@@ -29,7 +29,7 @@ dependencies {
     modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 
     modApi group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
-    modRuntimeOnly "maven.modrinth:journeymap:${project.jm_fabric_version}"
+    modImplementation "maven.modrinth:journeymap:${project.jm_fabric_version}"
 }
 
 loom {
