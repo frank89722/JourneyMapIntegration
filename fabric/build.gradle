@@ -30,6 +30,7 @@ dependencies {
 
     modApi group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
     modImplementation "maven.modrinth:journeymap:${project.jm_fabric_version}"
+    modRuntimeOnly "maven.modrinth:common-network:${project.common_network_fabric_version}"
 }
 
 loom {

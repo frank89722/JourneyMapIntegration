@@ -8,7 +8,6 @@ import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.event.FullscreenMapEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.ChunkPos;
@@ -16,18 +15,18 @@ import net.minecraft.world.level.ChunkPos;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 
 import static me.frankv.jmi.util.OverlayHelper.removeOverlays;
 import static me.frankv.jmi.util.OverlayHelper.showOverlay;
 
 @RequiredArgsConstructor
 public class ClaimingModeHandler {
-    private boolean mouseTracking = false;
     private final ClaimingMode claimingMode;
-
     @Getter
     private final Map<XZ, PolygonOverlay> dragPolygons = new HashMap<>();
     private final HashSet<XZ> chunks = new HashSet<>();
+    private boolean mouseTracking = false;
 
     public void onClick(FullscreenMapEvent.ClickEvent event) {
         if (event.getStage() != FullscreenMapEvent.Stage.PRE) return;
@@ -73,7 +72,7 @@ public class ClaimingModeHandler {
         mouseTracking = false;
         if (chunks.isEmpty()) return;
         var chunkChangeOp = RequestChunkChangePacket.ChunkChangeOp.create(mouseButton == 0, Screen.hasShiftDown());
-        var packet = new RequestChunkChangePacket(chunkChangeOp, chunks);
+        var packet = new RequestChunkChangePacket(chunkChangeOp, chunks, false, Optional.empty());
         NetworkManager.sendToServer(packet);
         removeOverlays(dragPolygons.values());
         chunks.clear();

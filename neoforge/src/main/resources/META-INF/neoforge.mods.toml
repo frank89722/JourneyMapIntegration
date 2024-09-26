@@ -39,7 +39,7 @@ side = "CLIENT"
 [[dependencies.jmi]]
 modId = "ftbchunks"
 type = "optional"
-versionRange = "[2101.1.0,)"
+versionRange = "[2101.1.1,)"
 ordering = "NONE"
 side = "CLIENT"
 

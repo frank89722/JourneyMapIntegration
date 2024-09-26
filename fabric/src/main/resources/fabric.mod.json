@@ -33,7 +33,7 @@
     "journeymap": "*"
   },
   "recommends": {
-    "ftbchunks": ">=2100",
+    "ftbchunks": ">=2101.1.1",
     "waystones": ">=21"
   }
 }

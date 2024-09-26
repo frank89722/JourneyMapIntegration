@@ -4,6 +4,7 @@ import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.IClientPlugin;
 import journeymap.api.v2.client.JourneyMapPlugin;
 import journeymap.api.v2.common.event.ClientEventRegistry;
+import journeymap.api.v2.common.event.FullscreenEventRegistry;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.ModCompatFactory;
@@ -43,17 +44,17 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
 
     private void registerJMEvents() {
         var eventBus = JMI.getJmiEventBus();
-        ClientEventRegistry.ADDON_BUTTON_DISPLAY_EVENT.subscribe(Constants.MOD_ID, e ->
+        FullscreenEventRegistry.ADDON_BUTTON_DISPLAY_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.AddButtonDisplay(e.getThemeButtonDisplay())));
-        ClientEventRegistry.INFO_SLOT_REGISTRY_EVENT_EVENT.subscribe(Constants.MOD_ID, e ->
+        ClientEventRegistry.INFO_SLOT_REGISTRY_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.JMInfoSlotRegistryEvent(e)));
         ClientEventRegistry.MAPPING_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.JMMappingEvent(e, JMI.isFirstLogin())));
-        ClientEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(Constants.MOD_ID, e ->
+        FullscreenEventRegistry.FULLSCREEN_MAP_MOVE_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.JMMouseMoveEvent(e)));
-        ClientEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(Constants.MOD_ID, e ->
+        FullscreenEventRegistry.FULLSCREEN_MAP_DRAG_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.JMMouseDraggedEvent(e)));
-        ClientEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(Constants.MOD_ID, e ->
+        FullscreenEventRegistry.FULLSCREEN_MAP_CLICK_EVENT.subscribe(Constants.MOD_ID, e ->
                 eventBus.sendEvent(new Event.JMClickEvent(e)));
 
     }
