@@ -6,5 +6,4 @@
 ### Changes:
 
 - Update dependencies
-- Fix FTBChunks integration overlay overlap with JM stuff
-- Add back missing FTBChunks info slot
+- Support FTBChunks 2101.1.1
