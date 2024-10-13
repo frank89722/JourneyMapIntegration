@@ -20,39 +20,42 @@ public class ModCompatFactory {
                 .map(provider -> {
                     try {
                         return provider.get();
-                    } catch (Error e) {
+                    } catch (Exception | Error e) {
                         log.warn("Failed to init JMI mod compat {}", e.getLocalizedMessage(), e);
                         return null;
                     }
                 })
                 .filter(Objects::nonNull)
                 .filter(ModCompat::isTargetModsLoaded)
-                .peek(compat -> {
-                    compat.init(jmAPI, clientConfig);
-                    compat.registerEvent(eventBus);
-                })
                 .collect(Collectors.toUnmodifiableMap(ModCompat::getClass, Function.identity()));
 
-        eventBus.subscribe(Event.AddButtonDisplay.class, e ->
-                modCompatMap.values().stream()
-                        .flatMap(modCompat -> modCompat.getToggleableOverlays().stream())
-                        .sorted(Comparator.comparing(ToggleableOverlay::getOrder))
-                        .forEach(t -> {
-                            var themeButtonDisplay = e.themeButtonDisplay();
-                            themeButtonDisplay.addThemeToggleButton(
-                                    t.getButtonLabel(),
-                                    t.getButtonLabel(),
-                                    t.getButtonIconName(),
-                                    t.isActivated(),
-                                    t::onToggle
-                            );
-                        }));
+        modCompatMap.values().forEach(compat -> {
+            compat.init(jmAPI, clientConfig);
+            compat.registerEvent(eventBus);
+        });
+
+        eventBus.subscribe(Event.AddButtonDisplay.class, this::onAddButtonDisplay);
     }
 
     public <T extends ModCompat> T get(Class<T> clazz) {
         return Optional.ofNullable(modCompatMap.get(clazz))
                 .map(clazz::cast)
                 .orElse(null);
+    }
+
+    private void onAddButtonDisplay(Event.AddButtonDisplay event) {
+        var themeButtonDisplay = event.themeButtonDisplay();
+
+        modCompatMap.values().stream()
+                .flatMap(modCompat -> modCompat.getToggleableOverlays().stream())
+                .sorted(Comparator.comparing(ToggleableOverlay::getOrder))
+                .forEach(t -> themeButtonDisplay.addThemeToggleButton(
+                        t.getButtonLabel(),
+                        t.getButtonLabel(),
+                        t.getButtonIconName(),
+                        t.isActivated(),
+                        t::onToggle
+                ));
     }
 
 }
