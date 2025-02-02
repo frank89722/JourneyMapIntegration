@@ -24,24 +24,20 @@ import java.util.Set;
 public enum ClaimingMode implements ToggleableOverlay {
     INSTANCE;
 
-    private IClientAPI jmAPI;
     private final Minecraft mc = Minecraft.getInstance();
-
+    @Getter
+    private final Set<ChunkPos> area = new HashSet<>();
+    @Getter
+    private final String buttonLabel = "FTBChunks Claiming Mode";
+    @Getter
+    private final int order = 0;
+    private IClientAPI jmAPI;
     @Getter
     private ClaimingModeHandler handler;
-
     @Getter
     private boolean activated = false;
     @Getter
     private PolygonOverlay claimAreaPolygon = null;
-    @Getter
-    private Set<ChunkPos> area = new HashSet<>();
-
-    @Getter
-    private String buttonLabel = "FTBChunks Claiming Mode";
-    @Getter
-    private final int order = 0;
-
 
     public void init(IClientAPI jmAPI, ClientConfig config) {
         this.jmAPI = jmAPI;
@@ -110,6 +106,7 @@ public enum ClaimingMode implements ToggleableOverlay {
         if (!(screen instanceof IFullscreen)) return;
         activated = false;
         removeOverlays();
+        handler.clearStates();
     }
 
     @Override

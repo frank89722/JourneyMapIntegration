@@ -12,30 +12,36 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.ChunkPos;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static me.frankv.jmi.util.OverlayHelper.removeOverlays;
 import static me.frankv.jmi.util.OverlayHelper.showOverlay;
 
 @RequiredArgsConstructor
 public class ClaimingModeHandler {
+    private static final List<Integer> ALLOWED_BUTTONS = List.of(0, 1);
+
     private final ClaimingMode claimingMode;
     @Getter
     private final Map<XZ, PolygonOverlay> dragPolygons = new HashMap<>();
-    private final HashSet<XZ> chunks = new HashSet<>();
+    private final Set<XZ> chunks = new HashSet<>();
     private boolean mouseTracking = false;
+    private Integer mouseButton = null;
 
     public void onClick(FullscreenMapEvent.ClickEvent event) {
-        if (event.getStage() != FullscreenMapEvent.Stage.PRE) return;
+        if (mouseTracking) {
+            event.cancel();
+            return;
+        }
         if (!claimingMode.isActivated()) return;
+        if (!ALLOWED_BUTTONS.contains(event.getButton())) return;
+        if (event.getStage() != FullscreenMapEvent.Stage.PRE) return;
 
         final var xz = XZ.chunkFromBlock(event.getLocation().getX(), event.getLocation().getZ());
         if (!claimingMode.getArea().contains(new ChunkPos(xz.x(), xz.z()))) return;
 
         mouseTracking = true;
+        mouseButton = event.getButton();
         addToWaitingList(xz);
         event.cancel();
     }
@@ -55,10 +61,9 @@ public class ClaimingModeHandler {
         if (claimingMode.getArea().contains(new ChunkPos(xz.x(), xz.z())) && !chunks.contains(xz)) addToWaitingList(xz);
     }
 
-    public void onMouseReleased(int mouseButton) {
-        if (!mouseTracking || mouseButton > 1) return;
-
-        applyChanges(mouseButton);
+    public void onMouseReleased() {
+        if (!mouseTracking) return;
+        applyChanges();
     }
 
     private void addToWaitingList(XZ xz) {
@@ -68,15 +73,19 @@ public class ClaimingModeHandler {
         chunks.add(xz);
     }
 
-    private void applyChanges(int mouseButton) {
-        mouseTracking = false;
-        if (chunks.isEmpty()) return;
+    private void applyChanges() {
         var chunkChangeOp = RequestChunkChangePacket.ChunkChangeOp.create(mouseButton == 0, Screen.hasShiftDown());
         var packet = new RequestChunkChangePacket(chunkChangeOp, chunks, false, Optional.empty());
         NetworkManager.sendToServer(packet);
+        GuiHelper.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F);
+        clearStates();
+    }
+
+    void clearStates() {
+        mouseTracking = false;
         removeOverlays(dragPolygons.values());
         chunks.clear();
         dragPolygons.clear();
-        GuiHelper.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F);
+        mouseButton = null;
     }
 }

@@ -38,7 +38,7 @@ public class FTBChunksCompat implements ModCompat {
         eventBus.subscribe(Event.JMMouseMoveEvent.class, e -> ClaimingMode.INSTANCE.getHandler().onMouseMove(e.mouseMoveEvent()));
         eventBus.subscribe(Event.JMMouseDraggedEvent.class, e -> ClaimingMode.INSTANCE.getHandler().onDrag(e.mouseDraggedEvent()));
         eventBus.subscribe(Event.JMInfoSlotRegistryEvent.class, ClaimedChunkPolygon.INSTANCE::onJMInfoSlotRegistryEvent);
-        eventBus.subscribe(Event.MouseRelease.class, e -> ClaimingMode.INSTANCE.getHandler().onMouseReleased(e.button()));
+        eventBus.subscribe(Event.MouseRelease.class, e -> ClaimingMode.INSTANCE.getHandler().onMouseReleased());
         eventBus.subscribe(Event.ScreenDraw.class, e -> GeneralDataOverlay.onScreenDraw(e.screen(), e.guiGraphics()));
     }
 
