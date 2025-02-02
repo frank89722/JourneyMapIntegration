@@ -6,4 +6,4 @@
 ### Changes:
 
 - Update dependencies
-- Support FTBChunks 2101.1.1
+- Fix overlay issues in FTBChunks claiming mode
