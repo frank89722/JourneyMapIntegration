@@ -1,8 +1,7 @@
 plugins {
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
-    id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.165'
+    id 'net.neoforged.gradle.userdev' version '7.0.170'
 }
 
 archivesBaseName = "${mod_id}-neoforge"
