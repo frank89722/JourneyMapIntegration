@@ -26,8 +26,8 @@ public class FTBClaimedChunkData {
     private final UUID teamId;
     @EqualsAndHashCode.Exclude
     private ClientTeam team;
-    @EqualsAndHashCode.Exclude
-    private PolygonOverlay overlay;
+//    @EqualsAndHashCode.Exclude
+//    private PolygonOverlay overlay;
 
     public FTBClaimedChunkData(MapDimension dim, ChunkSyncInfo chunk, UUID teamId) {
         long now = new Date().getTime();
@@ -40,17 +40,15 @@ public class FTBClaimedChunkData {
         ClientTeamManagerImpl.getInstance().getTeam(teamId)
                 .ifPresent(team -> {
                     this.team = team;
-                    overlay = makeOverlay();
+//                    overlay = makeOverlay();
                 });
     }
 
     private PolygonOverlay makeOverlay() {
         var color = team.getColor();
-//        var displayId = "claimed_" + chunkDimPos.x() + ',' + chunkDimPos.z();
         var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
                 .setFillColor(color)
-//                .setFillOpacity(JMI.clientConfig.getClaimedChunkOverlayOpacity().floatValue()); //TODO
                 .setFillOpacity(0.25f);
 
         var textProps = new TextProperties()
@@ -64,6 +62,7 @@ public class FTBClaimedChunkData {
 
         overlay.setOverlayGroupName("Claimed Chunks")
                 .setTitle(team.getDisplayName())
+                .setOverlayListener(new TestLis())
                 .setTextProperties(textProps);
 
         return overlay;
@@ -72,7 +71,7 @@ public class FTBClaimedChunkData {
     void updateOverlayProps() {
         final var color = team.getColor();
 
-        overlay.getTextProperties().setColor(color);
-        overlay.getShapeProperties().setFillColor(color);
+//        overlay.getTextProperties().setColor(color);
+//        overlay.getShapeProperties().setFillColor(color);
     }
 }
