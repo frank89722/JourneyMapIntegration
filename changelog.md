@@ -5,6 +5,4 @@
 
 ### Changes:
 
-- Update dependencies
-- Fix overlay issues in FTBChunks claiming mode
-- Fix fabric build
+- Rewrite FTBChunks compat for FPS improvement, still in beta so feel free to open issue on the github.
