@@ -7,30 +7,23 @@ import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
 
 @Slf4j
 public class OverlayHelper {
+    private static final Queue<Runnable> waitingQueue = new LinkedList<>();
     @Setter
     private static IClientAPI jmAPI;
-
-    private static final List<Displayable> waitingQueue = new LinkedList<>();
-
     private static boolean jmMappingStarted = false;
 
 
     public static void showOverlay(Displayable overlay) {
-        try {
-            if (jmMappingStarted) {
-                jmAPI.show(overlay);
-            } else {
-                waitingQueue.add(overlay);
-            }
-        } catch (Throwable t) {
-            log.error(String.valueOf(t));
-        }
+        waitingQueue.add(() -> safeShowOverlay(overlay));
+    }
+
+    public static void removeOverlay(Displayable overlay) {
+        waitingQueue.add(() -> safeRemoveOverlay(overlay));
     }
 
     public static void showOverlays(Collection<? extends Displayable> overlays) {
@@ -38,20 +31,48 @@ public class OverlayHelper {
     }
 
     public static void removeOverlays(Collection<? extends Displayable> overlays) {
-        overlays.forEach(jmAPI::remove);
+        overlays.forEach(OverlayHelper::removeOverlay);
+    }
+
+    private static void safeShowOverlay(Displayable overlay) {
+        try {
+            jmAPI.show(overlay);
+        } catch (Throwable t) {
+            log.error(String.valueOf(t));
+        }
+    }
+
+    private static void safeRemoveOverlay(Displayable overlay) {
+        try {
+            jmAPI.remove(overlay);
+        } catch (Throwable t) {
+            log.error(String.valueOf(t));
+        }
     }
 
     public static void onJMMapping(Event.JMMappingEvent event) {
         switch (event.mappingEvent().getStage()) {
             case MAPPING_STARTED -> {
                 jmMappingStarted = true;
-                waitingQueue.forEach(OverlayHelper::showOverlay);
+                waitingQueue.forEach(Runnable::run);
             }
-            case MAPPING_STOPPED -> {
+            case MAPPING_STOPPED -> jmMappingStarted = false;
+            default -> {
                 jmMappingStarted = false;
-                waitingQueue.clear();
+                throw new IllegalStateException("Unexpected value: " + event.mappingEvent().getStage());
             }
         }
+        waitingQueue.clear();
+    }
+
+    public static void onClientTick() {
+        if (!jmMappingStarted) return;
+
+        IntStream.range(0, 50)
+                .mapToObj(o -> waitingQueue.poll())
+                .filter(Objects::nonNull)
+                .forEachOrdered(Runnable::run);
+
     }
 
     public static ResourceLocation getIcon(String string) {

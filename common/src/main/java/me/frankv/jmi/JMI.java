@@ -31,6 +31,7 @@ public class JMI {
         jmiEventBus = new JMIEventBus();
         jmiEventBus.subscribe(Event.ClientTick.class, e -> onClientTick());
         jmiEventBus.subscribe(Event.JMMappingEvent.class, OverlayHelper::onJMMapping);
+        jmiEventBus.subscribe(Event.ClientTick.class, e -> OverlayHelper.onClientTick());
     }
 
 

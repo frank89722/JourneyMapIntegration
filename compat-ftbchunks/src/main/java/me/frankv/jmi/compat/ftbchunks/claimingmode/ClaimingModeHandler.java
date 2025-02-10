@@ -1,4 +1,4 @@
-package me.frankv.jmi.compat.ftbchunks;
+package me.frankv.jmi.compat.ftbchunks.claimingmode;
 
 import dev.architectury.networking.NetworkManager;
 import dev.ftb.mods.ftbchunks.net.RequestChunkChangePacket;

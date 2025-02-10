@@ -1,8 +1,7 @@
-package me.frankv.jmi.compat.ftbchunks;
+package me.frankv.jmi.compat.ftbchunks.claimingmode;
 
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftblibrary.math.XZ;
-import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.fullscreen.IFullscreen;
 import journeymap.api.v2.client.fullscreen.IThemeButton;
@@ -10,8 +9,8 @@ import journeymap.api.v2.client.model.ShapeProperties;
 import journeymap.api.v2.client.util.PolygonHelper;
 import lombok.Getter;
 import me.frankv.jmi.Constants;
-import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
+import me.frankv.jmi.compat.ftbchunks.ClaimedChunksOverlay;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -26,29 +25,25 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     private final Minecraft mc = Minecraft.getInstance();
     @Getter
+    private final  ClaimingModeHandler handler = new ClaimingModeHandler(this);
+
+    @Getter
     private final Set<ChunkPos> area = new HashSet<>();
     @Getter
     private final String buttonLabel = "FTBChunks Claiming Mode";
     @Getter
     private final int order = 0;
-    private IClientAPI jmAPI;
-    @Getter
-    private ClaimingModeHandler handler;
     @Getter
     private boolean activated = false;
     @Getter
     private PolygonOverlay claimAreaPolygon = null;
 
-    public void init(IClientAPI jmAPI, ClientConfig config) {
-        this.jmAPI = jmAPI;
-        handler = new ClaimingModeHandler(this);
-    }
 
     private void removeOverlays() {
         if (claimAreaPolygon == null) return;
-        jmAPI.remove(claimAreaPolygon);
+        OverlayHelper.removeOverlay(claimAreaPolygon);
 
-        ClaimedChunkPolygon.INSTANCE.showForceLoadedByArea(false);
+        ClaimedChunksOverlay.INSTANCE.showForceLoadedByArea(false);
         claimAreaPolygon = null;
         area.clear();
     }
@@ -65,7 +60,7 @@ public enum ClaimingMode implements ToggleableOverlay {
         return new PolygonOverlay(Constants.MOD_ID, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
-    PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
+    public PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
         final var player = Minecraft.getInstance().player;
 
         final var shapeProps = new ShapeProperties()
@@ -92,7 +87,7 @@ public enum ClaimingMode implements ToggleableOverlay {
             }
         }
 
-        ClaimedChunkPolygon.INSTANCE.showForceLoadedByArea(true);
+        ClaimedChunksOverlay.INSTANCE.showForceLoadedByArea(true);
 
         final var polygons = PolygonHelper.createChunksPolygon(area, 100);
 
@@ -117,7 +112,7 @@ public enum ClaimingMode implements ToggleableOverlay {
         } else {
             removeOverlays();
         }
-        ClaimedChunkPolygon.INSTANCE.onClaiming(activated);
+        ClaimedChunksOverlay.INSTANCE.onClaiming(activated);
         activated = !activated;
         button.setToggled(activated);
     }

@@ -2,6 +2,7 @@ package me.frankv.jmi.compat.ftbchunks;
 
 import dev.ftb.mods.ftbchunks.client.FTBChunksClient;
 import journeymap.api.v2.client.fullscreen.IFullscreen;
+import me.frankv.jmi.compat.ftbchunks.claimingmode.ClaimingMode;
 import me.frankv.jmi.util.Draw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
