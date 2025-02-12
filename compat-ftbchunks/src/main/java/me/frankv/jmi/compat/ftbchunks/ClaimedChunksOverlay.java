@@ -195,7 +195,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
         if (!clientConfig.getFtbChunks()) return;
         if (mc.level == null) return;
 
-        if (tick % 5 != 0) {
+        if (tick % 4 != 0) {
             tick++;
             return;
         }
