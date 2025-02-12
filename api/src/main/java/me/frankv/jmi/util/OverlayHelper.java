@@ -7,8 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 public class OverlayHelper {

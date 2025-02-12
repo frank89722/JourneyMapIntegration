@@ -27,6 +27,14 @@ public class ClaimedChunksOverlayStates {
         forceLoadedOverlays.clear();
     }
 
+    public void resetData() {
+        chunkData.clear();
+        forceLoadedOverlays.clear();
+        shapeProperties.clear();
+        textProperties.clear();
+        teamOverlays.clear();
+    }
+
     public ShapeProperties getShapeProps(ClientTeam team, float opacity) {
         return shapeProperties.computeIfAbsent(team.getTeamId(), __ -> new ShapeProperties()
                 .setStrokeWidth(0f)

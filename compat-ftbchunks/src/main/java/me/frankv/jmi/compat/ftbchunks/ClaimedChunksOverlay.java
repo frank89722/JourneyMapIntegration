@@ -48,6 +48,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     private int tick = 1;
     private ClaimedChunksOverlayStates states;
     private boolean shouldToggleAfterOff = false;
+    private boolean jmMappingStarted = false;
 
     public void init(ClientConfig clientConfig, ClaimedChunksOverlayStates states) {
         this.clientConfig = clientConfig;
@@ -194,8 +195,9 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     public void onClientTick() {
         if (!clientConfig.getFtbChunks()) return;
         if (mc.level == null) return;
+        if (!jmMappingStarted) return;
 
-        if (tick % 4 != 0) {
+        if (tick < 0 || tick % 4 != 0) {
             tick++;
             return;
         }
@@ -273,13 +275,18 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     public void onJMMapping(Event.JMMappingEvent e) {
         switch (e.mappingEvent().getStage()) {
             case MAPPING_STARTED -> {
+                tick = -20;
+                jmMappingStarted = true;
                 if (!e.firstLogin()) {
                     createPolygonsOnMappingStarted();
                     log.debug("re-add ftbchunks overlays");
                 }
             }
 
-            case MAPPING_STOPPED -> states.clearOverlays();
+            case MAPPING_STOPPED -> {
+                jmMappingStarted = false;
+                states.clearOverlays();
+            }
         }
 
     }
@@ -287,7 +294,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     public void addToQueue(MapDimension dim, ChunkSyncInfo info, UUID teamId) {
         if (!clientConfig.getFtbChunks()) return;
         queue.offer(FTBClaimedChunkData.create(dim, info, teamId));
-        tick = 1;
+        tick = tick > 0 ? 1 : -20;
     }
 
     @Override

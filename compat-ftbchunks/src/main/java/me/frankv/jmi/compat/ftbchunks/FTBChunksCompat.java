@@ -37,7 +37,7 @@ public class FTBChunksCompat implements ModCompat {
     @Override
     public void registerEvent(JMIEventBus eventBus) {
         eventBus.subscribe(Event.ClientTick.class, e -> ClaimedChunksOverlay.INSTANCE.onClientTick());
-        eventBus.subscribe(Event.ResetDataEvent.class, e -> states.getChunkData().clear());
+        eventBus.subscribe(Event.ResetDataEvent.class, e -> states.resetData());
         eventBus.subscribe(Event.ScreenClose.class, e -> ClaimingMode.INSTANCE.onScreenClose(e.screen()));
         eventBus.subscribe(Event.JMMappingEvent.class, ClaimedChunksOverlay.INSTANCE::onJMMapping);
         eventBus.subscribe(Event.JMClickEvent.class, e -> ClaimingMode.INSTANCE.getHandler().onClick(e.clickEvent()));
