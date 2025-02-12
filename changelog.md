@@ -5,4 +5,6 @@
 
 ### Changes:
 
-- Rewrite FTBChunks compat for FPS improvement, still in beta so feel free to open issue on the github.
+- [FTBChunks] Fix client crash when another player unclaims a chunk under certain unhandled conditions.
+- [FTBChunks] Fix overlay will not remove after the last claimed chunk is unclaimed.
+- [FTBChunks] Reduce the claiming mode white overlay latency.
