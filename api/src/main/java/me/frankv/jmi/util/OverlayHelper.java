@@ -12,18 +12,26 @@ import java.util.stream.IntStream;
 
 @Slf4j
 public class OverlayHelper {
-    private static final Queue<Runnable> waitingQueue = new LinkedList<>();
+    private static final List<Runnable> waitingQueue = new LinkedList<>();
     @Setter
     private static IClientAPI jmAPI;
     private static boolean jmMappingStarted = false;
 
 
     public static void showOverlay(Displayable overlay) {
-        waitingQueue.add(() -> safeShowOverlay(overlay));
+        if (!jmMappingStarted) {
+            waitingQueue.add(() -> safeShowOverlay(overlay));
+        } else {
+            safeShowOverlay(overlay);
+        }
     }
 
     public static void removeOverlay(Displayable overlay) {
-        waitingQueue.add(() -> safeRemoveOverlay(overlay));
+        if (!jmMappingStarted) {
+            waitingQueue.add(() -> safeRemoveOverlay(overlay));
+        } else {
+            safeRemoveOverlay(overlay);
+        }
     }
 
     public static void showOverlays(Collection<? extends Displayable> overlays) {
@@ -63,16 +71,6 @@ public class OverlayHelper {
             }
         }
         waitingQueue.clear();
-    }
-
-    public static void onClientTick() {
-        if (!jmMappingStarted) return;
-
-        IntStream.range(0, 50)
-                .mapToObj(o -> waitingQueue.poll())
-                .filter(Objects::nonNull)
-                .forEachOrdered(Runnable::run);
-
     }
 
     public static ResourceLocation getIcon(String string) {
