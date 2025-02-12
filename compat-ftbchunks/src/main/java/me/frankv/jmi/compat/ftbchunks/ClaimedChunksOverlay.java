@@ -160,8 +160,6 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     }
 
     private boolean shouldReplace(FTBClaimedChunkData data) {
-        if (data.getTeam().isEmpty()) return false;
-
         final var that = states.getChunkData().get(data.chunkDimPos());
         if (that == null) return false;
         return !data.equals(that);
@@ -223,7 +221,13 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
         }
 
         if (!modifiedTeamIds.isEmpty()) {
-            createPolygon(mc.level, modifiedTeamIds).forEach(this::updateOverlays);
+            var polygon = createPolygon(mc.level, modifiedTeamIds);
+            if (polygon.size() < modifiedTeamIds.size()) {
+                modifiedTeamIds.stream()
+                        .filter(id -> !polygon.containsKey(id))
+                        .forEach(id -> updateOverlays(id, Set.of()));
+            }
+            polygon.forEach(this::updateOverlays);
         }
 
         queue.clear();
