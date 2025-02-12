@@ -207,15 +207,19 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
 
         for (var data : queue) {
             if (data.getTeam().isEmpty()) {
-                modifiedTeamIds.add(states.getChunkData().get(data.chunkDimPos()).teamId());
-                states.getChunkData().remove(data.chunkDimPos());
-            } else if (!shouldReplace(data)) {
-                modifiedTeamIds.add(data.teamId());
+                var removed = states.getChunkData().remove(data.chunkDimPos());
+                Optional.ofNullable(removed).ifPresentOrElse(o -> modifiedTeamIds.add(o.teamId()),
+                        () -> log.warn("Failed to remove an unknown claimed chunk. dim: {}, chunk: {}, player_dim: {}",
+                                data.chunkDimPos().dimension(), data.chunkDimPos().chunkPos(), playerDim));
+
+                continue;
+            }
+            if (!shouldReplace(data)) {
                 states.getChunkData().put(data.chunkDimPos(), data);
             } else {
-                modifiedTeamIds.add(data.teamId());
                 replaceChunk(data, playerDim);
             }
+            modifiedTeamIds.add(data.teamId());
         }
 
         if (!modifiedTeamIds.isEmpty()) {
