@@ -3,7 +3,7 @@ package me.frankv.jmi.mixin;
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
 import dev.ftb.mods.ftbchunks.client.map.UpdateChunkFromServerTask;
 import dev.ftb.mods.ftbchunks.data.ChunkSyncInfo;
-import me.frankv.jmi.compat.ftbchunks.ClaimedChunksOverlay;
+import me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay.ClaimedChunksOverlay;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

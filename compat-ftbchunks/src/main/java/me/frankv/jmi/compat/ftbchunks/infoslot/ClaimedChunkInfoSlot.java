@@ -5,13 +5,13 @@ import dev.ftb.mods.ftbteams.data.ClientTeam;
 import lombok.AllArgsConstructor;
 import me.frankv.jmi.Constants;
 import me.frankv.jmi.api.event.Event;
-import me.frankv.jmi.compat.ftbchunks.ClaimedChunksOverlayStates;
+import me.frankv.jmi.compat.ftbchunks.FTBChunksCompatStates;
 import net.minecraft.client.Minecraft;
 
 @AllArgsConstructor
 public class ClaimedChunkInfoSlot {
     private final Minecraft mc = Minecraft.getInstance();
-    private final ClaimedChunksOverlayStates states;
+    private final FTBChunksCompatStates states;
 
     public void onJMInfoSlotRegistryEvent(Event.JMInfoSlotRegistryEvent e) {
         e.infoSlotRegistryEvent().register(Constants.MOD_ID,

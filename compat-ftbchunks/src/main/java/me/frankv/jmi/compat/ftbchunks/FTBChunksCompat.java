@@ -9,6 +9,7 @@ import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
 import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
+import me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay.ClaimedChunksOverlay;
 import me.frankv.jmi.compat.ftbchunks.claimingmode.ClaimingMode;
 import me.frankv.jmi.compat.ftbchunks.infoslot.ClaimedChunkInfoSlot;
 
@@ -19,14 +20,14 @@ public class FTBChunksCompat implements ModCompat {
 
     private final Set<ToggleableOverlay> toggleableOverlays = Set.of(ClaimedChunksOverlay.INSTANCE, ClaimingMode.INSTANCE);
     private ClaimedChunkInfoSlot claimedChunkInfoSlot;
-    private ClaimedChunksOverlayStates states;
+    private FTBChunksCompatStates states;
 
     private ClientConfig clientConfig;
 
 
     @Override
     public void init(IClientAPI jmAPI, ClientConfig clientConfig) {
-        this.states = new ClaimedChunksOverlayStates();
+        this.states = new FTBChunksCompatStates();
         this.clientConfig = clientConfig;
         this.claimedChunkInfoSlot = new ClaimedChunkInfoSlot(states);
         ClaimedChunksOverlay.INSTANCE.init(clientConfig, states);

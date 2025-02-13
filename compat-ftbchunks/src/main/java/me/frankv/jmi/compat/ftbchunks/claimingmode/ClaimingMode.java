@@ -10,7 +10,7 @@ import journeymap.api.v2.client.util.PolygonHelper;
 import lombok.Getter;
 import me.frankv.jmi.Constants;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
-import me.frankv.jmi.compat.ftbchunks.ClaimedChunksOverlay;
+import me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay.ClaimedChunksOverlay;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,7 +25,7 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     private final Minecraft mc = Minecraft.getInstance();
     @Getter
-    private final  ClaimingModeHandler handler = new ClaimingModeHandler(this);
+    private final ClaimingModeHandler handler = new ClaimingModeHandler(this);
 
     @Getter
     private final Set<ChunkPos> area = new HashSet<>();

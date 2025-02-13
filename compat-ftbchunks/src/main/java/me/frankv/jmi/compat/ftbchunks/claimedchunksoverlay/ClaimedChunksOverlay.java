@@ -1,4 +1,4 @@
-package me.frankv.jmi.compat.ftbchunks;
+package me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay;
 
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
 import dev.ftb.mods.ftbchunks.data.ChunkSyncInfo;
@@ -17,10 +17,12 @@ import me.frankv.jmi.Constants;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
+import me.frankv.jmi.compat.ftbchunks.ClaimedChunk;
+import me.frankv.jmi.compat.ftbchunks.FTBChunksCompatStates;
+import me.frankv.jmi.compat.ftbchunks.PolygonWrapper;
 import me.frankv.jmi.compat.ftbchunks.claimingmode.ClaimingMode;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -35,8 +37,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     INSTANCE;
 
     private final Minecraft mc = Minecraft.getInstance();
-
-    private final Queue<FTBClaimedChunkData> queue = new LinkedList<>();
+    private final Queue<ClaimedChunk> queue = new LinkedList<>();
     @Getter
     private final int order = 1;
     @Getter
@@ -46,40 +47,87 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     private boolean activated = true;
 
     private int tick = 1;
-    private ClaimedChunksOverlayStates states;
+    private FTBChunksCompatStates states;
     private boolean shouldToggleAfterOff = false;
     private boolean jmMappingStarted = false;
 
-    public void init(ClientConfig clientConfig, ClaimedChunksOverlayStates states) {
+    public void init(ClientConfig clientConfig, FTBChunksCompatStates states) {
         this.clientConfig = clientConfig;
         this.states = states;
 
         TeamEvent.CLIENT_PROPERTIES_CHANGED.register(this::onTeamPropsChanged);
     }
 
-    private void updateOverlays(UUID teamId, Set<PolygonWrapper> newOverlays) {
-        var oldOverlays = Set.copyOf(states.getTeamOverlays().getOrDefault(teamId, Set.of()));
-        if (oldOverlays.isEmpty()) {
-            states.getTeamOverlays().put(teamId, newOverlays);
-            if (!activated) return;
-            newOverlays.forEach(o -> showOverlay(o.polygon()));
+    public void onClientTick() {
+        if (!clientConfig.getFtbChunks()) return;
+        if (mc.level == null) return;
+        if (!jmMappingStarted) return;
+
+        if (tick < 0 || tick % 4 != 0) {
+            tick++;
             return;
         }
 
-        var addOverlays = new HashSet<>(newOverlays);
-        var rmvOverlays = new HashSet<>(oldOverlays);
-        rmvOverlays.removeAll(newOverlays);
-        addOverlays.removeAll(oldOverlays);
+        var modifiedTeamIds = new HashSet<UUID>();
 
-        var newSet = new HashSet<>(oldOverlays);
-        newSet.removeAll(rmvOverlays);
-        newSet.addAll(addOverlays);
-        states.getTeamOverlays().put(teamId, newSet);
+        for (var data : queue) {
+            if (data.getTeam().isEmpty()) {
+                var removed = states.getChunkData().remove(data.chunkDimPos());
+                Optional.ofNullable(removed).ifPresentOrElse(o -> modifiedTeamIds.add(o.teamId()),
+                        () -> log.warn("Failed to remove an unknown claimed chunk. dim: {}, chunk: {}, player_dim: {}",
+                                data.chunkDimPos().dimension(), data.chunkDimPos().chunkPos(), mc.level.dimension()));
 
-        if (!activated) return;
-        rmvOverlays.forEach(o -> removeOverlay(o.polygon()));
-        addOverlays.forEach(o -> showOverlay(o.polygon()));
+                continue;
+            }
 
+            var existent = states.getChunkData().get(data.chunkDimPos());
+            if (existent != null) {
+                modifiedTeamIds.add(existent.teamId());
+                replaceChunk(data);
+            } else {
+                states.getChunkData().put(data.chunkDimPos(), data);
+            }
+            modifiedTeamIds.add(data.teamId());
+        }
+
+        if (!modifiedTeamIds.isEmpty()) {
+            var polygon = createPolygon(mc.level, modifiedTeamIds);
+            modifiedTeamIds.forEach(id -> updateOverlays(id, polygon.getOrDefault(id, Set.of())));
+        }
+
+        queue.clear();
+        tick = 1;
+    }
+
+    public void showForceLoadedByArea(boolean show) {
+        final var level = mc.level;
+        if (level == null) return;
+
+        if (!show) {
+            removeOverlays(states.getForceLoadedOverlays().values());
+            states.getForceLoadedOverlays().clear();
+            return;
+        }
+
+        ClaimingMode.INSTANCE.getArea().forEach(p -> {
+            final var chunkDimPos = new ChunkDimPos(level.dimension(), p.x, p.z);
+            showForceLoaded(chunkDimPos, true);
+        });
+    }
+
+    public void onClaiming(boolean off) {
+        if (!off && activated) return;
+        if (!off) {
+            toggleOverlay();
+            shouldToggleAfterOff = true;
+        } else if (shouldToggleAfterOff) {
+            toggleOverlay();
+            shouldToggleAfterOff = false;
+        }
+    }
+
+    private Map<UUID, Set<PolygonWrapper>> createPolygon(Level level) {
+        return createPolygon(level, null);
     }
 
     private Map<UUID, Set<PolygonWrapper>> createPolygon(Level level, Set<UUID> teamIds) {
@@ -109,7 +157,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
                         .setOverlayListener(new ClaimedChunkOverlayListener(states, overlay))
                         .setTextProperties(states.getTextProps(team));
 
-                overlays.computeIfAbsent(teamId, k -> new HashSet<>()).add(new PolygonWrapper(overlay, level));
+                overlays.computeIfAbsent(teamId, k -> new HashSet<>()).add(new PolygonWrapper(overlay));
             }
 
         }
@@ -117,33 +165,37 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
         return overlays;
     }
 
-    private Map<UUID, Set<PolygonWrapper>> createPolygon(Level level) {
-        return createPolygon(level, null);
+    private void updateOverlays(UUID teamId, Set<PolygonWrapper> newOverlays) {
+        var oldOverlays = Set.copyOf(states.getTeamOverlays().getOrDefault(teamId, Set.of()));
+        if (oldOverlays.isEmpty()) {
+            states.getTeamOverlays().put(teamId, newOverlays);
+            if (!activated) return;
+            newOverlays.forEach(o -> showOverlay(o.polygon()));
+            return;
+        }
+
+        var addOverlays = new HashSet<>(newOverlays);
+        var rmvOverlays = new HashSet<>(oldOverlays);
+        rmvOverlays.removeAll(newOverlays);
+        addOverlays.removeAll(oldOverlays);
+
+        var newSet = new HashSet<>(oldOverlays);
+        newSet.removeAll(rmvOverlays);
+        newSet.addAll(addOverlays);
+        states.getTeamOverlays().put(teamId, newSet);
+
+        if (!activated) return;
+        rmvOverlays.forEach(o -> removeOverlay(o.polygon()));
+        addOverlays.forEach(o -> showOverlay(o.polygon()));
+
     }
 
-
-    private void replaceChunk(FTBClaimedChunkData data, ResourceKey<Level> dim) {
+    private void replaceChunk(ClaimedChunk data) {
         states.getChunkData().remove(data.chunkDimPos());
         states.getChunkData().put(data.chunkDimPos(), data);
         if (!ClaimingMode.INSTANCE.isActivated()) return;
         showForceLoaded(data.chunkDimPos(), false);
         showForceLoaded(data.chunkDimPos(), true);
-    }
-
-    public void showForceLoadedByArea(boolean show) {
-        final var level = mc.level;
-        if (level == null) return;
-
-        if (!show) {
-            removeOverlays(states.getForceLoadedOverlays().values());
-            states.getForceLoadedOverlays().clear();
-            return;
-        }
-
-        ClaimingMode.INSTANCE.getArea().forEach(p -> {
-            final var chunkDimPos = new ChunkDimPos(level.dimension(), p.x, p.z);
-            showForceLoaded(chunkDimPos, true);
-        });
     }
 
     private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
@@ -159,13 +211,6 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
             states.getForceLoadedOverlays().remove(chunkDimPos);
         }
     }
-
-    private boolean shouldReplace(FTBClaimedChunkData data) {
-        final var that = states.getChunkData().get(data.chunkDimPos());
-        if (that == null) return false;
-        return !data.equals(that);
-    }
-
 
     private void onTeamPropsChanged(ClientTeamPropertiesChangedEvent event) {
         var team = event.getTeam();
@@ -192,59 +237,11 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
 
     }
 
-    public void onClientTick() {
-        if (!clientConfig.getFtbChunks()) return;
-        if (mc.level == null) return;
-        if (!jmMappingStarted) return;
-
-        if (tick < 0 || tick % 4 != 0) {
-            tick++;
-            return;
-        }
-
-        var modifiedTeamIds = new HashSet<UUID>();
-        var playerDim = mc.level.dimension();
-
-        for (var data : queue) {
-            if (data.getTeam().isEmpty()) {
-                var removed = states.getChunkData().remove(data.chunkDimPos());
-                Optional.ofNullable(removed).ifPresentOrElse(o -> modifiedTeamIds.add(o.teamId()),
-                        () -> log.warn("Failed to remove an unknown claimed chunk. dim: {}, chunk: {}, player_dim: {}",
-                                data.chunkDimPos().dimension(), data.chunkDimPos().chunkPos(), playerDim));
-
-                continue;
-            }
-            if (!shouldReplace(data)) {
-                states.getChunkData().put(data.chunkDimPos(), data);
-            } else {
-                replaceChunk(data, playerDim);
-            }
-            modifiedTeamIds.add(data.teamId());
-        }
-
-        if (!modifiedTeamIds.isEmpty()) {
-            var polygon = createPolygon(mc.level, modifiedTeamIds);
-            if (polygon.size() < modifiedTeamIds.size()) {
-                modifiedTeamIds.stream()
-                        .filter(id -> !polygon.containsKey(id))
-                        .forEach(id -> updateOverlays(id, Set.of()));
-            }
-            polygon.forEach(this::updateOverlays);
-        }
-
-        queue.clear();
-        tick = 1;
-    }
-
-    public void onClaiming(boolean off) {
-        if (!off && activated) return;
-        if (!off) {
-            toggleOverlay();
-            shouldToggleAfterOff = true;
-        } else if (shouldToggleAfterOff) {
-            toggleOverlay();
-            shouldToggleAfterOff = false;
-        }
+    @Override
+    public void onToggle(IThemeButton button) {
+        if (ClaimingMode.INSTANCE.isActivated()) return;
+        toggleOverlay();
+        button.setToggled(activated);
     }
 
     private void toggleOverlay() {
@@ -256,13 +253,6 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
                 .forEach(action);
 
         activated = !activated;
-    }
-
-    @Override
-    public void onToggle(IThemeButton button) {
-        if (ClaimingMode.INSTANCE.isActivated()) return;
-        toggleOverlay();
-        button.setToggled(activated);
     }
 
     private void createPolygonsOnMappingStarted() {
@@ -293,7 +283,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
 
     public void addToQueue(MapDimension dim, ChunkSyncInfo info, UUID teamId) {
         if (!clientConfig.getFtbChunks()) return;
-        queue.offer(FTBClaimedChunkData.create(dim, info, teamId));
+        queue.offer(ClaimedChunk.create(dim, info, teamId));
         tick = tick > 0 ? 1 : -20;
     }
 

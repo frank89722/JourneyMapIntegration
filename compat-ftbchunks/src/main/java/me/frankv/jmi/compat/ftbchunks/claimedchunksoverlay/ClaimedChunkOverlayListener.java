@@ -1,16 +1,17 @@
-package me.frankv.jmi.compat.ftbchunks;
+package me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay;
 
 import journeymap.api.v2.client.display.IOverlayListener;
 import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.fullscreen.ModPopupMenu;
 import journeymap.api.v2.client.util.UIState;
 import lombok.extern.slf4j.Slf4j;
+import me.frankv.jmi.compat.ftbchunks.FTBChunksCompatStates;
 import net.minecraft.core.BlockPos;
 
 import java.awt.geom.Point2D;
 
 @Slf4j
-public record ClaimedChunkOverlayListener(ClaimedChunksOverlayStates states,
+public record ClaimedChunkOverlayListener(FTBChunksCompatStates states,
                                           PolygonOverlay overlay) implements IOverlayListener {
 
     @Override

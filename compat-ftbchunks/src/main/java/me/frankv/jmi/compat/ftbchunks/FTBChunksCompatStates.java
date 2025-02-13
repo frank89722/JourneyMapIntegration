@@ -15,8 +15,8 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
-public class ClaimedChunksOverlayStates {
-    private final Map<ChunkDimPos, FTBClaimedChunkData> chunkData = new HashMap<>();
+public class FTBChunksCompatStates {
+    private final Map<ChunkDimPos, ClaimedChunk> chunkData = new HashMap<>();
     private final Map<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
     private final Map<UUID, ShapeProperties> shapeProperties = new HashMap<>();
     private final Map<UUID, TextProperties> textProperties = new HashMap<>();
