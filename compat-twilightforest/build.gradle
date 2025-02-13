@@ -1,0 +1,35 @@
+plugins {
+    id 'net.neoforged.gradle.userdev' version '7.0.170'
+}
+
+archivesBaseName = "${mod_id}-neoforge"
+
+runs {
+    configureEach { run ->
+//        run.modSource sourceSets.main
+        run.setShouldExportToIDE(false)
+    }
+}
+
+
+//sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neoforge_version}"
+
+    compileOnly project(':api')
+    api group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version, changing:
+            true
+    implementation "team-twilight:twilightforest:${twilightforest_version}:universal"
+
+}
+
+processResources {
+
+    def buildProps = project.properties.clone()
+
+    filesMatching(['pack.mcmeta']) {
+
+        expand buildProps
+    }
+}

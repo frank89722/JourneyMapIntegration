@@ -13,16 +13,19 @@ runs {
         systemProperty 'forge.logging.console.level', 'debug'
 
         modSource project.sourceSets.main
+//        modSource project(":compat-ftbchunks").sourceSets.main
     }
 
     client {
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
 //        programArguments = ['--username', 'Dev###']
+        client()
     }
 
     server {
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         programArgument '--nogui'
+        server()
     }
 }
 
@@ -46,6 +49,9 @@ dependencies {
     implementation "maven.modrinth:balm:${project.balm_neoforge_version}"
     implementation "maven.modrinth:waystones:${project.waystones_neoforge_version}"
 
+    compileOnly project(':compat-twilightforest')
+    implementation "team-twilight:twilightforest:${twilightforest_version}:universal"
+
     api group: 'info.journeymap', name: 'journeymap-api-neoforge', version: project.journeymap_api_version, changing:
             true
     implementation "maven.modrinth:journeymap:${project.jm_neoforge_version}"
@@ -60,6 +66,7 @@ tasks.withType(JavaCompile).configureEach {
     source(project(":api").sourceSets.main.allSource)
     source(project(":compat-waystones").sourceSets.main.allSource)
     source(project(":compat-ftbchunks").sourceSets.main.allSource)
+    source(project(":compat-twilightforest").sourceSets.main.allSource)
 }
 
 processResources {
@@ -67,6 +74,7 @@ processResources {
     from project(":api").sourceSets.main.resources
     from project(":compat-waystones").sourceSets.main.resources
     from project(":compat-ftbchunks").sourceSets.main.resources
+    from project(":compat-twilightforest").sourceSets.main.resources
 }
 
 jar {
