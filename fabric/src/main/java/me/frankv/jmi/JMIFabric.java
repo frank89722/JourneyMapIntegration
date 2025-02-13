@@ -3,8 +3,8 @@ package me.frankv.jmi;
 import journeymap.api.v2.client.fullscreen.IFullscreen;
 import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.event.JMIEventBus;
-import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.config.FabricClientConfig;
+import me.frankv.jmi.config.FiberUtils;
 import me.frankv.jmi.jmdefaultconfig.JMDefaultConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -14,14 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 
 public class JMIFabric implements ClientModInitializer {
-    public static final ClientConfig CLIENT_CONFIG = FabricClientConfig.loadConfig();
-
-    @Override
-    public void onInitializeClient() {
-        JMI.init(CLIENT_CONFIG);
-        new JMDefaultConfig().tryWriteJMDefaultConfig();
-        registerEvent();
-    }
+    public final static FabricClientConfig CLIENT_CONFIG = new FabricClientConfig();
 
     private static void registerEvent() {
         var eventBus = JMI.getJmiEventBus();
@@ -38,6 +31,14 @@ public class JMIFabric implements ClientModInitializer {
 
         ScreenEvents.afterRender(screen).register((screenE, stack, mouseX, mouseY, tickDelta) ->
                 eventBus.sendEvent(new Event.ScreenDraw(screen, stack)));
+    }
+
+    @Override
+    public void onInitializeClient() {
+        FiberUtils.setup(CLIENT_CONFIG.getConfigTree(), FabricClientConfig.fileName);
+        JMI.init(CLIENT_CONFIG);
+        new JMDefaultConfig().tryWriteJMDefaultConfig();
+        registerEvent();
     }
 
 }

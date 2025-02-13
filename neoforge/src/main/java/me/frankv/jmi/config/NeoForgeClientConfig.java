@@ -34,7 +34,8 @@ public class NeoForgeClientConfig implements ClientConfig {
         builder.pop();
 
         builder.push("WaypointMessage");
-        waypointMessageBlocks = builder.comment("List of block id and tags for WaypointMessage. e.g., [\"#forge:ores/diamond\", \"minecraft:diamond_block\"]").defineList("waypointMessageBlocks", ArrayList::new, l -> l instanceof String);
+        waypointMessageBlocks = builder.comment("List of block id and tags for WaypointMessage. e.g., [\"#forge:ores/diamond\", \"minecraft:diamond_block\"]")
+                .defineList("waypointMessageBlocks", ArrayList::new, l -> l instanceof String);
         waypointMessageEmptyHandOnly = builder.define("emptyHandOnly", true);
         builder.pop();
 
