@@ -35,4 +35,5 @@ include 'neoforge'
 include 'api'
 include 'compat-ftbchunks'
 include 'compat-waystones'
+include 'compat-twilightforest'
 
