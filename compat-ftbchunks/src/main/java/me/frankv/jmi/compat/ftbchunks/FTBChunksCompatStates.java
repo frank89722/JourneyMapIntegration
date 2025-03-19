@@ -37,8 +37,8 @@ public class FTBChunksCompatStates {
 
     public ShapeProperties getShapeProps(ClientTeam team, float opacity) {
         return shapeProperties.computeIfAbsent(team.getTeamId(), __ -> new ShapeProperties()
-                .setStrokeWidth(0f)
-                .setStrokeOpacity(0f)
+                .setStrokeWidth(1.5f)
+                .setStrokeOpacity(.75f)
                 .setStrokeColor(team.getColor())
                 .setFillColor(team.getColor())
                 .setFillOpacity(opacity));

@@ -1,18 +1,24 @@
 package me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay;
 
+import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
+import dev.ftb.mods.ftbteams.data.ClientTeam;
 import journeymap.api.v2.client.display.IOverlayListener;
 import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.fullscreen.ModPopupMenu;
 import journeymap.api.v2.client.util.UIState;
 import lombok.extern.slf4j.Slf4j;
+import me.frankv.jmi.compat.ftbchunks.ClaimedChunk;
 import me.frankv.jmi.compat.ftbchunks.FTBChunksCompatStates;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
 
 import java.awt.geom.Point2D;
+import java.util.Optional;
 
 @Slf4j
 public record ClaimedChunkOverlayListener(FTBChunksCompatStates states,
                                           PolygonOverlay overlay) implements IOverlayListener {
+
 
     @Override
     public void onActivate(UIState mapState) {
@@ -26,16 +32,16 @@ public record ClaimedChunkOverlayListener(FTBChunksCompatStates states,
 
     @Override
     public void onMouseMove(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
-//        var chunkDimPos = new ChunkDimPos(mapState.dimension, new ChunkPos(blockPosition));
-//
-//        var teamId = Optional.ofNullable(states.getChunkData().get(chunkDimPos))
-//                .flatMap(FTBClaimedChunkData::getTeam)
-//                .map(ClientTeam::getTeamId)
-//                .orElse(null);
-//
-//        Optional.ofNullable(states.getTextProperties().get(teamId))
-//                .ifPresentOrElse(o -> o.setMinZoom(250),
-//                        () -> overlay.getTextProperties().setMinZoom(Integer.MAX_VALUE));
+        var chunkDimPos = new ChunkDimPos(mapState.dimension, new ChunkPos(blockPosition));
+
+        var teamId = Optional.ofNullable(states.getChunkData().get(chunkDimPos))
+                .flatMap(ClaimedChunk::getTeam)
+                .map(ClientTeam::getTeamId)
+                .orElse(null);
+
+        Optional.ofNullable(states.getTextProperties().get(teamId))
+                .ifPresentOrElse(o -> o.setMinZoom(250),
+                        () -> overlay.getTextProperties().setMinZoom(Integer.MAX_VALUE));
     }
 
     @Override

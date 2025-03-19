@@ -154,7 +154,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
                 overlay.setOverlayGroupName("Claimed Chunks")
                         .setLabel(team.getDisplayName())
 //                        .setTitle(team.getDisplayName())
-                        .setOverlayListener(new ClaimedChunkOverlayListener(states, overlay))
+//                        .setOverlayListener(new ClaimedChunkOverlayListener(states, overlay))
                         .setTextProperties(states.getTextProps(team));
 
                 overlays.computeIfAbsent(teamId, k -> new HashSet<>()).add(new PolygonWrapper(overlay));
@@ -228,8 +228,8 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
                 .orElse(Collections.emptySet())
                 .forEach(overlay -> {
                     overlay.polygon()
+//                            .setTitle(clientTeam.getDisplayName())
                             .setLabel(clientTeam.getDisplayName());
-//                            .setTitle(clientTeam.getDisplayName()));
                     removeOverlay(overlay.polygon());
                     showOverlay(overlay.polygon());
                 });
