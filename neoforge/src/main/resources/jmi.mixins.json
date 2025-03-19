@@ -4,6 +4,7 @@
   "refmap": "jmi.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "MagicMapPacketMixin",
     "UpdateFromServerTaskMixin"
   ],
   "injectors": {
