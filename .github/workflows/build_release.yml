@@ -30,7 +30,7 @@ jobs:
         id: build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean jar curseforge modrinth --stacktrace --no-daemon
+          arguments: clean build curseforge modrinth --stacktrace --no-daemon
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
           CF_TOKEN: ${{ secrets.CF_TOKEN }}
