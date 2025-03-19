@@ -39,10 +39,10 @@ public class FabricClientConfig implements ClientConfig {
                 .finishValue(ftbChunks::mirror)
 
                 .beginValue("claimedChunkOverlayOpacity", ConfigTypes.DOUBLE.withMinimum(0d).withMaximum(1.0d),
-                        0.222223d)
+                        0.175)
                 .withComment("""
                         
-                        Range: 0 ~ 1.0, Default: 0.222223d
+                        Range: 0 ~ 1.0, Default: 0.175
                         """)
                 .finishValue(claimedChunkOverlayOpacity::mirror)
 
