@@ -30,7 +30,7 @@ public enum ClaimingMode implements ToggleableOverlay {
     @Getter
     private final Set<ChunkPos> area = new HashSet<>();
     @Getter
-    private final String buttonLabel = "FTBChunks Claiming Mode";
+    private final String buttonLabel = "jmi.toggleable_overlay.ftbchunks.claiming_mode";
     @Getter
     private final int order = 0;
     @Getter

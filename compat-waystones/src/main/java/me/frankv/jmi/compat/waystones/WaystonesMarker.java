@@ -26,23 +26,18 @@ import java.util.*;
 public enum WaystonesMarker implements ToggleableOverlay {
     INSTANCE;
 
-    private IClientAPI jmAPI;
     private final Minecraft mc = Minecraft.getInstance();
-
-    private ClientConfig clientConfig;
-
     @Getter
-    private boolean activated = true;
-
-    @Getter
-    private final String buttonLabel = "Waystones Overlay";
+    private final String buttonLabel = "jmi.toggleable_overlay.waystones";
     @Getter
     private final int order = 2;
-
     @Getter
     private final Map<ResourceLocation, Set<WaystoneMeta>> waystones = new HashMap<>();
     private final HashMap<WaystoneMeta, MarkerOverlay> markers = new HashMap<>();
-
+    private IClientAPI jmAPI;
+    private ClientConfig clientConfig;
+    @Getter
+    private boolean activated = true;
 
     public void init(IClientAPI jmAPI, ClientConfig clientConfig) {
         this.jmAPI = jmAPI;

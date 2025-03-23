@@ -41,7 +41,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     @Getter
     private final int order = 1;
     @Getter
-    private final String buttonLabel = "FTBChunks Overlay";
+    private final String buttonLabel = "jmi.toggleable_overlay.ftbchunks";
     private ClientConfig clientConfig;
     @Getter
     private boolean activated = true;

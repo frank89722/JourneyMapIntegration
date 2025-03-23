@@ -1,3 +1,6 @@
 {
-  "jmi.infoslot.ftbchunks": "FTBChunks Info"
+  "jmi.infoslot.ftbchunks": "FTBChunks ",
+  "jmi.toggleable_overlay.ftbchunks": "FTBChunks Overlay",
+  "jmi.toggleable_overlay.waystones": "Waystones Overlay",
+  "jmi.toggleable_overlay.ftbchunks.claiming_mode": "FTBChunks Claiming"
 }
