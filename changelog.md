@@ -5,4 +5,5 @@
 
 ### Changes:
 
-- [FTBChunks] Add stroke to claimed chunk overlay and make it more transparent
+- Make the text on the theme buttons translatable
+- Add zh_tw translation
