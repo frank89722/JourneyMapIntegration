@@ -47,6 +47,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
 
     private void createMarker(WaystoneMeta waystone) {
         final var marker = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "images/waystone.png");
+        log.info(marker.toString());
         final var icon = new MapImage(marker, 32, 32)
                 .setAnchorX(16.0d)
                 .setAnchorY(38.0d)
