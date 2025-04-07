@@ -5,5 +5,4 @@
 
 ### Changes:
 
-- Make the text on the theme buttons translatable
-- Add zh_tw translation
+- Fix Waystones marker not removing after the waystone is broken.
