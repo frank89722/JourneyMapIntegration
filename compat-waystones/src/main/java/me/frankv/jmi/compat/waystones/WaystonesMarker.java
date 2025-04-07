@@ -105,7 +105,9 @@ public enum WaystonesMarker implements ToggleableOverlay {
     public void onJMMapping(Event.JMMappingEvent event) {
         switch (event.mappingEvent().getStage()) {
             case MAPPING_STARTED -> {
-                createMarkersOnMappingStarted();
+                if (!event.firstLogin()) {
+                    createMarkersOnMappingStarted();
+                }
                 log.debug("re-added waystones overlays");
             }
 

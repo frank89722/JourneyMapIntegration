@@ -33,6 +33,7 @@ public class JMIJourneyMapPlugin implements IClientPlugin {
         overlayFactory = new ModCompatFactory(jmAPI, JMI.getClientConfig(), JMI.getJmiEventBus());
         OverlayHelper.setJmAPI(jmAPI);
         JMI.getJmiEventBus().subscribe(Event.JMMappingEvent.class, this::onJMMapping);
+        JMI.getJmiEventBus().subscribe(Event.ResetDataEvent.class, e -> jmAPI.removeAll(Constants.MOD_ID));
 
         log.info("Initialized {}", getClass().getName());
     }
