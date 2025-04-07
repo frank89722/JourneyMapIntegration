@@ -24,9 +24,9 @@ dependencies {
     modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version, changing: true
 
     modCompileOnly "dev.architectury:architectury-fabric:${project.architectury_version}"
-    modCompileOnly "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
-    modCompileOnly "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
-    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
+    modCompileOnly "curse.maven:ftb-library-fabric-438495:6304124"
+    modCompileOnly "curse.maven:ftb-teams-fabric-438497:6119436"
+    modCompileOnly "curse.maven:ftb-chunks-fabric-472657:6295697"
 
 }
 

@@ -38,9 +38,9 @@ dependencies {
     implementation "dev.architectury:architectury-neoforge:${project.architectury_version}"
 
     compileOnly project(':compat-ftbchunks')
-    implementation "dev.ftb.mods:ftb-library-neoforge:${project.ftb_library_version}"
-    implementation "dev.ftb.mods:ftb-teams-neoforge:${project.ftb_teams_version}"
-    implementation "dev.ftb.mods:ftb-chunks-neoforge:${project.ftb_chunks_version}"
+    implementation "curse.maven:ftb-library-forge-404465:6304123"
+    implementation "curse.maven:ftb-teams-forge-404468:6119437"
+    implementation "curse.maven:ftb-chunks-forge-314906:6295696"
 
     compileOnly project(':compat-waystones')
     implementation "maven.modrinth:balm:${project.balm_neoforge_version}"
