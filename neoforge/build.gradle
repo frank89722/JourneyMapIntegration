@@ -49,7 +49,6 @@ dependencies {
     api group: 'info.journeymap', name: 'journeymap-api-neoforge', version: project.journeymap_api_version, changing:
             true
     implementation "maven.modrinth:journeymap:${project.jm_neoforge_version}"
-//    implementation files("lib/journeymap-neoforge-1.21.1-6.0.0-beta.37.jar")
 
 }
 
