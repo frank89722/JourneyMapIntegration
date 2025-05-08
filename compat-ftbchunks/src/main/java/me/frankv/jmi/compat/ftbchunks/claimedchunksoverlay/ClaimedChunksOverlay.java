@@ -19,6 +19,7 @@ import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
 import me.frankv.jmi.compat.ftbchunks.ClaimedChunk;
 import me.frankv.jmi.compat.ftbchunks.FTBChunksCompatStates;
+import me.frankv.jmi.compat.ftbchunks.OverlayUtil;
 import me.frankv.jmi.compat.ftbchunks.PolygonWrapper;
 import me.frankv.jmi.compat.ftbchunks.claimingmode.ClaimingMode;
 import me.frankv.jmi.util.OverlayHelper;
@@ -220,7 +221,12 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
         var nameChanged = !Objects.equals(oldName, team.getName().getString());
 
         Optional.ofNullable(states.getShapeProperties().get(team.getTeamId()))
-                .ifPresent(prop -> prop.setFillColor(clientTeam.getColor()));
+                .ifPresent(prop ->
+                        prop.setFillColor(clientTeam.getColor()).setStrokeColor(clientTeam.getColor()));
+       
+        Optional.ofNullable(states.getTextProperties().get(team.getTeamId()))
+                .ifPresent(prop -> prop.setColor(OverlayUtil.getTeamTextColor(clientTeam)));
+
         if (!nameChanged) return;
 
         Optional.ofNullable(states.getTeamOverlays().get(team.getTeamId()))
