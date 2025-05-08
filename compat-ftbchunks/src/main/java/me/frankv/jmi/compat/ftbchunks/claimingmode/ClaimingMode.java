@@ -1,16 +1,24 @@
 package me.frankv.jmi.compat.ftbchunks.claimingmode;
 
+import dev.ftb.mods.ftbchunks.FTBChunks;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftblibrary.math.XZ;
+import dev.ftb.mods.ftbteams.data.AbstractTeamBase;
+import journeymap.api.v2.client.display.Overlay;
 import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.fullscreen.IFullscreen;
 import journeymap.api.v2.client.fullscreen.IThemeButton;
 import journeymap.api.v2.client.model.ShapeProperties;
+import journeymap.api.v2.client.model.TextProperties;
 import journeymap.api.v2.client.util.PolygonHelper;
 import lombok.Getter;
 import me.frankv.jmi.Constants;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
+import me.frankv.jmi.compat.ftbchunks.ClaimedChunk;
+import me.frankv.jmi.compat.ftbchunks.FTBChunksCompatStates;
+import me.frankv.jmi.compat.ftbchunks.OverlayUtil;
 import me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay.ClaimedChunksOverlay;
+import me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay.ForceLoadedChunkOverlayListener;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -55,21 +63,33 @@ public enum ClaimingMode implements ToggleableOverlay {
                 .setStrokeWidth(0)
                 .setFillColor(0xffffff).setFillOpacity(.3f);
 
-        final var polygon = PolygonHelper.createChunkPolygon(xz.x(), 10, xz.z());
+        final var polygon = PolygonHelper.createChunkPolygon(xz.x(), 15, xz.z());
 
         return new PolygonOverlay(Constants.MOD_ID, player.clientLevel.dimension(), shapeProps, polygon);
     }
 
-    public PolygonOverlay forceLoadedPolygon(ChunkDimPos pos) {
-        final var player = Minecraft.getInstance().player;
-
+    public Overlay forceLoadedPolygon(ChunkDimPos pos, ClaimedChunk data, FTBChunksCompatStates states) {
+        final var marker = ResourceLocation.fromNamespaceAndPath(FTBChunks.MOD_ID, "textures/force_loaded.png");
         final var shapeProps = new ShapeProperties()
-                .setStrokeWidth(2).setStrokeColor(0xff0000)
-                .setFillOpacity(0f);
+                .setStrokeWidth(0)
+                .setImageLocation(marker)
+                .setTextureScaleX(.5f).setTextureScaleY(.5f)
+                .setFillColor(0xFF5555)
+                .setFillOpacity(1f);
+        final var textProps = data.getTeam()
+                .map(team -> new TextProperties()
+                        .setColor(OverlayUtil.getTeamTextColor(team)))
+                .orElseGet(TextProperties::new);
 
-        final var polygon = PolygonHelper.createChunkPolygon(pos.x(), 10, pos.z());
+        final var polygon = PolygonHelper.createChunkPolygon(pos.x(), 100, pos.z());
+        final var title = String.format("%s\nForce loaded", data.getTeam()
+                .map(AbstractTeamBase::getDisplayName)
+                .orElse("Unknown"));
 
-        return new PolygonOverlay(Constants.MOD_ID, player.clientLevel.dimension(), shapeProps, polygon);
+        return new PolygonOverlay(Constants.MOD_ID, pos.dimension(), shapeProps, polygon)
+                .setOverlayListener(new ForceLoadedChunkOverlayListener(states, data))
+                .setTextProperties(textProps)
+                .setTitle(title);
     }
 
     private void createClaimingAreaOverlays() {

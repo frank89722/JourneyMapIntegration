@@ -2,7 +2,7 @@ package me.frankv.jmi.compat.ftbchunks;
 
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
 import dev.ftb.mods.ftbteams.data.ClientTeam;
-import journeymap.api.v2.client.display.PolygonOverlay;
+import journeymap.api.v2.client.display.Overlay;
 import journeymap.api.v2.client.model.ShapeProperties;
 import journeymap.api.v2.client.model.TextProperties;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class FTBChunksCompatStates {
     private final Map<ChunkDimPos, ClaimedChunk> chunkData = new HashMap<>();
-    private final Map<ChunkDimPos, PolygonOverlay> forceLoadedOverlays = new HashMap<>();
+    private final Map<ChunkDimPos, Overlay> forceLoadedOverlays = new HashMap<>();
     private final Map<UUID, ShapeProperties> shapeProperties = new HashMap<>();
     private final Map<UUID, TextProperties> textProperties = new HashMap<>();
     private final Map<UUID, Set<PolygonWrapper>> teamOverlays = new HashMap<>();
@@ -46,7 +46,7 @@ public class FTBChunksCompatStates {
 
     public TextProperties getTextProps(ClientTeam team) {
         return textProperties.computeIfAbsent(team.getTeamId(), __ -> new TextProperties()
-                .setBackgroundColor(team.getColor() << 2)
+                .setColor(OverlayUtil.getTeamTextColor(team))
                 .setMinZoom(250)
                 .setFontShadow(true));
     }

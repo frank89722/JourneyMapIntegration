@@ -1,31 +1,20 @@
 package me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay;
 
-import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
-import dev.ftb.mods.ftbteams.data.ClientTeam;
 import journeymap.api.v2.client.display.IOverlayListener;
-import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.fullscreen.ModPopupMenu;
 import journeymap.api.v2.client.util.UIState;
-import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.compat.ftbchunks.ClaimedChunk;
 import me.frankv.jmi.compat.ftbchunks.FTBChunksCompatStates;
 import me.frankv.jmi.compat.ftbchunks.OverlayUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ChunkPos;
 
 import java.awt.geom.Point2D;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
-@Slf4j
-public record ClaimedChunkOverlayListener(
-        UUID teamId,
+public record ForceLoadedChunkOverlayListener(
         FTBChunksCompatStates states,
-        PolygonOverlay overlay
-
+        ClaimedChunk data
 ) implements IOverlayListener {
-
 
     @Override
     public void onActivate(UIState mapState) {
@@ -39,21 +28,15 @@ public record ClaimedChunkOverlayListener(
 
     @Override
     public void onMouseMove(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
-        var chunkDimPos = new ChunkDimPos(mapState.dimension, new ChunkPos(blockPosition));
+        Optional.ofNullable(states.getTextProperties().get(data.teamId()))
+                .ifPresent(OverlayUtil::disableTextForTextProps);
 
-        Optional.ofNullable(states.getChunkData().get(chunkDimPos))
-                .flatMap(ClaimedChunk::getTeam)
-                .map(ClientTeam::getTeamId)
-                // Make sure the teamId we get from chunkDimPos is the same with the teamId of this overlay
-                .filter(teamId -> Objects.equals(teamId, this.teamId))
-                .map(teamId -> states.getTextProperties().get(teamId))
-                .ifPresentOrElse(OverlayUtil::enableTextForTextProps,
-                        () -> OverlayUtil.disableTextForTextProps(overlay.getTextProperties()));
     }
 
     @Override
     public void onMouseOut(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
-
+        Optional.ofNullable(states.getTextProperties().get(data.teamId()))
+                .ifPresent(OverlayUtil::enableTextForTextProps);
     }
 
     @Override
@@ -66,3 +49,4 @@ public record ClaimedChunkOverlayListener(
 
     }
 }
+

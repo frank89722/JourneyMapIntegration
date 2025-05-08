@@ -71,7 +71,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
         var modifiedTeamIds = new HashSet<UUID>();
 
         for (var data : queue) {
-            if (data.getTeam().isEmpty()) {
+            if (data.getTeam().isEmpty()) {  // When a team of data is empty means this action is unclaiming
                 var removed = states.getChunkData().remove(data.chunkDimPos());
                 Optional.ofNullable(removed).ifPresentOrElse(o -> modifiedTeamIds.add(o.teamId()),
                         () -> log.warn("Failed to remove an unknown claimed chunk. dim: {}, chunk: {}, player_dim: {}",
@@ -152,9 +152,8 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
                         polygon);
 
                 overlay.setOverlayGroupName("Claimed Chunks")
-                        .setLabel(team.getDisplayName())
-//                        .setTitle(team.getDisplayName())
-//                        .setOverlayListener(new ClaimedChunkOverlayListener(states, overlay))
+                        .setTitle(team.getDisplayName())
+                        .setOverlayListener(new ClaimedChunkOverlayListener(teamId, states, overlay))
                         .setTextProperties(states.getTextProps(team));
 
                 overlays.computeIfAbsent(teamId, k -> new HashSet<>()).add(new PolygonWrapper(overlay));
@@ -200,10 +199,10 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
 
     private void showForceLoaded(ChunkDimPos chunkDimPos, boolean show) {
         if (!states.getChunkData().containsKey(chunkDimPos)) return;
-        final var data = states.getChunkData().get(chunkDimPos);
+        var data = states.getChunkData().get(chunkDimPos);
 
         if (show && data.forceLoaded() && !states.getForceLoadedOverlays().containsKey(chunkDimPos)) {
-            final var claimedOverlay = ClaimingMode.INSTANCE.forceLoadedPolygon(chunkDimPos);
+            var claimedOverlay = ClaimingMode.INSTANCE.forceLoadedPolygon(chunkDimPos, data, states);
             showOverlay(claimedOverlay);
             states.getForceLoadedOverlays().put(chunkDimPos, claimedOverlay);
         } else if (!show && states.getForceLoadedOverlays().containsKey(chunkDimPos)) {
@@ -228,8 +227,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
                 .orElse(Collections.emptySet())
                 .forEach(overlay -> {
                     overlay.polygon()
-//                            .setTitle(clientTeam.getDisplayName())
-                            .setLabel(clientTeam.getDisplayName());
+                            .setTitle(clientTeam.getDisplayName());
                     removeOverlay(overlay.polygon());
                     showOverlay(overlay.polygon());
                 });
