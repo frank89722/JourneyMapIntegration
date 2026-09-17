@@ -1,6 +1,7 @@
 package me.frankv.jmi.mixin;
 
-import me.frankv.jmi.waypointmessage.WaypointChatMessage;
+import me.frankv.jmi.JMI;
+import me.frankv.jmi.api.event.Event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.world.phys.BlockHitResult;
@@ -21,8 +22,10 @@ public class MouseHandlerMixin {
         final var hitResult = mc.hitResult;
 
         if (mc.player == null || hitResult == null || hitResult.getType() != HitResult.Type.BLOCK) return;
+        if (JMI.getJmiEventBus() == null) return;
 
-        WaypointChatMessage.onRightClickOnBlock(((BlockHitResult)mc.hitResult).getBlockPos(), mc.player.getMainHandItem());
+        JMI.getJmiEventBus().sendEvent(
+                new Event.PlayerInteract(((BlockHitResult) hitResult).getBlockPos(), mc.player.getMainHandItem()));
     }
 
 }

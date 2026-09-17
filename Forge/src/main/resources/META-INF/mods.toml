@@ -8,7 +8,7 @@ version="${file.jarVersion}"
 displayName="JourneyMap Integration"
 #updateJSONURL="https://change.me.example.invalid/updates.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/journeymap-integration"
-logoFile="logo.png"
+logoFile="assets/jmi/logo.png"
 #credits="Thanks for this example mod goes to Java"
 authors="frankV"
 description='''
@@ -31,14 +31,14 @@ The mod that adds mod integration for JourneyMap.
 [[dependencies.jmi]]
     modId="journeymap"
     mandatory=true
-    versionRange="[5.8,)"
+    versionRange="[1.20.1-6.0.0,)"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.jmi]]
     modId="ftbchunks"
     mandatory=false
-    versionRange="[2001.1.3,)"
+    versionRange="[2001.3.0,)"
     ordering="NONE"
     side="CLIENT"
 

@@ -1,1 +1,5 @@
-- Fix FTBChunks info slot setting got reset after game restart
+- Port to JourneyMap 6 / JourneyMap API 2.0.0 (requires JourneyMap 1.20.1-6.0.0 or newer)
+- [FTBChunks] Improve chunk claiming mode
+- [FTBChunks] Improve client performance by changing how overlay label renders
+- [FTBChunks] Fix overlay color does not update properly on team color changed
+- [FTBChunks] Requires FTB Chunks 2001.3.0 or newer

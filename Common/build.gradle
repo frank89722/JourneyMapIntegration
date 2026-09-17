@@ -1,14 +1,11 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom'
     id 'maven-publish'
 }
 
-archivesBaseName = "${mod_id}-common-${minecraft_version}"
+base.archivesName = "${mod_id}-common-${minecraft_version}"
 
 loom {
-    interfaceInjection {
-        enableDependencyInterfaceInjection = false
-    }
     runConfigs.configureEach {
         ideConfigGenerated = false
     }
@@ -21,15 +18,14 @@ dependencies {
 
     modCompileOnly("net.fabricmc:fabric-loader:${fabric_loader_version}")
 
-    modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_common_version, changing: true
+    modCompileOnly group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
 
     modCompileOnly "dev.architectury:architectury-fabric:${project.architectury_version}"
-    modCompileOnly "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
-    modCompileOnly "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
-    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
+    modCompileOnly "curse.maven:${project.ftb_library_fabric}"
+    modCompileOnly "curse.maven:${project.ftb_teams_fabric}"
+    modCompileOnly "curse.maven:${project.ftb_chunks_fabric}"
     modCompileOnly "maven.modrinth:balm:${project.balm_fabric_version}"
     modCompileOnly "maven.modrinth:waystones:${project.waystones_fabric_version}"
-
 }
 
 processResources {

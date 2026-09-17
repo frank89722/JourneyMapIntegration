@@ -1,9 +1,9 @@
 package me.frankv.jmi.platform;
 
-import me.frankv.jmi.platform.services.IPlatformHelper;
+import me.frankv.jmi.api.PlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
-public class FabricPlatformHelper implements IPlatformHelper {
+public class FabricPlatformHelper implements PlatformHelper {
 
     @Override
     public String getPlatformName() {
@@ -12,13 +12,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean isModLoaded(String modId) {
-
         return FabricLoader.getInstance().isModLoaded(modId);
     }
 
     @Override
     public boolean isDevelopmentEnvironment() {
-
         return FabricLoader.getInstance().isDevelopmentEnvironment();
     }
 }
