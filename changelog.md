@@ -3,3 +3,4 @@
 - [FTBChunks] Improve client performance by changing how overlay label renders
 - [FTBChunks] Fix overlay color does not update properly on team color changed
 - [FTBChunks] Requires FTB Chunks 2001.3.0 or newer
+- [FTBChunks] Rebuild only the claim regions that changed, compute polygons off the render thread, and keep them cached per dimension
