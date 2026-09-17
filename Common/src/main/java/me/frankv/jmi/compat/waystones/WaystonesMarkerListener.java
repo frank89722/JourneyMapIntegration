@@ -25,7 +25,7 @@ public class WaystonesMarkerListener implements IOverlayListener {
     @Override
     public boolean onMouseClick(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition, int button, boolean doubleClick) {
         if (button == 1) {
-            return false;
+            return true;
         }
 
         var alreadyCreated = jmAPI.getWaypoints(Constants.MOD_ID).stream()

@@ -26,9 +26,4 @@ public record ForceLoadedChunkOverlayListener(
         Optional.ofNullable(states.getTextProperties().get(data.teamId()))
                 .ifPresent(OverlayUtil::enableTextForTextProps);
     }
-
-    @Override
-    public boolean onMouseClick(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition, int button, boolean doubleClick) {
-        return false;
-    }
 }
