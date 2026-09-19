@@ -57,7 +57,7 @@ subprojects {
         }
 
         maven {
-            url "https://jm.gserv.me/repository/maven-public/"
+            url "https://maven.blamejared.com"
             content {
                 includeGroup "info.journeymap"
             }
