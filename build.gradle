@@ -1,25 +1,37 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT' apply false
+    id 'fabric-loom' version '1.17-SNAPSHOT' apply false
+}
+
+configurations.configureEach {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 subprojects {
-    apply plugin: 'java'
-    
+    apply plugin: 'java-library'
+
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     def ENV = System.getenv()
     version = "${minecraft_version}-${base_version}-${ENV.GITHUB_RUN_NUMBER ?: 'dev'}"
 
     repositories {
-        mavenCentral()
+        mavenCentral {
+            content {
+                excludeGroupByRegex "org\\.lwjgl"
+            }
+        }
+        mavenLocal {
+            content {
+                includeGroup "info.journeymap"
+                includeGroup "mysticdrew"
+            }
+        }
 
         maven {
             name = 'Sponge / Mixin'
             url = 'https://repo.spongepowered.org/repository/maven-public/'
-        }
-
-        maven {
-            name = 'BlameJared Maven (CrT / Bookshelf)'
-            url = 'https://maven.blamejared.com'
+            content {
+                includeGroupAndSubgroups "org.spongepowered"
+            }
         }
 
         maven {
@@ -40,19 +52,12 @@ subprojects {
         maven {
             url "https://maven.architectury.dev"
             content {
+                includeGroup "dev.architectury"
             }
         }
 
         maven {
-            url "https://maven.saps.dev/minecraft"
-            content {
-                includeGroup "dev.latvian.mods"
-                includeGroup "dev.ftb.mods"
-            }
-        }
-
-        maven {
-            url "https://jm.gserv.me/repository/maven-public/"
+            url "https://maven.blamejared.com"
             content {
                 includeGroup "info.journeymap"
             }
@@ -67,16 +72,24 @@ subprojects {
     }
 
     tasks.withType(JavaCompile).configureEach {
-    
         it.options.encoding = 'UTF-8'
         it.options.release = 17
+    }
+
+    tasks.configureEach { task ->
+        if (task instanceof Copy || task instanceof AbstractArchiveTask) {
+            task.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
     }
 
     // Disables Gradle's custom module metadata from being published to maven. The
     // metadata includes mapped dependencies which are not reasonably consumable by
     // other mod developers.
     tasks.withType(GenerateModuleMetadata) {
-
         enabled = false
+    }
+
+    tasks.withType(Test).configureEach {
+        failOnNoDiscoveredTests = false
     }
 }

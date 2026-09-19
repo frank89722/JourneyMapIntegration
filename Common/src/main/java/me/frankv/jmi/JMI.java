@@ -1,31 +1,53 @@
 package me.frankv.jmi;
 
-import me.frankv.jmi.config.IClientConfig;
-import me.frankv.jmi.platform.Services;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import me.frankv.jmi.api.event.Event;
+import me.frankv.jmi.api.event.JMIEventBus;
+import me.frankv.jmi.api.jmoverlay.ClientConfig;
+import me.frankv.jmi.util.OverlayHelper;
+import me.frankv.jmi.waypointmessage.WaypointChatMessage;
+import net.minecraft.client.Minecraft;
 
+@Slf4j
 public class JMI {
+    @Getter
+    private static JMIEventBus jmiEventBus;
+    @Getter
+    private static ClientConfig clientConfig;
 
-    public static final String MOD_ID = "jmi";
-    public static final String MOD_NAME = "JourneyMap Integration";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    private static final Minecraft mc = Minecraft.getInstance();
 
-    public static boolean waystones;
-    public static boolean ftbchunks;
+    @Getter
+    @Setter
+    private static boolean haveDim = false;
+    @Getter
+    @Setter
+    private static boolean firstLogin = false;
 
-    public static IPlatformEventListener platformEventListener;
-    public static IClientConfig clientConfig;
-
-    public static void init(IClientConfig clientConfig, IPlatformEventListener platformEventListener) {
+    public static void init(ClientConfig clientConfig) {
         JMI.clientConfig = clientConfig;
-        JMI.platformEventListener = platformEventListener;
+        jmiEventBus = new JMIEventBus();
+        jmiEventBus.subscribe(Event.ClientTick.class, e -> onClientTick());
+        jmiEventBus.subscribe(Event.JMMappingEvent.class, OverlayHelper::onJMMapping);
+        jmiEventBus.subscribe(Event.PlayerInteract.class, e -> WaypointChatMessage.onRightClickOnBlock(e.pos(), e.itemStack()));
+    }
 
-        waystones = Services.PLATFORM.isModLoaded("waystones");
-        ftbchunks = Services.PLATFORM.isModLoaded("ftbchunks");
+    private static void onClientTick() {
+        if (mc.level == null) {
+            if (haveDim) {
+                haveDim = false;
+                jmiEventBus.sendEvent(new Event.ResetDataEvent());
+                log.debug("all data cleared");
+            }
+            return;
+        }
 
-        if (ftbchunks) LOGGER.info("FTBChunks integration loaded.");
-        if (waystones) LOGGER.info("Waystones integration loaded.");
+        if (!haveDim) {
+            firstLogin = true;
+            haveDim = true;
+        }
     }
 
 }

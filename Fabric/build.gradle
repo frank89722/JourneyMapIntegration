@@ -1,12 +1,14 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom'
     id 'maven-publish'
     id 'idea'
-    id 'io.github.CDAGaming.cursegradle' version '1.+'
+    id 'net.darkhax.curseforgegradle' version '1.1.28'
     id "com.modrinth.minotaur" version "2.+"
 }
 
-archivesBaseName = "${mod_id}-fabric"
+base.archivesName = "${mod_id}-fabric"
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -16,18 +18,22 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     implementation project(path: ':Common', configuration: 'namedElements')
 
-    modApi group: 'info.journeymap', name: 'journeymap-api', version: project.journeymap_api_fabric_version, changing: true
+    modApi group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
     modRuntimeOnly "maven.modrinth:journeymap:${project.jm_fabric_version}"
+    modRuntimeOnly "maven.modrinth:common-network:${project.common_network_fabric_version}"
 
     modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
-    modImplementation "dev.ftb.mods:ftb-library-fabric:${project.ftb_library_version}"
-    modImplementation "dev.ftb.mods:ftb-teams-fabric:${project.ftb_teams_version}"
-    modImplementation "dev.ftb.mods:ftb-chunks-fabric:${project.ftb_chunks_version}"
+    modImplementation "curse.maven:${project.ftb_library_fabric}"
+    modImplementation "curse.maven:${project.ftb_teams_fabric}"
+    modImplementation "curse.maven:${project.ftb_chunks_fabric}"
     modImplementation "maven.modrinth:balm:${project.balm_fabric_version}"
     modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 }
 
 loom {
+    mixin {
+        useLegacyMixinAp = false
+    }
     runs {
         client {
             client()
@@ -44,7 +50,6 @@ loom {
     }
 }
 
-
 processResources {
     from project(":Common").sourceSets.main.resources
     inputs.property "version", project.version
@@ -54,12 +59,12 @@ processResources {
     }
 }
 
-tasks.withType(JavaCompile) {
+tasks.named("compileJava", JavaCompile) {
     source(project(":Common").sourceSets.main.allSource)
 }
 
 jar {
-    from("LICENSE") {
+    from(rootProject.file("LICENSE")) {
         rename { "${it}_${mod_name}" }
     }
 }
@@ -68,7 +73,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
-            artifactId project.archivesBaseName
+            artifactId base.archivesName.get()
             version project.version
             from components.java
         }
@@ -83,51 +88,35 @@ publishing {
 
 def ENV = System.getenv()
 def release_title = "[Fabric] v${version}"
+def publishJar = tasks.named("remapJar")
 
-if (ENV.CF_TOKEN) {
-    curseforge {
-        apiKey = ENV.CF_TOKEN
-        project {
-            id = curse_id
-            releaseType = release_type
-            addGameVersion "Fabric"
-            addGameVersion "Quilt"
-            addGameVersion "Java 17"
-            addGameVersion "Client"
-            addGameVersion minecraft_version
-            mainArtifact(remapJar.archivePath) {
-                it.displayName = release_title
-            }
-            relations {
-                it.requiredDependency 'journeymap'
-                it.optionalDependency 'ftb-chunks-forge'
-                it.optionalDependency 'waystones'
-            }
-            changelog = rootProject.file('changelog.md')
-            changelogType = 'markdown'
-
-        }
-
-        options {
-            forgeGradleIntegration = false
-        }
-    }
+tasks.register("publishCurseForge", TaskPublishCurseForge) {
+    apiToken = ENV.CF_TOKEN ?: "notset"
+    def mainFile = upload(curse_id, publishJar)
+    mainFile.displayName = release_title
+    mainFile.releaseType = release_type
+    mainFile.addModLoader("Fabric", "Quilt")
+    mainFile.addJavaVersion("Java 17")
+    mainFile.addGameVersion(minecraft_version)
+    mainFile.addEnvironment("Client")
+    mainFile.addRequirement("journeymap")
+    mainFile.addOptional("ftb-chunks-forge", "waystones")
+    mainFile.changelogType = "markdown"
+    mainFile.changelog = rootProject.file('changelog.md')
 }
 
-if (ENV.MODRINTH_TOKEN) {
-    modrinth {
-        token = ENV.MODRINTH_TOKEN
-        projectId = modrinth_id
-        versionType = release_type
-        versionName = release_title
-        versionNumber = "${version}+fabric"
-        uploadFile = remapJar
-        gameVersions = [ minecraft_version ]
-        loaders = ["fabric", "quilt"]
-        changelog = rootProject.file('changelog.md').text
-        dependencies {
-            required.project "lfHFW1mp" // journeymap
-            optional.project "LOpKHB2A" // waystones
-        }
+modrinth {
+    token = ENV.MODRINTH_TOKEN ?: "notset"
+    projectId = modrinth_id
+    versionType = release_type
+    versionName = release_title
+    versionNumber = "${version}+fabric"
+    uploadFile = publishJar
+    gameVersions = [ minecraft_version ]
+    loaders = ["fabric", "quilt"]
+    changelog = rootProject.file('changelog.md').text
+    dependencies {
+        required.project "lfHFW1mp" // journeymap
+        optional.project "LOpKHB2A" // waystones
     }
 }
