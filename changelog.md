@@ -1,6 +1,6 @@
-- Port to JourneyMap 6 / JourneyMap API 2.0.0 (requires JourneyMap 1.20.1-6.0.0 or newer)
-- [FTBChunks] Improve chunk claiming mode
-- [FTBChunks] Improve client performance by changing how overlay label renders
-- [FTBChunks] Fix overlay color does not update properly on team color changed
-- [FTBChunks] Requires FTB Chunks 2001.3.0 or newer
-- [FTBChunks] Rebuild only the claim regions that changed, compute polygons off the render thread, and keep them cached per dimension
+- Port to JourneyMap 6 / JourneyMap API 2.0.0 (requires JourneyMap 1.20.1-6.0.0 or newer) - Mysticdrew
+- [FTBChunks] Improve chunk claiming mode - Mysticdrew
+- [FTBChunks] Improve client performance by changing how overlay label renders - Mysticdrew
+- [FTBChunks] Fix overlay color does not update properly on team color changed - Mysticdrew
+- [FTBChunks] Requires FTB Chunks 2001.3.0 or newer - Mysticdrew
+- [FTBChunks] Rebuild only the claim regions that changed, compute polygons off the render thread, and keep them cached per dimension - Mysticdrew
