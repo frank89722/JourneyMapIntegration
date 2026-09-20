@@ -3,7 +3,7 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 plugins {
     id 'net.minecraftforge.gradle' version '7.0.34'
     id 'net.minecraftforge.renamer' version '1.1.0'
-    id 'net.darkhax.curseforgegradle' version '1.1.28'
+    id 'net.darkhax.curseforgegradle' version '1.1.+'
     id "com.modrinth.minotaur" version "2.+"
     id 'maven-publish'
 }
@@ -109,7 +109,7 @@ def ENV = System.getenv()
 def release_title = "[Forge] v${version}"
 def publishJar = tasks.named("jar")
 
-tasks.register("publishCurseForge", TaskPublishCurseForge) {
+tasks.register("curseforge", TaskPublishCurseForge) {
     apiToken = ENV.CF_TOKEN ?: "notset"
     def mainFile = upload(curse_id, publishJar)
     mainFile.displayName = release_title

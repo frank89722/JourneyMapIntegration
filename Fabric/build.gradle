@@ -4,7 +4,7 @@ plugins {
     id 'fabric-loom'
     id 'maven-publish'
     id 'idea'
-    id 'net.darkhax.curseforgegradle' version '1.1.28'
+    id 'net.darkhax.curseforgegradle' version '1.1.+'
     id "com.modrinth.minotaur" version "2.+"
 }
 
@@ -90,7 +90,7 @@ def ENV = System.getenv()
 def release_title = "[Fabric] v${version}"
 def publishJar = tasks.named("remapJar")
 
-tasks.register("publishCurseForge", TaskPublishCurseForge) {
+tasks.register("curseforge", TaskPublishCurseForge) {
     apiToken = ENV.CF_TOKEN ?: "notset"
     def mainFile = upload(curse_id, publishJar)
     mainFile.displayName = release_title
