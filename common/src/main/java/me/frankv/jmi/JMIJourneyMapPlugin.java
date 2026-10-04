@@ -2,7 +2,7 @@ package me.frankv.jmi;
 
 import journeymap.api.v2.client.IClientAPI;
 import journeymap.api.v2.client.IClientPlugin;
-import journeymap.api.v2.client.JourneyMapPlugin;
+import journeymap.api.v2.common.JourneyMapPlugin;
 import journeymap.api.v2.common.event.ClientEventRegistry;
 import journeymap.api.v2.common.event.FullscreenEventRegistry;
 import lombok.Getter;

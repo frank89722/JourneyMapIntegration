@@ -1,41 +1,41 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'net.neoforged.moddev'
+    id 'multiloader-common'
 }
 
-archivesBaseName = "${mod_id}-compat-ftbchunks-${minecraft_version}"
-
-loom {
-//    interfaceInjection {
-//        enableDependencyInterfaceInjection = false
-//    }
-    runConfigs.configureEach {
-        ideConfigGenerated = false
+configurations {
+    commonJava {
+        canBeConsumed = true
+        canBeResolved = false
     }
+    commonResources {
+        canBeConsumed = true
+        canBeResolved = false
+    }
+}
+
+artifacts {
+    commonJava(sourceSets.main.java.sourceDirectories.singleFile)
+    commonResources(sourceSets.main.resources.sourceDirectories.singleFile)
+}
+
+test {
+    useJUnitPlatform()
+}
+
+neoForge {
+    neoFormVersion = neo_form_version
 }
 
 dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compileOnly project(":api")
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
+    compileOnly group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version,
+            changing: true
+    compileOnly "net.fabricmc:sponge-mixin:0.16.4+mixin.0.8.7"
+    compileOnly "dev.architectury:architectury-neoforge:${project.architectury_version}"
+    compileOnly "curse.maven:${project.ftb_library_neoforge}"
+    compileOnly "curse.maven:${project.ftb_teams_neoforge}"
+    compileOnly "curse.maven:${project.ftb_chunks_neoforge}"
 
-    modCompileOnly("net.fabricmc:fabric-loader:${fabric_loader_version}")
-
-    modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version, changing: true
-
-    modCompileOnly "dev.architectury:architectury-fabric:${project.architectury_version}"
-    modCompileOnly "curse.maven:ftb-library-fabric-438495:6304124"
-    modCompileOnly "curse.maven:ftb-teams-fabric-438497:6119436"
-    modCompileOnly "curse.maven:ftb-chunks-fabric-472657:6295697"
-
-}
-
-processResources {
-
-    def buildProps = project.properties.clone()
-
-    filesMatching(['pack.mcmeta']) {
-
-        expand buildProps
-    }
 }
