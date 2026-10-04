@@ -6,11 +6,13 @@ import journeymap.api.v2.client.model.TextProperties;
 public class OverlayUtil {
 
     public static void disableTextForTextProps(TextProperties textProperties) {
-        textProperties.setMinZoom(Integer.MAX_VALUE);
+        textProperties.setOpacity(0f);
+        textProperties.setBackgroundOpacity(0f);
     }
 
     public static void enableTextForTextProps(TextProperties textProperties) {
-        textProperties.setMinZoom(250);
+        textProperties.setOpacity(1f);
+        textProperties.setBackgroundOpacity(1f);
     }
 
     public static int getTeamTextColor(ClientTeam team) {
