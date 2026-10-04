@@ -1,0 +1,37 @@
+plugins {
+    id 'multiloader-common'
+}
+
+configurations {
+    commonJava {
+        canBeResolved = true
+    }
+    commonResources {
+        canBeResolved = true
+    }
+}
+
+dependencies {
+    compileOnly(project(':api'))
+    compileOnly(project(':common'))
+
+    commonJava project(path: ':common', configuration: 'commonJava')
+    commonResources project(path: ':common', configuration: 'commonResources')
+    commonJava project(path: ':api', configuration: 'commonJava')
+    commonResources project(path: ':api', configuration: 'commonResources')
+}
+
+ext.compat = { String... names ->
+    names.each { n ->
+        def path = ":compat-${n}"
+        dependencies {
+            compileOnly project(path)
+            commonJava project(path: path, configuration: 'commonJava')
+            commonResources project(path: path, configuration: 'commonResources')
+        }
+    }
+}
+
+// Register as real source dirs so IDE-imported dev runs also see the classes/resources
+sourceSets.main.java.srcDir(configurations.commonJava)
+sourceSets.main.resources.srcDir(configurations.commonResources)

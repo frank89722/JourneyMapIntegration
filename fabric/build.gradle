@@ -1,10 +1,11 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom'
+    id 'multiloader-loader'
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
 }
 
-archivesBaseName = "${mod_id}-fabric"
+compat 'ftbchunks', 'waystones'
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -13,23 +14,16 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 
-    compileOnly project(':common')
-    compileOnly project(':api')
-
     modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
 
-    compileOnly project(':compat-ftbchunks')
-    modImplementation "curse.maven:ftb-library-fabric-438495:6304124"
-    modImplementation "curse.maven:ftb-teams-fabric-438497:6119436"
-    modImplementation "curse.maven:ftb-chunks-fabric-472657:6295697"
-
-    compileOnly project(':compat-waystones')
+    modImplementation "curse.maven:${project.ftb_library_fabric}"
+    modImplementation "curse.maven:${project.ftb_teams_fabric}"
+    modImplementation "curse.maven:${project.ftb_chunks_fabric}"
     modImplementation "maven.modrinth:balm:${project.balm_fabric_version}"
     modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 
     modApi group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
     modImplementation "maven.modrinth:journeymap:${project.jm_fabric_version}"
-//    modImplementation files("lib/journeymap-fabric-1.21.1-6.0.0-beta.44.jar")
     modRuntimeOnly "maven.modrinth:common-network:${project.common_network_fabric_version}"
 
     modImplementation "me.zeroeightsix:fiber:${fiber_version}"
@@ -37,9 +31,6 @@ dependencies {
 }
 
 loom {
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
     runs {
         client {
             client()
@@ -53,32 +44,6 @@ loom {
             ideConfigGenerated(true)
             runDir("run")
         }
-    }
-}
-
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-    from project(":common").sourceSets.main.resources
-    from project(":api").sourceSets.main.resources
-    from project(":compat-waystones").sourceSets.main.resources
-    from project(":compat-ftbchunks").sourceSets.main.resources
-}
-
-tasks.withType(JavaCompile).configureEach {
-    source(project(":common").sourceSets.main.allSource)
-    source(project(":api").sourceSets.main.allSource)
-    source(project(":compat-waystones").sourceSets.main.allSource)
-    source(project(":compat-ftbchunks").sourceSets.main.allSource)
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${mod_name}" }
     }
 }
 

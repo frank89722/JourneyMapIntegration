@@ -1,36 +1,31 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'net.neoforged.moddev'
+    id 'multiloader-common'
 }
 
-archivesBaseName = "${mod_id}-common-${minecraft_version}"
-
-loom {
-//    interfaceInjection {
-//        enableDependencyInterfaceInjection = false
-//    }
-    runConfigs.configureEach {
-        ideConfigGenerated = false
+configurations {
+    commonJava {
+        canBeConsumed = true
+        canBeResolved = false
     }
+    commonResources {
+        canBeConsumed = true
+        canBeResolved = false
+    }
+}
+
+artifacts {
+    commonJava(sourceSets.main.java.sourceDirectories.singleFile)
+    commonResources(sourceSets.main.resources.sourceDirectories.singleFile)
+}
+
+neoForge {
+    neoFormVersion = neo_form_version
 }
 
 dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compileOnly project(":api")
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-
-    modCompileOnly("net.fabricmc:fabric-loader:${fabric_loader_version}")
-
-    modCompileOnlyApi group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version, changing: true
-
-}
-
-processResources {
-
-    def buildProps = project.properties.clone()
-
-    filesMatching(['pack.mcmeta']) {
-
-        expand buildProps
-    }
+    compileOnly group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version,
+            changing: true
 }

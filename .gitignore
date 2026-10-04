@@ -12,7 +12,6 @@ out
 *.iws
 *.iml
 .idea/*
-!.idea/scopes
 
 # gradle
 build
@@ -23,3 +22,8 @@ eclipse
 run
 runs
 .DS_Store
+
+# ai
+.agents
+.junie
+.claude

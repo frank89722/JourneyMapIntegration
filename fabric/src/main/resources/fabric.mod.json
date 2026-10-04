@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "jmi",
+  "id": "${mod_id}",
   "version": "${version}",
-  "name": "JourneyMapIntegration",
-  "description": "The mod that adds mod integration for JourneyMap.",
+  "name": "${mod_name}",
+  "description": "${description",
   "authors": [
     "frankV"
   ],
@@ -11,7 +11,7 @@
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/journeymap-integration",
     "sources": "https://github.com/frank89722/JourneyMapIntegration"
   },
-  "license": "MIT",
+  "license": "${license}",
   "icon": "assets/jmi/logo.png",
   "environment": "*",
   "entrypoints": {
@@ -30,7 +30,7 @@
     "fabric-api": "*",
     "minecraft": "~1.21",
     "java": ">=21",
-    "journeymap": "*"
+    "journeymap": ">=1.21.1-6.0.0"
   },
   "recommends": {
     "ftbchunks": ">=2101.1.1",

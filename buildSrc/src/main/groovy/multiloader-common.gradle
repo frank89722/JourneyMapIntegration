@@ -1,0 +1,136 @@
+plugins {
+    id 'java-library'
+    id 'java'
+    id 'idea'
+}
+
+def baseName = "${project.mod_id}-${project.name}"
+base {
+    archivesName = baseName
+}
+version = "${project.minecraft_version}-${project.version}"
+group = project.group
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+    withSourcesJar()
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Sponge'
+                url = 'https://repo.spongepowered.org/repository/maven-public'
+            }
+        }
+        filter { includeGroupAndSubgroups('org.spongepowered') }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Fabric'
+                url = uri('https://maven.fabricmc.net')
+            }
+        }
+        filter {
+            includeGroup('net.fabricmc')
+            includeGroup('net.fabricmc.unpick')
+            includeGroup('fabric-loom')
+        }
+    }
+    exclusiveContent {
+        forRepositories(
+                maven {
+                    name = 'ParchmentMC'
+                    url = 'https://maven.parchmentmc.org/'
+                },
+                maven {
+                    name = 'NeoForge'
+                    url = 'https://maven.neoforged.net/releases'
+                }
+        )
+        filter { includeGroup('org.parchmentmc.data') }
+    }
+    maven {
+        name = 'BlameJared'
+        url = 'https://maven.blamejared.com'
+    }
+    maven {
+        name = 'FTB'
+        url = 'https://maven.ftb.dev/releases'
+        content { includeGroup 'dev.ftb.mods' }
+    }
+    maven {
+        name = 'Architectury'
+        url = 'https://maven.architectury.dev/'
+    }
+    maven {
+        name = 'CurseMaven'
+        url = 'https://www.cursemaven.com'
+        content { includeGroup 'curse.maven' }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        // forRepositories(fg.repository) // Uncomment when using ForgeGradle
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
+        name = 'JourneyMap'
+        url = 'https://jm.gserv.me/repository/maven-public/'
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = 'UTF-8'
+    it.options.release.set(Integer.parseInt(java_version))
+}
+
+dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.48")
+    annotationProcessor("org.projectlombok:lombok:1.18.48")
+
+    testCompileOnly("org.projectlombok:lombok:1.18.48")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.48")
+}
+
+processResources {
+    def expandProps = [
+            'version'                      : version,
+            'group'                        : project.group,
+            'minecraft_version'            : minecraft_version,
+            'minecraft_version_range'      : minecraft_version_range,
+            'forge_version'                : forge_version,
+            'neoforge_version'             : neoforge_version,
+            'neoforge_loader_version_range': neoforge_loader_version_range,
+            'fabric_api_version'           : fabric_version,
+            'fabric_loader_version'        : fabric_loader_version,
+            'mod_name'                     : mod_name,
+            'mod_author'                   : mod_author,
+            'mod_id'                       : mod_id,
+            'license'                      : license,
+            'description'                  : project.description,
+            'java_version'                 : java_version,
+            'journeymap_version_range'     : journeymap_version_range,
+            'journeymap_min_version'       : journeymap_min_version
+    ]
+
+    filesMatching(['META-INF/mods.toml', 'META-INF/neoforge.mods.toml', 'pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
+        expand expandProps
+    }
+
+    inputs.properties(expandProps)
+}
+
+tasks.withType(GenerateModuleMetadata).configureEach {
+    enabled = false
+}

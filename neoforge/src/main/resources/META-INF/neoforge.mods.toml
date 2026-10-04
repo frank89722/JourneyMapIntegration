@@ -1,52 +1,50 @@
 modLoader = "javafml"
-loaderVersion = "[4,)"
-license = "MIT"
+loaderVersion = "${neoforge_loader_version_range}"
+license = "${license}"
 issueTrackerURL = "https://github.com/frank89722/JourneyMapIntegration/issues"
 [[mods]]
-modId = "jmi"
-version = "${file.jarVersion}"
-displayName = "JourneyMap Integration"
+modId = "${mod_id}"
+version = "${version}"
+displayName = "${mod_name}"
 displayTest = "IGNORE_ALL_VERSION"
 #updateJSONURL="https://change.me.example.invalid/updates.json"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/journeymap-integration"
 #logoFile="logo.png"
 #credits="Thanks for this example mod goes to Java"
 authors = "frankV"
-description = '''
-The mod that adds mod integration for JourneyMap.
-'''
+description = '''${description}'''
 [[dependencies.jmi]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.0,)"
+versionRange = "${neoforge_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.jmi]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21,1.22)"
+versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.jmi]]
 modId = "journeymap"
 type = "required"
-versionRange = "[1.21,)"
+versionRange = "${journeymap_version_range}"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.jmi]]
 modId = "ftbchunks"
 type = "optional"
-versionRange = "[2101.1.1,)"
+versionRange = "${ftb_chunks_version_range}"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.jmi]]
 modId = "waystones"
 type = "optional"
-versionRange = "[21.0.0,)"
+versionRange = "${waystones_version_range}"
 ordering = "NONE"
 side = "CLIENT"
 
