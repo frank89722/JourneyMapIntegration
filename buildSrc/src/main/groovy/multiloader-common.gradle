@@ -8,7 +8,7 @@ def baseName = "${project.mod_id}-${project.name}"
 base {
     archivesName = baseName
 }
-version = "${project.minecraft_version}-${project.version}"
+version = "${project.minecraft_version}-${project.base_version}"
 group = project.group
 
 java {
