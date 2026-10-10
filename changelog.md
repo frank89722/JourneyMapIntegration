@@ -5,7 +5,5 @@
 
 ### Changes:
 
-- [FTBChunks] Improve chunk claiming mode
-- [FTBChunks] Improve client performance by changing how overlay label renders (A minimum version of JourneyMap 6.0.
-  0.beta45 is required, or the labels won't render)
-- [FTBChunks] Fix overlay color does not update properly on team color changed
+- [FTBChunks] Port performace update from MC 1.20.1 to 1.21, thanks to Mysticdrew
+- Update to latest Journeymap release
