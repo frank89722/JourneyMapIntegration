@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
     id 'multiloader-loader'
     id 'io.github.CDAGaming.cursegradle' version '1.+'
     id "com.modrinth.minotaur" version "2.+"
@@ -9,24 +9,24 @@ compat 'ftbchunks', 'waystones'
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 
-    modImplementation "dev.architectury:architectury-fabric:${project.architectury_version}"
+    implementation "dev.architectury:architectury-fabric:${project.architectury_version}"
 
-    modImplementation "curse.maven:${project.ftb_library_fabric}"
-    modImplementation "curse.maven:${project.ftb_teams_fabric}"
-    modImplementation "curse.maven:${project.ftb_chunks_fabric}"
-    modImplementation "maven.modrinth:balm:${project.balm_fabric_version}"
-    modImplementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
+    implementation "curse.maven:${project.ftb_library_fabric}"
+    implementation "curse.maven:${project.ftb_teams_fabric}"
+    implementation "curse.maven:${project.ftb_chunks_fabric}"
+    implementation "maven.modrinth:balm:${project.balm_fabric_version}"
+    implementation "maven.modrinth:shogi:${project.shogi_fabric_version}"
+    implementation "maven.modrinth:waystones:${project.waystones_fabric_version}"
 
-    modApi group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
-    modImplementation "maven.modrinth:journeymap:${project.jm_fabric_version}"
-    modRuntimeOnly "maven.modrinth:common-network:${project.common_network_fabric_version}"
+    api group: 'info.journeymap', name: 'journeymap-api-fabric', version: project.journeymap_api_version, changing: true
+    implementation "maven.modrinth:journeymap:${project.jm_fabric_version}"
+    runtimeOnly "maven.modrinth:common-network:${project.common_network_fabric_version}"
 
-    modImplementation "me.zeroeightsix:fiber:${fiber_version}"
+    implementation "me.zeroeightsix:fiber:${fiber_version}"
     include "me.zeroeightsix:fiber:${fiber_version}"
 }
 
@@ -58,10 +58,10 @@ if (ENV.CF_TOKEN) {
             releaseType = release_type
             addGameVersion "Fabric"
             addGameVersion "Quilt"
-            addGameVersion "Java 21"
+            addGameVersion "Java 25"
             addGameVersion "Client"
             addGameVersion minecraft_version
-            mainArtifact(remapJar.archiveFile) {
+            mainArtifact(jar.archiveFile) {
                 it.displayName = release_title
             }
             relations {
@@ -87,7 +87,7 @@ if (ENV.MODRINTH_TOKEN) {
         versionType = release_type
         versionName = release_title
         versionNumber = "${version}+fabric"
-        uploadFile = remapJar
+        uploadFile = jar
         gameVersions = [minecraft_version]
         loaders = ["fabric", "quilt"]
         changelog = rootProject.file('changelog.md').text

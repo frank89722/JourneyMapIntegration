@@ -53,6 +53,7 @@ dependencies {
     implementation "curse.maven:${project.ftb_teams_neoforge}"
     implementation "curse.maven:${project.ftb_chunks_neoforge}"
     implementation "maven.modrinth:balm:${project.balm_neoforge_version}"
+    implementation "maven.modrinth:shogi:${project.shogi_neoforge_version}"
     implementation "maven.modrinth:waystones:${project.waystones_neoforge_version}"
 
     api group: 'info.journeymap', name: 'journeymap-api-neoforge', version: project.journeymap_api_version, changing:
@@ -71,7 +72,7 @@ if (ENV.CF_TOKEN) {
             id = curse_id
             releaseType = release_type
             addGameVersion "NeoForge"
-            addGameVersion "Java 21"
+            addGameVersion "Java 25"
             addGameVersion "Client"
             addGameVersion minecraft_version
             mainArtifact(jar) {

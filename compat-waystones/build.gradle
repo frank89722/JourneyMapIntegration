@@ -33,6 +33,7 @@ dependencies {
     compileOnly group: 'info.journeymap', name: 'journeymap-api-common', version: project.journeymap_api_version,
             changing: true
     compileOnly "maven.modrinth:balm:${project.balm_neoforge_version}"
+    compileOnly "maven.modrinth:shogi:${project.shogi_neoforge_version}"
     compileOnly "maven.modrinth:waystones:${project.waystones_neoforge_version}"
 
 }
