@@ -1,7 +1,7 @@
 package me.frankv.jmi.api.jmoverlay;
 
 import journeymap.api.v2.client.fullscreen.IThemeButton;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface ToggleableOverlay {
 
@@ -9,7 +9,7 @@ public interface ToggleableOverlay {
 
     String getButtonLabel();
 
-    ResourceLocation getButtonIconName();
+    Identifier getButtonIcon();
 
     int getOrder();
 

@@ -1,6 +1,6 @@
 package me.frankv.jmi.compat.ftbchunks;
 
-import dev.ftb.mods.ftbchunks.client.FTBChunksClientConfig;
+import dev.ftb.mods.ftbchunks.config.FTBChunksClientConfig;
 import journeymap.api.v2.client.IClientAPI;
 import lombok.Getter;
 import me.frankv.jmi.api.ModCompat;
@@ -42,14 +42,15 @@ public class FTBChunksCompat implements ModCompat {
             states.resetData();
             ClaimedChunksOverlay.INSTANCE.onReset();
         });
+        eventBus.subscribe(Event.FTBTeamPropertiesChanged.class, ClaimedChunksOverlay.INSTANCE::onTeamPropsChanged);
         eventBus.subscribe(Event.ScreenClose.class, e -> ClaimingMode.INSTANCE.onScreenClose(e.screen()));
         eventBus.subscribe(Event.JMMappingEvent.class, ClaimedChunksOverlay.INSTANCE::onJMMapping);
         eventBus.subscribe(Event.JMClickEvent.class, e -> ClaimingMode.INSTANCE.getHandler().onClick(e.clickEvent()));
         eventBus.subscribe(Event.JMMouseMoveEvent.class, e -> ClaimingMode.INSTANCE.getHandler().onMouseMove(e.mouseMoveEvent()));
         eventBus.subscribe(Event.JMMouseDraggedEvent.class, e -> ClaimingMode.INSTANCE.getHandler().onDrag(e.mouseDraggedEvent()));
         eventBus.subscribe(Event.JMInfoSlotRegistryEvent.class, claimedChunkInfoSlot::onJMInfoSlotRegistryEvent);
-        eventBus.subscribe(Event.MouseRelease.class, e -> ClaimingMode.INSTANCE.getHandler().onMouseReleased());
-        eventBus.subscribe(Event.ScreenDraw.class, e -> GeneralDataOverlay.onScreenDraw(e.screen(), e.guiGraphics()));
+        eventBus.subscribe(Event.MouseRelease.class, _ -> ClaimingMode.INSTANCE.getHandler().onMouseReleased());
+        eventBus.subscribe(Event.ScreenDraw.class, e -> GeneralDataOverlay.onScreenDraw(e.screen(), e.guiGraphicsExtractor()));
     }
 
     @Override

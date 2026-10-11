@@ -39,7 +39,7 @@ public record ClaimedChunkOverlayListener(
 
     @Override
     public void onMouseMove(UIState mapState, Point2D.Double mousePosition, BlockPos blockPosition) {
-        var chunkDimPos = new ChunkDimPos(mapState.dimension, new ChunkPos(blockPosition));
+        var chunkDimPos = new ChunkDimPos(mapState.dimension, new ChunkPos(blockPosition.getX() >> 4, blockPosition.getZ() >> 4));
 
         Optional.ofNullable(states.getChunkData().get(chunkDimPos))
                 .flatMap(ClaimedChunk::getTeam)

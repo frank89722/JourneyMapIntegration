@@ -52,7 +52,7 @@ public class ModCompatFactory {
                 .forEach(t -> themeButtonDisplay.addThemeToggleButton(
                         t.getButtonLabel(),
                         t.getButtonLabel(),
-                        t.getButtonIconName(),
+                        t.getButtonIcon(),
                         t.isActivated(),
                         t::onToggle
                 ));

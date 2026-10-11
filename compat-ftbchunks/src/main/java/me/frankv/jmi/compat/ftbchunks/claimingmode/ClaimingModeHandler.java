@@ -1,14 +1,16 @@
 package me.frankv.jmi.compat.ftbchunks.claimingmode;
 
 import dev.architectury.networking.NetworkManager;
+import dev.ftb.mods.ftbchunks.api.event.ChunkChangeEvent;
 import dev.ftb.mods.ftbchunks.net.RequestChunkChangePacket;
 import dev.ftb.mods.ftblibrary.math.XZ;
-import dev.ftb.mods.ftblibrary.ui.GuiHelper;
+import dev.ftb.mods.ftblibrary.client.gui.GuiHelper;
+import dev.ftb.mods.ftblibrary.platform.network.Play2ServerNetworking;
 import journeymap.api.v2.client.display.PolygonOverlay;
 import journeymap.api.v2.client.event.FullscreenMapEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.ChunkPos;
 
@@ -64,6 +66,7 @@ public class ClaimingModeHandler {
     public void onMouseReleased() {
         if (!mouseTracking) return;
         applyChanges();
+        clearStates();
     }
 
     private void addToWaitingList(XZ xz) {
@@ -74,11 +77,10 @@ public class ClaimingModeHandler {
     }
 
     private void applyChanges() {
-        var chunkChangeOp = RequestChunkChangePacket.ChunkChangeOp.create(mouseButton == 0, Screen.hasShiftDown());
-        var packet = new RequestChunkChangePacket(chunkChangeOp, chunks, false, Optional.empty());
-        NetworkManager.sendToServer(packet);
+        var chunkChangeOp = ChunkChangeEvent.Operation.createOnClient(mouseButton == 0, Minecraft.getInstance().hasShiftDown());
+        var packet = new RequestChunkChangePacket(chunkChangeOp, Set.copyOf(chunks), false, Optional.empty());
+        Play2ServerNetworking.send(packet);
         GuiHelper.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F);
-        clearStates();
     }
 
     void clearStates() {

@@ -143,10 +143,10 @@ public final class TeamClaimGraph {
 
     private static ChunkPos[] neighbours(ChunkPos pos) {
         return new ChunkPos[]{
-                new ChunkPos(pos.x + 1, pos.z),
-                new ChunkPos(pos.x - 1, pos.z),
-                new ChunkPos(pos.x, pos.z + 1),
-                new ChunkPos(pos.x, pos.z - 1)
+                new ChunkPos(pos.x() + 1, pos.z()),
+                new ChunkPos(pos.x() - 1, pos.z()),
+                new ChunkPos(pos.x(), pos.z() + 1),
+                new ChunkPos(pos.x(), pos.z() - 1)
         };
     }
 }

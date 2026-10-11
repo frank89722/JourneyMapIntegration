@@ -1,33 +1,25 @@
 package me.frankv.jmi.util;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.util.Mth;
 
 public class Draw {
-    public static void drawRectangle(GuiGraphics guiGraphics, double x, double y, double width, double height, int color, float alpha) {
+    public static void drawRectangle(GuiGraphicsExtractor guiGraphics, double x, double y, double width, double height,
+                                     int color, float alpha) {
         drawRectangle(guiGraphics, x, y, width, height, color, alpha, 0.0F);
     }
 
-    public static void drawRectangle(GuiGraphics guiGraphics, double x, double y, double width, double height, int color, float alpha, float level) {
-        var red = (float) (color >> 16 & 255) / 255.0F;
-        var green = (float) (color >> 8 & 255) / 255.0F;
-        var blue = (float) (color & 255) / 255.0F;
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        var bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        var matrix4f = guiGraphics.pose().last().pose();
-        bufferbuilder.addVertex(matrix4f, (float) x, (float) (height + y), level).setColor(red, green, blue, alpha);
-        bufferbuilder.addVertex(matrix4f, (float) (x + width), (float) (height + y), level).setColor(red, green, blue, alpha);
-        bufferbuilder.addVertex(matrix4f, (float) (x + width), (float) y, level).setColor(red, green, blue, alpha);
-        bufferbuilder.addVertex(matrix4f, (float) x, (float) y, level).setColor(red, green, blue, alpha);
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableBlend();
+    /**
+     * @param level unused since 26.1; GUI elements are layered by submission order.
+     */
+    public static void drawRectangle(GuiGraphicsExtractor guiGraphics, double x, double y, double width, double height,
+                                     int color, float alpha, float level) {
+        var a = Mth.clamp(Math.round(alpha * 255.0F), 0, 255);
+        var argb = (a << 24) | (color & 0xFFFFFF);
+        guiGraphics.fill(
+                (int) Math.round(x), (int) Math.round(y),
+                (int) Math.round(x + width), (int) Math.round(y + height),
+                argb
+        );
     }
 }

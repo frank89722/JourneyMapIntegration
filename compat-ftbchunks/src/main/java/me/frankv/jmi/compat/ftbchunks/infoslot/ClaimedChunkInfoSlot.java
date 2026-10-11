@@ -23,7 +23,7 @@ public class ClaimedChunkInfoSlot {
     private String getPolygonTitleByPlayerPos() {
         if (mc.player == null) return "";
 
-        final var pos = new ChunkDimPos(mc.player.level().dimension(), mc.player.chunkPosition().x, mc.player.chunkPosition().z);
+        final var pos = new ChunkDimPos(mc.player.level().dimension(), mc.player.chunkPosition().x(), mc.player.chunkPosition().z());
         if (!states.getChunkData().containsKey(pos)) return "Wilderness";
         return states.getChunkData().get(pos).getTeam().map(ClientTeam::getDisplayName).orElse("");
     }

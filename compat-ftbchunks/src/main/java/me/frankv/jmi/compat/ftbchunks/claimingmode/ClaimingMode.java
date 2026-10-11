@@ -22,7 +22,7 @@ import me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay.ForceLoadedChunkOverl
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 
 import java.util.HashSet;
@@ -65,11 +65,11 @@ public enum ClaimingMode implements ToggleableOverlay {
 
         final var polygon = PolygonHelper.createChunkPolygon(xz.x(), 15, xz.z());
 
-        return new PolygonOverlay(Constants.MOD_ID, player.clientLevel.dimension(), shapeProps, polygon);
+        return new PolygonOverlay(Constants.MOD_ID, player.level().dimension(), shapeProps, polygon);
     }
 
     public Overlay forceLoadedPolygon(ChunkDimPos pos, ClaimedChunk data, FTBChunksCompatStates states) {
-        final var marker = ResourceLocation.fromNamespaceAndPath(FTBChunks.MOD_ID, "textures/force_loaded.png");
+        final var marker = Identifier.fromNamespaceAndPath(FTBChunks.MOD_ID, "textures/force_loaded.png");
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(0)
                 .setImageLocation(marker)
@@ -94,7 +94,7 @@ public enum ClaimingMode implements ToggleableOverlay {
 
     private void createClaimingAreaOverlays() {
         final var player = Minecraft.getInstance().player;
-        final var startPoint = new ChunkPos(player.chunkPosition().x - 7, player.chunkPosition().z - 7);
+        final var startPoint = new ChunkPos(player.chunkPosition().x() - 7, player.chunkPosition().z() - 7);
 
         final var shapeProps = new ShapeProperties()
                 .setStrokeWidth(3)
@@ -103,7 +103,7 @@ public enum ClaimingMode implements ToggleableOverlay {
 
         for (var x = 0; x < 15; x++) {
             for (var z = 0; z < 15; z++) {
-                area.add(new ChunkPos(startPoint.x + x, startPoint.z + z));
+                area.add(new ChunkPos(startPoint.x() + x, startPoint.z() + z));
             }
         }
 
@@ -139,7 +139,7 @@ public enum ClaimingMode implements ToggleableOverlay {
 
 
     @Override
-    public ResourceLocation getButtonIconName() {
+    public Identifier getButtonIcon() {
         return OverlayHelper.getIcon("grid");
     }
 }

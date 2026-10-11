@@ -11,26 +11,27 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.client.gui.screens.Screen;
-import org.lwjgl.glfw.GLFW;
 
 public class JMIFabric implements ClientModInitializer {
     public final static FabricClientConfig CLIENT_CONFIG = new FabricClientConfig();
 
     private static void registerEvent() {
         var eventBus = JMI.getJmiEventBus();
-        ClientTickEvents.START_CLIENT_TICK.register(__ -> eventBus.sendEvent(new Event.ClientTick()));
-        ScreenEvents.AFTER_INIT.register((minecraft, screen, i, i1) -> onGuiScreen(screen, eventBus));
+        ClientTickEvents.START_CLIENT_TICK.register(_ -> eventBus.sendEvent(new Event.ClientTick()));
+        ScreenEvents.AFTER_INIT.register((_, screen, _, _) -> onGuiScreen(screen, eventBus));
     }
 
     private static void onGuiScreen(Screen screen, JMIEventBus eventBus) {
-        ScreenEvents.remove(screen).register(event -> eventBus.sendEvent(new Event.ScreenClose(screen)));
+        ScreenEvents.remove(screen).register(_ -> eventBus.sendEvent(new Event.ScreenClose(screen)));
         if (!(screen instanceof IFullscreen)) return;
 
-        ScreenMouseEvents.afterMouseRelease(screen).register((screenE, mouseX, mouseY, button) ->
-                eventBus.sendEvent(new Event.MouseRelease(GLFW.GLFW_RELEASE)));
+        ScreenMouseEvents.afterMouseRelease(screen).register((_, event, consumed) -> {
+            eventBus.sendEvent(new Event.MouseRelease(event.button()));
+            return consumed;
+        });
 
-        ScreenEvents.afterRender(screen).register((screenE, stack, mouseX, mouseY, tickDelta) ->
-                eventBus.sendEvent(new Event.ScreenDraw(screen, stack)));
+        ScreenEvents.afterExtract(screen).register((_, graphics, _, _, _) ->
+                eventBus.sendEvent(new Event.ScreenDraw(screen, graphics)));
     }
 
     @Override

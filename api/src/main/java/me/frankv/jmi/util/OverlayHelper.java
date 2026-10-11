@@ -5,7 +5,7 @@ import journeymap.api.v2.client.display.Displayable;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import me.frankv.jmi.api.event.Event;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -74,8 +74,8 @@ public class OverlayHelper {
         waitingQueue.clear();
     }
 
-    public static ResourceLocation getIcon(String string) {
-        return ResourceLocation.fromNamespaceAndPath("journeymap", "theme/flat/icon/" + string + ".png");
+    public static Identifier getIcon(String string) {
+        return Identifier.fromNamespaceAndPath("journeymap", "theme/flat/icon/" + string + ".png");
     }
 
 }

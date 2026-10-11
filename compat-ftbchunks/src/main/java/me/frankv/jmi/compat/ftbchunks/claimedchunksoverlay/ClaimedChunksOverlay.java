@@ -3,8 +3,6 @@ package me.frankv.jmi.compat.ftbchunks.claimedchunksoverlay;
 import dev.ftb.mods.ftbchunks.client.map.MapDimension;
 import dev.ftb.mods.ftbchunks.data.ChunkSyncInfo;
 import dev.ftb.mods.ftblibrary.math.ChunkDimPos;
-import dev.ftb.mods.ftbteams.api.event.ClientTeamPropertiesChangedEvent;
-import dev.ftb.mods.ftbteams.api.event.TeamEvent;
 import dev.ftb.mods.ftbteams.data.ClientTeam;
 import dev.ftb.mods.ftbteams.data.ClientTeamManagerImpl;
 import journeymap.api.v2.client.display.Displayable;
@@ -26,7 +24,7 @@ import me.frankv.jmi.util.BackgroundWorker;
 import me.frankv.jmi.util.OverlayHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -72,8 +70,6 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     public void init(ClientConfig clientConfig, FTBChunksCompatStates states) {
         this.clientConfig = clientConfig;
         this.states = states;
-
-        TeamEvent.CLIENT_PROPERTIES_CHANGED.register(this::onTeamPropsChanged);
     }
 
     public void onClientTick() {
@@ -205,7 +201,7 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
         }
 
         ClaimingMode.INSTANCE.getArea().forEach(p -> {
-            final var chunkDimPos = new ChunkDimPos(level.dimension(), p.x, p.z);
+            final var chunkDimPos = new ChunkDimPos(level.dimension(), p.x(), p.z());
             showForceLoaded(chunkDimPos, true);
         });
     }
@@ -236,8 +232,8 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     }
 
 
-    private void onTeamPropsChanged(ClientTeamPropertiesChangedEvent event) {
-        var teamId = event.getTeam().getTeamId();
+    public void onTeamPropsChanged(Event.FTBTeamPropertiesChanged event) {
+        var teamId = event.teamId();
         var clientTeam = ClientTeamManagerImpl.getInstance().getTeam(teamId).orElse(null);
         if (clientTeam == null) return;
 
@@ -304,8 +300,8 @@ public enum ClaimedChunksOverlay implements ToggleableOverlay {
     }
 
     @Override
-    public ResourceLocation getButtonIconName() {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "images/ftb.png");
+    public Identifier getButtonIcon() {
+        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "images/ftb.png");
     }
 
 }

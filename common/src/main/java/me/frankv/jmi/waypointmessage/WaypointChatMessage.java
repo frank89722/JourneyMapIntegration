@@ -3,6 +3,7 @@ package me.frankv.jmi.waypointmessage;
 import me.frankv.jmi.JMI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.world.item.ItemStack;
@@ -25,15 +26,15 @@ public class WaypointChatMessage {
 
         final var name = block.getName().getString();
         final var msg = String.format("[name:\"%s\", x:%d, y:%d, z:%d, dim:%s]",
-                name, blockPos.getX(), blockPos.getY(), blockPos.getZ(), mc.player.level().dimension().location());
+                name, blockPos.getX(), blockPos.getY(), blockPos.getZ(), mc.player.level().dimension().identifier());
 
         mc.player.connection.handleSystemChat(new ClientboundSystemChatPacket(Component.literal(msg), false));
     }
 
     private static boolean checkBlockTags(Block block) {
-        final var blockStrLen = block.toString().length();
-        return block.defaultBlockState().getTags()
-                .anyMatch(e -> JMI.getClientConfig().getWaypointMessageBlocks().contains('#' + e.location().toString())) ||
-                JMI.getClientConfig().getWaypointMessageBlocks().contains(block.toString().substring(6, blockStrLen-1));
+        final var blocks = JMI.getClientConfig().getWaypointMessageBlocks();
+        final var holder = BuiltInRegistries.BLOCK.wrapAsHolder(block);
+        return holder.tags().anyMatch(e -> blocks.contains('#' + e.location().toString())) ||
+                blocks.contains(BuiltInRegistries.BLOCK.getKey(block).toString());
     }
 }

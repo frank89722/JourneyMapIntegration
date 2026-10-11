@@ -12,12 +12,11 @@ import me.frankv.jmi.api.event.Event;
 import me.frankv.jmi.api.jmoverlay.ClientConfig;
 import me.frankv.jmi.api.jmoverlay.ToggleableOverlay;
 import me.frankv.jmi.util.OverlayHelper;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.waystones.api.event.WaystonesListReceivedEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -32,7 +31,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
     @Getter
     private final int order = 2;
     @Getter
-    private final Map<ResourceLocation, Set<WaystoneMeta>> waystones = new HashMap<>();
+    private final Map<Identifier, Set<WaystoneMeta>> waystones = new HashMap<>();
     private final HashMap<WaystoneMeta, MarkerOverlay> markers = new HashMap<>();
     private IClientAPI jmAPI;
     private ClientConfig clientConfig;
@@ -42,11 +41,11 @@ public enum WaystonesMarker implements ToggleableOverlay {
     public void init(IClientAPI jmAPI, ClientConfig clientConfig) {
         this.jmAPI = jmAPI;
         this.clientConfig = clientConfig;
-        Balm.getEvents().onEvent(WaystonesListReceivedEvent.class, this::onWaystonesListReceived);
+        WaystonesListReceivedEvent.EVENT.register(this::onWaystonesListReceived);
     }
 
     private void createMarker(WaystoneMeta waystone) {
-        final var marker = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "images/waystone.png");
+        final var marker = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "images/waystone.png");
         final var icon = new MapImage(marker, 32, 32)
                 .setAnchorX(16.0d)
                 .setAnchorY(38.0d)
@@ -118,7 +117,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
     public void onWaystonesListReceived(WaystonesListReceivedEvent event) {
         if (!clientConfig.getWaystone()) return;
 
-        var oldWaystones = Optional.ofNullable(waystones.get(event.getWaystoneType())).orElseGet(HashSet::new);
+        var oldWaystones = Optional.ofNullable(waystones.get(event.waystoneType())).orElseGet(HashSet::new);
         var newWaystones = new HashSet<>(WaystoneMeta.fromEvent(event));
 
         final var addWaystones = new HashSet<>(newWaystones);
@@ -129,11 +128,11 @@ public enum WaystonesMarker implements ToggleableOverlay {
         rmvWaystones.forEach(this::removeMarker);
         addWaystones.forEach(this::createMarker);
 
-        waystones.put(event.getWaystoneType(), newWaystones);
+        waystones.put(event.waystoneType(), newWaystones);
     }
 
     @Override
-    public ResourceLocation getButtonIconName() {
+    public Identifier getButtonIcon() {
         return OverlayHelper.getIcon("waypoints");
     }
 
@@ -142,7 +141,7 @@ public enum WaystonesMarker implements ToggleableOverlay {
         public static Set<WaystoneMeta> fromEvent(WaystonesListReceivedEvent event) {
             final var waystones = new HashSet<WaystoneMeta>();
 
-            event.getWaystones().forEach(w -> {
+            event.waystones().forEach(w -> {
                 if (!w.hasName()) return;
                 waystones.add(new WaystoneMeta(w.getWaystoneUid(), w.getName().tryCollapseToString(), w.getPos(), w.getDimension()));
             });
